@@ -26,7 +26,7 @@ func _ready():
 		direction.x = 0
 		direction.y = dist.y
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if alive:
 		$AnimatedSprite2D.animation = "run"
 		if entered:
@@ -44,6 +44,8 @@ func die():
 	alive = false
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"
+	get_parent().enemy_killed.emit()
+
 
 func _on_entrance_timer_timeout():
 	entered = true
