@@ -1,13 +1,19 @@
 extends CharacterBody2D
 
+@onready var ammo_counter = get_node("/root/Main/UI/AmmoCounter/AmmoLabel")
+
 signal shoot
 
 var speed : int
 var can_shoot : bool
 var screen_size : Vector2
+var bullets : int = 15
 
 func _ready():
 	screen_size = get_viewport_rect().size
+	reset()
+
+func reset():
 	position = screen_size/2
 	speed = 200
 	can_shoot = true
@@ -48,4 +54,7 @@ func _physics_process(_delta):
 
 
 func _on_shot_timer_timeout():
-	can_shoot = true
+	if bullets != 0:
+		can_shoot = true
+	else:
+		can_shoot = false
