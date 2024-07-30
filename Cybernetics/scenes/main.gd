@@ -31,16 +31,13 @@ func _process(_delta):
 func _on_enemy_spawner_hit_p():
 	health -= 10
 	$UI/HealthBar.value = health
-
-
+	if health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
 
 func _on_enemy_killed():
 	enemies_left -= 1
 	$UI/EnemyCounter/EnemiesLabel.text = "Enemies Left: " + str(enemies_left)
-	if enemies_left <= 0:
-		get_tree().paused = true
-		$GameOver.show()
-
 
 func _on_restart_timer_timeout():
 	get_tree().paused = false
