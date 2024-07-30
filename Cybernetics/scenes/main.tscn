@@ -31,6 +31,7 @@ one_shot = true
 
 [node name="GameOver" parent="." instance=ExtResource("2_mcsw5")]
 process_mode = 2
+visible = false
 
 [connection signal="enemy_killed" from="." to="." method="_on_enemy_killed"]
 [connection signal="shoot" from="Player" to="BulletManager" method="_on_player_shoot"]

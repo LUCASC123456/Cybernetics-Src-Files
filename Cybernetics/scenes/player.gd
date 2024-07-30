@@ -7,6 +7,7 @@ signal shoot
 var speed : int
 var can_shoot : bool
 var screen_size : Vector2
+var bullets : int = 15
 
 func _ready():
 	screen_size = get_viewport_rect().size
@@ -15,6 +16,8 @@ func _ready():
 func reset():
 	position = screen_size/2
 	speed = 200
+	bullets = 15
+	ammo_counter.text = "AMMO: " + str(bullets) + "/15"
 	can_shoot = true
 
 func get_input():
@@ -24,6 +27,8 @@ func get_input():
 	
 	#mouse clicks
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
+		bullets -= 1
+		ammo_counter.text = "AMMO: " + str(bullets) + "/15"
 		var dir = get_global_mouse_position() - position
 		shoot.emit(position, dir)
 		can_shoot = false
@@ -53,4 +58,7 @@ func _physics_process(_delta):
 
 
 func _on_shot_timer_timeout():
-	can_shoot = true
+	if bullets != 0:
+		can_shoot = true
+	else:
+		can_shoot = false

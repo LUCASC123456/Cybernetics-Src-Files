@@ -18,7 +18,7 @@ func new_game():
 	$Player.reset()
 	get_tree().call_group("enemies", "queue_free")
 	get_tree().call_group("bullets", "queue_free")
-	$UI/EnemyCounter/EnemiesLabel.text = "Enemies Left: " + str(enemies_left)
+	$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)
 	$UI/HealthBar.value = health
 	$GameOver.hide()
 	get_tree().paused = true
@@ -37,7 +37,7 @@ func _on_enemy_spawner_hit_p():
 
 func _on_enemy_killed():
 	enemies_left -= 1
-	$UI/EnemyCounter/EnemiesLabel.text = "Enemies Left: " + str(enemies_left)
+	$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)
 	if enemies_left <= 0:
 		get_tree().paused = true
 		$GameOver.show()
