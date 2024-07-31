@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://b6u6nfgqa5dtb"]
+
+[ext_resource type="Script" path="res://scenes/item.gd" id="1_bokm2"]
+[ext_resource type="Texture2D" uid="uid://dyr8ykxfq0qb3" path="res://assets/Items/SimpleHealth.png" id="1_fihfq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cxn0y"]
+size = Vector2(40, 40)
+
+[node name="Item" type="Area2D"]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("1_bokm2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("1_fihfq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_cxn0y")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
