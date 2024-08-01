@@ -1,28 +1,28 @@
-[gd_scene load_steps=5 format=3 uid="uid://cija68e8tqh4n"]
+[gd_scene load_steps=5 format=3 uid="uid://c3vfi2w4cr36"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1a642"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8wu3h"]
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x466k"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mtgpl"]
 bg_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eliht"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_endnl"]
 bg_color = Color(0.217101, 0.217101, 0.217101, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pmbvu"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3f852"]
 bg_color = Color(0.374139, 0.374139, 0.374139, 1)
 
-[node name="GameOver" type="CanvasLayer"]
+[node name="MainMenu" type="CanvasLayer"]
 
-[node name="Background2" type="Panel" parent="."]
+[node name="Background1" type="Panel" parent="."]
 offset_right = 768.0
 offset_bottom = 768.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1a642")
+theme_override_styles/panel = SubResource("StyleBoxFlat_8wu3h")
 
-[node name="GameOver" type="Label" parent="."]
+[node name="Logo" type="Label" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -35,11 +35,11 @@ offset_bottom = -75.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 75
-text = "GAME OVER"
+text = "CYBERNETICS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ExitButton" type="Button" parent="."]
+[node name="PlayButton" type="Button" parent="."]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -51,8 +51,8 @@ offset_right = 104.5
 offset_bottom = -258.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_x466k")
-theme_override_styles/hover = SubResource("StyleBoxFlat_eliht")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_pmbvu")
-text = "EXIT GAME
+theme_override_styles/normal = SubResource("StyleBoxFlat_mtgpl")
+theme_override_styles/hover = SubResource("StyleBoxFlat_endnl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_3f852")
+text = "PLAY
 "
