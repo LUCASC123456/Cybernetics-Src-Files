@@ -30,7 +30,7 @@ func _process(_delta):
 	pass
 
 func _on_enemy_spawner_hit_p():
-	health -= 10
+	health -= randi_range(10, 30)
 	$UI/HealthBar.value = health
 	if health <= 0 and $UI/HealthBar.value <= 0:
 		get_tree().paused = true

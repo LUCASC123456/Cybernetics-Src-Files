@@ -7,7 +7,9 @@ signal shoot
 var speed : int
 var can_shoot : bool
 var screen_size : Vector2
-var ammo : int
+var mags : int
+
+var mag_collection = [15,15,15]
 
 func _ready():
 	screen_size = get_viewport_rect().size
@@ -16,8 +18,11 @@ func _ready():
 func reset():
 	position = screen_size/2
 	speed = 200
-	ammo = 15
-	ammo_counter.text = "AMMO: " + str(ammo) + "/15"
+	mags = 3
+	mag_collection[0] = 15
+	mag_collection[1] = 15
+	mag_collection[2] = 15
+	ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
 	can_shoot = true
 
 func get_input():
@@ -27,12 +32,16 @@ func get_input():
 	
 	#mouse clicks
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
-		ammo -= 1
-		ammo_counter.text = "AMMO: " + str(ammo) + "/15"
+		mag_collection[mags-1] -= 1
+		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
 		var dir = get_global_mouse_position() - position
 		shoot.emit(position, dir)
 		can_shoot = false
-		$ShotTimer.start()
+		if mag_collection[mags-1] > 0:
+			$ShotTimer.start()
+		else:
+			$ReloadTimer.start()
+		
 
 func _physics_process(_delta):
 	#player movement
@@ -55,20 +64,38 @@ func _physics_process(_delta):
 	else:
 		$AnimatedSprite2D.stop()
 		$AnimatedSprite2D.frame = 1
-
+	
 func ammo_gained():
-	if ammo >= 15:
-		pass
-	else:
-		if ammo == 14:
-			ammo += 1
-			ammo_counter.text = "AMMO: " + str(ammo) + "/15"
+	if mags == 3:
+		if mag_collection[mags-1] == 15:
+			pass
 		else:
-			ammo += 2
-			ammo_counter.text = "AMMO: " + str(ammo) + "/15"
+			mag_collection[mags-1] += randi_range(1, 15-mag_collection[mags-1])
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+	elif mags > 0 and mags < 3:
+		mag_collection[mags-1] += randi_range(1,15)
+		if mag_collection[mags-1] > 15:
+			mag_collection[mags] = mag_collection[mags-1] - 15
+			mag_collection[mags-1] = 15
+			mags += 1
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+		else:
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+	elif mags == 0:
+		mags += 1
+		mag_collection[mags-1] += randi_range(1, 15)
+		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+		can_shoot = true
 
 func _on_shot_timer_timeout():
-	if ammo > 0:
+	can_shoot = true
+
+func _on_reload_timer_timeout():
+	mags -= 1
+	if mags > 0:
+		mag_collection[mags-1] = 15
+		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
 		can_shoot = true
 	else:
+		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
 		can_shoot = false

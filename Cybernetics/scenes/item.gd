@@ -1,8 +1,11 @@
 extends Area2D
 
 @onready var main = get_node("/root/Main")
+@onready var player = get_node("/root/Main/Player")
 @onready var health_bar = get_node("/root/Main/UI/HealthBar")
 @onready var ammo_counter = get_node("/root/Main/UI/AmmoCounter/AmmoLabel")
+@onready var reload_timer = get_node("/root/Main/Player/ReloadTimer")
+@onready var shot_timer = get_node("/root/Main/Player/ShotTimer")
 
 var item_type : int # 0: health, 1: ammo
 
@@ -16,15 +19,20 @@ func _ready():
 	$Sprite2D.texture = textures[item_type]
 
 func _on_body_entered(body):
-	#Health
 	if item_type == 0:
-		if main.health != 100:
-			main.health += 10
-			health_bar.value = main.health
+		if main.health < 100:
+			main.health += randi_range(10, 75)
+			if main.health >= 100:
+				main.health == 100
+				health_bar.value = main.health
+			else:
+				health_bar.value = main.health
+			queue_free()
 		else:
 			pass
-	#Ammo
 	elif item_type == 1:
-		body.ammo_gained()
-	#Delete item
-	queue_free()
+		if reload_timer.is_stopped() == true and shot_timer.is_stopped() == true and player.mag_collection[2] < 15:
+			body.ammo_gained()
+			queue_free()
+		else:
+			pass
