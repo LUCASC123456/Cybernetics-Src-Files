@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bamn4ssgqwx4c"]
+[gd_scene load_steps=4 format=3 uid="uid://bamn4ssgqwx4c"]
+
+[ext_resource type="Script" path="res://scenes/ui.gd" id="1_jivp1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ts838"]
 bg_color = Color(0, 0, 0, 0.65098)
@@ -7,6 +9,7 @@ bg_color = Color(0, 0, 0, 0.65098)
 bg_color = Color(0.905254, 0, 0.0149213, 1)
 
 [node name="UI" type="CanvasLayer"]
+script = ExtResource("1_jivp1")
 
 [node name="AmmoCounter" type="Panel" parent="."]
 offset_left = 531.0
@@ -45,3 +48,13 @@ theme_override_styles/background = SubResource("StyleBoxFlat_ts838")
 theme_override_styles/fill = SubResource("StyleBoxFlat_u1n4b")
 value = 100.0
 show_percentage = false
+
+[node name="PauseButton" type="Button" parent="."]
+offset_left = 50.0
+offset_top = 611.0
+offset_right = 114.0
+offset_bottom = 673.0
+text = "PAUSE"
+
+[connection signal="mouse_entered" from="PauseButton" to="." method="_on_pause_button_mouse_entered"]
+[connection signal="mouse_exited" from="PauseButton" to="." method="_on_pause_button_mouse_exited"]

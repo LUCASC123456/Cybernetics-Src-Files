@@ -8,6 +8,8 @@ var enemies_left : int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$UI.hide()
+	$PauseScreen.hide()
 	$GameOver.hide()
 	$MainMenu.show()
 	$MainMenu/PlayButton.pressed.connect(new_game)
@@ -26,10 +28,20 @@ func new_game():
 	$MainMenu.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
 	get_tree().paused = true
 	$RestartTimer.start()
+
+func pause():
+	get_tree().paused = true
+	$PauseScreen.show()
+	$PauseScreen/ResumeButton.pressed.connect(resume)
+	$PauseScreen/ExitButton.pressed.connect(_ready)
+	
+func resume():
+	get_tree().paused = false
+	$PauseScreen.hide()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	pass
+	$UI/PauseButton.pressed.connect(pause)
 
 func _on_enemy_spawner_hit_p():
 	health -= randi_range(10, 30)
@@ -45,8 +57,8 @@ func _on_enemy_killed():
 	if enemies_left <= 0:
 		get_tree().paused = true
 		$GameOver.show()
-		$GameOver/ExitToMainMenuButton.pressed.connect(_ready)
+		$GameOver/ExitButton.pressed.connect(_ready)
 
 func _on_restart_timer_timeout():
+	$UI.show()
 	get_tree().paused = false
-

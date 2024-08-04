@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bobem383lawow"]
+[gd_scene load_steps=11 format=3 uid="uid://bobem383lawow"]
 
 [ext_resource type="PackedScene" uid="uid://caullttnbvnfk" path="res://scenes/world.tscn" id="1_omqkc"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_tm84j"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://d27us872t4jwm" path="res://scenes/bullet.tscn" id="5_nuxkt"]
 [ext_resource type="PackedScene" uid="uid://bamn4ssgqwx4c" path="res://scenes/ui.tscn" id="7_bcf5h"]
 [ext_resource type="PackedScene" uid="uid://c3vfi2w4cr36" path="res://scenes/main_menu.tscn" id="9_nogpj"]
+[ext_resource type="PackedScene" uid="uid://c8fcto6d2woq" path="res://scenes/pause_screen.tscn" id="10_lltoc"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_tm84j")
@@ -29,12 +30,16 @@ process_mode = 2
 one_shot = true
 
 [node name="UI" parent="." instance=ExtResource("7_bcf5h")]
+visible = false
 
 [node name="GameOver" parent="." instance=ExtResource("2_mcsw5")]
 process_mode = 2
 visible = false
 
 [node name="MainMenu" parent="." instance=ExtResource("9_nogpj")]
+
+[node name="PauseScreen" parent="." instance=ExtResource("10_lltoc")]
+visible = false
 
 [connection signal="enemy_killed" from="." to="." method="_on_enemy_killed"]
 [connection signal="shoot" from="Player" to="BulletManager" method="_on_player_shoot"]

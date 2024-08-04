@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @onready var ammo_counter = get_node("/root/Main/UI/AmmoCounter/AmmoLabel")
+@onready var UI = get_node("/root/Main/UI")
 
 signal shoot
 
@@ -31,7 +32,7 @@ func get_input():
 	velocity = input_dir.normalized() * speed
 	
 	#mouse clicks
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot and UI.entered == false:
 		mag_collection[mags-1] -= 1
 		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
 		var dir = get_global_mouse_position() - position
