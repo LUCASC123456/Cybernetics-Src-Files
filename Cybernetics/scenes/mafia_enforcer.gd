@@ -8,6 +8,7 @@ var item_scene := preload("res://scenes/item.tscn")
 signal hit_player
 
 var alive : bool
+var health : int
 var entered : bool
 var speed : int = 100
 var direction : Vector2
@@ -16,6 +17,7 @@ const BASIC_DROP_CHANCE : float = 0.8
 func _ready():
 	var screen_rect = get_viewport_rect()
 	alive = true
+	health = 100
 	entered = false
 	#pick direction for the entrance
 	var dist = screen_rect.get_center() - position
@@ -47,6 +49,7 @@ func die():
 	alive = false
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"
+	$EnemyHealthBar.hide()
 	get_parent().enemy_killed.emit()
 	if randf() <= BASIC_DROP_CHANCE:
 		drop_item()
