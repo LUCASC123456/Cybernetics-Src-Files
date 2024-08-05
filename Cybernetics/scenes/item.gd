@@ -23,7 +23,7 @@ func _on_body_entered(body):
 		if main.health < 100:
 			main.health += randi_range(10, 75)
 			if main.health >= 100:
-				main.health == 100
+				main.health = 100
 				health_bar.value = main.health
 			else:
 				health_bar.value = main.health

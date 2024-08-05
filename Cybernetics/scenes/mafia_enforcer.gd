@@ -65,4 +65,15 @@ func _on_entrance_timer_timeout():
 	entered = true
 
 func _on_area_2d_body_entered(_body):
+	if alive == true:
+		hit_player.emit()
+		$HitTimer.start()
+	else:
+		pass
+
+func _on_hit_timer_timeout():
 	hit_player.emit()
+
+
+func _on_area_2d_body_exited(_body):
+	$HitTimer.stop()

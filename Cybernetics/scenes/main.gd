@@ -12,7 +12,6 @@ func _ready():
 	$PauseScreen.hide()
 	$GameOver.hide()
 	$MainMenu.show()
-	$MainMenu/PlayButton.pressed.connect(new_game)
 	
 func new_game():
 	max_enemies = 10
@@ -32,16 +31,14 @@ func new_game():
 func pause():
 	get_tree().paused = true
 	$PauseScreen.show()
-	$PauseScreen/ResumeButton.pressed.connect(resume)
-	$PauseScreen/ExitButton.pressed.connect(_ready)
-	
+
 func resume():
 	get_tree().paused = false
 	$PauseScreen.hide()
 	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+# Called every frame. 'delta' is the elapsed time since the previous frame
 func _process(_delta):
-	$UI/PauseButton.pressed.connect(pause)
+	pass
 
 func _on_enemy_spawner_hit_p():
 	health -= randi_range(10, 30)
@@ -49,7 +46,6 @@ func _on_enemy_spawner_hit_p():
 	if health <= 0 and $UI/HealthBar.value <= 0:
 		get_tree().paused = true
 		$GameOver.show()
-		$GameOver/ExitButton.pressed.connect(_ready)
 
 func _on_enemy_killed():
 	enemies_left -= 1
@@ -57,7 +53,6 @@ func _on_enemy_killed():
 	if enemies_left <= 0:
 		get_tree().paused = true
 		$GameOver.show()
-		$GameOver/ExitButton.pressed.connect(_ready)
 
 func _on_restart_timer_timeout():
 	$UI.show()
