@@ -21,7 +21,7 @@ bg_color = Color(0.374139, 0.374139, 0.374139, 1)
 process_mode = 2
 script = ExtResource("1_ui1xq")
 
-[node name="Background2" type="Panel" parent="."]
+[node name="Background3" type="Panel" parent="."]
 offset_right = 768.0
 offset_bottom = 768.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_ga2v7")

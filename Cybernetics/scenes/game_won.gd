@@ -2,9 +2,11 @@ extends CanvasLayer
 
 @onready var main = get_node("/root/Main")
 
+var credits_earned : int
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	credits_earned = 0
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
