@@ -5,7 +5,10 @@ extends Area2D
 @onready var health_bar = get_node("/root/Main/UI/HealthBar")
 @onready var ammo_counter = get_node("/root/Main/UI/AmmoCounter/AmmoLabel")
 @onready var reload_timer = get_node("/root/Main/Player/ReloadTimer")
-@onready var shot_timer = get_node("/root/Main/Player/ShotTimer")
+@onready var shot_timer_pistol = get_node("/root/Main/Player/ShotTimerPistol")
+@onready var shot_timer_smg = get_node("/root/Main/Player/ShotTimerSMG")
+@onready var shot_timer_lmg = get_node("/root/Main/Player/ShotTimerLMG")
+@onready var shot_timer_ar = get_node("/root/Main/Player/ShotTimerAR")
 
 var item_type : int # 0: health, 1: ammo
 
@@ -31,8 +34,27 @@ func _on_body_entered(body):
 		else:
 			pass
 	elif item_type == 1:
-		if reload_timer.is_stopped() == true and shot_timer.is_stopped() == true and player.mag_collection[2] < 15:
-			body.ammo_gained()
-			queue_free()
-		else:
-			pass
+		if player.selected_gun == "PISTOL":
+			if reload_timer.is_stopped() == true and shot_timer_pistol.is_stopped() == true and player.mag_collection[2] < 15:
+				body.ammo_gained()
+				queue_free()
+			else:
+				pass
+		elif player.selected_gun == "SMG":
+			if reload_timer.is_stopped() == true and shot_timer_smg.is_stopped() == true and player.mag_collection[2] < 18:
+				body.ammo_gained()
+				queue_free()
+			else:
+				pass
+		elif player.selected_gun == "LMG":
+			if reload_timer.is_stopped() == true and shot_timer_lmg.is_stopped() == true and player.mag_collection[2] < 50:
+				body.ammo_gained()
+				queue_free()
+			else:
+				pass
+		elif player.selected_gun == "AR":
+			if reload_timer.is_stopped() == true and shot_timer_ar.is_stopped() == true and player.mag_collection[2] < 30:
+				body.ammo_gained()
+				queue_free()
+			else:
+				pass

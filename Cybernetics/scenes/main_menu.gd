@@ -1,16 +1,37 @@
 extends CanvasLayer
 
 @onready var main = get_node("/root/Main")
+@onready var main_menu = get_node("/root/Main/MainMenu")
+@onready var market = get_node("/root/Main/MarketUI")
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+var save_path = "user://save"
 
+var store = {
+	"bought" : [true, false, false, false],
+	"selected" : 0,
+}
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	pass
-
+var credits = 0
 
 func _on_play_button_pressed():
 	main.new_game()
+
+func save_data():
+	var file = FileAccess.open(save_path, FileAccess.WRITE)
+	file.store_var(credits)
+	file.store_var(store)
+
+func load_data():
+	if FileAccess.file_exists(save_path):
+		var file = FileAccess.open(save_path, FileAccess.READ)
+		credits = file.get_var(credits)
+		store = file.get_var()
+	else:
+		credits = 0
+		
+
+func _on_shop_button_pressed():
+	print(store.selected)
+	main_menu.hide()
+	market.show()
+	market.get_child(5).text = "CREDITS AVAILABLE: " + str(main_menu.credits)

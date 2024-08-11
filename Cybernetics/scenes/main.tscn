@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bobem383lawow"]
+[gd_scene load_steps=14 format=3 uid="uid://bobem383lawow"]
 
 [ext_resource type="PackedScene" uid="uid://caullttnbvnfk" path="res://scenes/world.tscn" id="1_omqkc"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_tm84j"]
@@ -11,6 +11,8 @@
 [ext_resource type="PackedScene" uid="uid://c3vfi2w4cr36" path="res://scenes/main_menu.tscn" id="9_nogpj"]
 [ext_resource type="PackedScene" uid="uid://c8fcto6d2woq" path="res://scenes/pause_screen.tscn" id="10_lltoc"]
 [ext_resource type="PackedScene" uid="uid://cs6ky3u2k6bjh" path="res://scenes/game_won.tscn" id="11_apbxy"]
+[ext_resource type="PackedScene" uid="uid://re6s5jcw6eiw" path="res://scenes/market_ui.tscn" id="12_rnwhq"]
+[ext_resource type="PackedScene" uid="uid://3k3j8g2awwi1" path="res://scenes/not_enough_credits.tscn" id="13_en3i7"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_tm84j")
@@ -38,6 +40,7 @@ process_mode = 2
 visible = false
 
 [node name="MainMenu" parent="." instance=ExtResource("9_nogpj")]
+process_mode = 2
 
 [node name="PauseScreen" parent="." instance=ExtResource("10_lltoc")]
 visible = false
@@ -48,7 +51,15 @@ visible = false
 
 [node name="CreditTimer" type="Timer" parent="."]
 
+[node name="MarketUI" parent="." instance=ExtResource("12_rnwhq")]
+visible = false
+
+[node name="NotEnoughCredits" parent="." instance=ExtResource("13_en3i7")]
+visible = false
+
 [connection signal="enemy_killed" from="." to="." method="_on_enemy_killed"]
+[connection signal="tree_entered" from="." to="." method="_on_tree_entered"]
+[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
 [connection signal="shoot" from="Player" to="BulletManager" method="_on_player_shoot"]
 [connection signal="hit_p" from="EnemySpawner" to="." method="_on_enemy_spawner_hit_p"]
 [connection signal="timeout" from="RestartTimer" to="." method="_on_restart_timer_timeout"]

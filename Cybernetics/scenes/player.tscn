@@ -104,12 +104,28 @@ drag_vertical_enabled = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ck7nk")
 
-[node name="ShotTimer" type="Timer" parent="."]
+[node name="ShotTimerPistol" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="ShotTimerSMG" type="Timer" parent="."]
+wait_time = 0.075
+one_shot = true
+
+[node name="ShotTimerLMG" type="Timer" parent="."]
+wait_time = 0.06
+one_shot = true
+
+[node name="ShotTimerAR" type="Timer" parent="."]
+wait_time = 0.075
 one_shot = true
 
 [node name="ReloadTimer" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
 
-[connection signal="timeout" from="ShotTimer" to="." method="_on_shot_timer_timeout"]
+[connection signal="timeout" from="ShotTimerPistol" to="." method="_on_shot_timer_pistol_timeout"]
+[connection signal="timeout" from="ShotTimerSMG" to="." method="_on_shot_timer_smg_timeout"]
+[connection signal="timeout" from="ShotTimerLMG" to="." method="_on_shot_timer_lmg_timeout"]
+[connection signal="timeout" from="ShotTimerAR" to="." method="_on_shot_timer_ar_timeout"]
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]

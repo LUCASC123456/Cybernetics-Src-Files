@@ -1,0 +1,225 @@
+[gd_scene load_steps=9 format=3 uid="uid://re6s5jcw6eiw"]
+
+[ext_resource type="Script" path="res://scenes/market_ui.gd" id="1_c85yt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eaugh"]
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wiysv"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pw0sc"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toyey"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0bcyo"]
+bg_color = Color(0.217101, 0.217101, 0.217101, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ttu2p"]
+bg_color = Color(0.374139, 0.374139, 0.374139, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iim4a"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="MarketUI" type="CanvasLayer"]
+process_mode = 2
+script = ExtResource("1_c85yt")
+
+[node name="Background5" type="Panel" parent="."]
+offset_right = 768.0
+offset_bottom = 768.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_eaugh")
+
+[node name="SubBackground1" type="Panel" parent="."]
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 766.0
+offset_bottom = 103.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wiysv")
+
+[node name="Market" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -383.0
+offset_top = -384.0
+offset_right = 382.0
+offset_bottom = -281.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 75
+text = "MARKET"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubBackground2" type="Panel" parent="."]
+offset_left = 2.0
+offset_top = 642.0
+offset_right = 766.0
+offset_bottom = 766.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pw0sc")
+
+[node name="ExitButton" type="Button" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -369.0
+offset_top = -98.0
+offset_right = -160.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_toyey")
+theme_override_styles/hover = SubResource("StyleBoxFlat_0bcyo")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ttu2p")
+text = "EXIT
+"
+
+[node name="CreditsAvailable" type="Label" parent="." groups=["Persist"]]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 98.0
+offset_top = 311.0
+offset_right = 367.0
+offset_bottom = 346.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+text = "CREDITS AVAILABLE: 0"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 103.0
+offset_right = 768.0
+offset_bottom = 642.0
+
+[node name="Button1" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 30.0
+offset_right = 378.0
+offset_bottom = 264.0
+text = "EQUIPPED"
+
+[node name="Label1" type="Label" parent="Control/Button1"]
+layout_mode = 0
+offset_right = 346.0
+offset_bottom = 23.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
+text = "PISTOL"
+horizontal_alignment = 1
+
+[node name="StatsLabel1" type="Label" parent="Control/Button1"]
+layout_mode = 0
+offset_top = 23.0
+offset_right = 111.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 10
+text = "FIRERATE: 300 RPM
+BULLET SPEED: 750 FPS
+ROUNDS PER MAG: 15
+DAMAGE: 30-50"
+
+[node name="Button2" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 390.0
+offset_top = 30.0
+offset_right = 736.0
+offset_bottom = 264.0
+text = "COST: 400 CREDITS"
+
+[node name="LabeL2" type="Label" parent="Control/Button2"]
+layout_mode = 0
+offset_right = 346.0
+offset_bottom = 23.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
+text = "SMG"
+horizontal_alignment = 1
+
+[node name="StatsLabel2" type="Label" parent="Control/Button2"]
+layout_mode = 0
+offset_top = 23.0
+offset_right = 111.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 10
+text = "FIRERATE: 800 RPM
+BULLET SPEED: 850 FPS
+ROUNDS PER MAG: 18
+DAMAGE: 40-60"
+
+[node name="Button3" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 275.0
+offset_right = 378.0
+offset_bottom = 509.0
+text = "COST: 1000 CREDITS"
+
+[node name="Label3" type="Label" parent="Control/Button3"]
+layout_mode = 0
+offset_right = 346.0
+offset_bottom = 23.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
+text = "LMG"
+horizontal_alignment = 1
+
+[node name="StatsLabel3" type="Label" parent="Control/Button3"]
+layout_mode = 0
+offset_top = 23.0
+offset_right = 111.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 10
+text = "FIRERATE: 1000 RPM
+BULLET SPEED: 1050 FPS
+ROUNDS PER MAG: 50
+DAMAGE: 50-70"
+
+[node name="Button4" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 390.0
+offset_top = 275.0
+offset_right = 736.0
+offset_bottom = 509.0
+text = "COST: 600 CREDITS"
+
+[node name="Label4" type="Label" parent="Control/Button4"]
+layout_mode = 0
+offset_right = 346.0
+offset_bottom = 23.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
+text = "AR
+"
+horizontal_alignment = 1
+
+[node name="StatsLabel4" type="Label" parent="Control/Button4"]
+layout_mode = 0
+offset_top = 23.0
+offset_right = 111.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 10
+text = "FIRERATE: 800 RPM
+BULLET SPEED: 950 FPS
+ROUNDS PER MAG: 30
+DAMAGE: 60-80"
+
+[connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="Control/Button1" to="." method="_on_button_1_pressed"]
+[connection signal="pressed" from="Control/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="Control/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="Control/Button4" to="." method="_on_button_4_pressed"]

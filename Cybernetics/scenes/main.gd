@@ -7,12 +7,14 @@ var health : int
 var enemies_left : int
 var random : int
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
+	get_tree().paused = true
 	$UI.hide()
 	$PauseScreen.hide()
 	$GameOver.hide()
 	$GameWon.hide()
+	$MarketUI.hide()
+	$NotEnoughCredits.hide()
 	$MainMenu.show()
 	
 func new_game():
@@ -27,7 +29,6 @@ func new_game():
 	$UI/HealthBar.value = health
 	$MainMenu.hide()
 	$MainMenu.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
-	get_tree().paused = true
 	$RestartTimer.start()
 
 func pause():
@@ -86,3 +87,9 @@ func _on_credit_timer_timeout():
 			pass
 	else:
 		pass
+
+func _on_tree_entered():
+	$MainMenu.load_data()
+
+func _on_tree_exited():
+	$MainMenu.save_data()
