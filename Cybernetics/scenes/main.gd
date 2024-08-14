@@ -7,7 +7,15 @@ var health : int
 var enemies_left : int
 var random : int
 
+var enemy_level_count = [20, 30, 40, 50]
+var levels = [true, false, false, false, false]
+
 func _ready():
+	for i in range(0, len(levels)):
+		if i == 0:
+			levels[i] = true
+		else:
+			levels[i] = false
 	get_tree().paused = true
 	$UI.hide()
 	$PauseScreen.hide()
@@ -16,13 +24,22 @@ func _ready():
 	$MarketUI.hide()
 	$NotEnoughCredits.hide()
 	$MainMenu.show()
+
+func sum(array):
+	var result = 0
+	for i in array:
+		result += i
+	return result
 	
 func new_game():
-	max_enemies = 10
+	max_enemies = sum(enemy_level_count)
 	health = 100
 	enemies_left = max_enemies
 	$Player.reset()
-	get_tree().call_group("enemies", "queue_free")
+	get_tree().call_group("enemies_level_1", "queue_free")
+	get_tree().call_group("enemies_level_2", "queue_free")
+	get_tree().call_group("enemies_level_3", "queue_free")
+	get_tree().call_group("enemies_level_4", "queue_free")
 	get_tree().call_group("bullets", "queue_free")
 	get_tree().call_group("items", "queue_free")
 	$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)

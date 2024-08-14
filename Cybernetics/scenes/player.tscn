@@ -82,6 +82,7 @@ size = Vector2(50, 50)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 1
+position = Vector2(384, 384)
 collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_j7i8d")
@@ -93,8 +94,8 @@ animation = &"walk7"
 [node name="Camera2D" type="Camera2D" parent="AnimatedSprite2D"]
 limit_left = 0
 limit_top = 0
-limit_right = 768
-limit_bottom = 797
+limit_right = 2000
+limit_bottom = 2000
 limit_smoothed = true
 position_smoothing_enabled = true
 rotation_smoothing_enabled = true

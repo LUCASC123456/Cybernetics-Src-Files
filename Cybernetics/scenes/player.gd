@@ -6,12 +6,14 @@ extends CharacterBody2D
 @onready var game_won = get_node("/root/Main/GameWon")
 @onready var main_menu = get_node("/root/Main/MainMenu")
 @onready var market = get_node("/root/Main/MarketUI")
+@onready var world = get_node("/root/Main/World")
 
 signal shoot
 
 var speed : int
 var can_shoot : bool
-var screen_size : Vector2
+var screen_size_max : Vector2
+var screen_size_min : Vector2
 var mags : int
 var selected_gun : String
 var guns = [
@@ -24,11 +26,14 @@ var guns = [
 var mag_collection = [0,0,0]
 
 func _ready():
-	screen_size = get_viewport_rect().size
 	reset()
 
 func reset():
-	position = screen_size/2
+	screen_size_min.x = 0
+	screen_size_min.y = 0
+	screen_size_max.x = 768
+	screen_size_max.y = 768
+	position = screen_size_max/2
 	main_menu.load_data()
 	selected_gun = guns[main_menu.store.selected]
 	speed = 200
@@ -146,7 +151,66 @@ func _physics_process(_delta):
 	move_and_slide()
 	
 	#limit movement to window size
-	position = position.clamp(Vector2.ZERO, screen_size)
+	if main.levels[0] == true:
+		screen_size_min.x = 0
+		screen_size_min.y = 0
+		screen_size_max.x = 868
+		screen_size_max.y = 768
+		position = position.clamp(screen_size_min, screen_size_max)
+		$AnimatedSprite2D/Camera2D.limit_left = 0
+		$AnimatedSprite2D/Camera2D.limit_top = 0
+		$AnimatedSprite2D/Camera2D.limit_right = 1536
+		$AnimatedSprite2D/Camera2D.limit_bottom = 768
+	elif main.levels[1] == true:
+		screen_size_min.x = 1052
+		screen_size_min.y = 0
+		screen_size_max.x = 2788
+		screen_size_max.y = 768
+		position = position.clamp(screen_size_min, screen_size_max)
+		$AnimatedSprite2D/Camera2D.limit_left = 384
+		$AnimatedSprite2D/Camera2D.limit_top = 0
+		$AnimatedSprite2D/Camera2D.limit_right = 3456
+		$AnimatedSprite2D/Camera2D.limit_bottom = 768
+	elif main.levels[2] == true:
+		screen_size_min.x = 1680
+		screen_size_min.y = 812
+		screen_size_max.x = 4752
+		screen_size_max.y = 2452
+		position = position.clamp(screen_size_min, screen_size_max)
+		$AnimatedSprite2D/Camera2D.limit_left = 1680
+		$AnimatedSprite2D/Camera2D.limit_top = 144
+		$AnimatedSprite2D/Camera2D.limit_right = 4752
+		$AnimatedSprite2D/Camera2D.limit_bottom = 3120
+	elif main.levels[3] == true:
+		screen_size_min.x = 5856
+		screen_size_min.y = 912
+		screen_size_max.x = 8400
+		screen_size_max.y = 2452
+		position = position.clamp(screen_size_min, screen_size_max)
+		$AnimatedSprite2D/Camera2D.limit_left = 5856
+		$AnimatedSprite2D/Camera2D.limit_top = 912
+		$AnimatedSprite2D/Camera2D.limit_right = 8400
+		$AnimatedSprite2D/Camera2D.limit_bottom = 3120
+	elif main.levels[4] == true:
+		screen_size_min.x = 7008
+		screen_size_min.y = 2924
+		screen_size_max.x = 9216
+		screen_size_max.y = 6768
+		position = position.clamp(screen_size_min, screen_size_max)
+		$AnimatedSprite2D/Camera2D.limit_left = 7008
+		$AnimatedSprite2D/Camera2D.limit_top = 2256
+		$AnimatedSprite2D/Camera2D.limit_right = 9216
+		$AnimatedSprite2D/Camera2D.limit_bottom = 6768
+	elif main.levels[0] == false and main.levels[1] == false and main.levels[2] == false and main.levels[3] == false and main.levels[4] == false:
+		screen_size_min.x = 0
+		screen_size_min.y = 0
+		screen_size_max.x = 9216
+		screen_size_max.y = 6768
+		position = position.clamp(screen_size_min, screen_size_max)
+		$AnimatedSprite2D/Camera2D.limit_left = 0
+		$AnimatedSprite2D/Camera2D.limit_top = 0
+		$AnimatedSprite2D/Camera2D.limit_right = 9216
+		$AnimatedSprite2D/Camera2D.limit_bottom = 6768
 	
 	#player rotation
 	var mouse = get_local_mouse_position()
