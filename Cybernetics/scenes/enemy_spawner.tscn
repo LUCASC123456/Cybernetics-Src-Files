@@ -6,7 +6,10 @@
 script = ExtResource("1_pqikd")
 
 [node name="Timer" type="Timer" parent="."]
-autostart = true
+
+[node name="Timer2" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
 
 [node name="Level1" type="Node2D" parent="."]
 
@@ -118,3 +121,4 @@ position = Vector2(8452, 1674)
 [node name="Level5" type="Node2D" parent="."]
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="Timer2" to="." method="_on_timer_2_timeout"]

@@ -26,17 +26,17 @@ var guns = [
 var mag_collection = [0,0,0]
 
 func _ready():
-	reset()
-
-func reset():
 	screen_size_min.x = 0
 	screen_size_min.y = 0
 	screen_size_max.x = 768
 	screen_size_max.y = 768
 	position = screen_size_max/2
 	main_menu.load_data()
+	reset()
+
+func reset():
 	selected_gun = guns[main_menu.store.selected]
-	speed = 200
+	speed = 250
 	mags = 3
 	if selected_gun == "PISTOL":
 		mag_collection[0] = 15
@@ -84,6 +84,7 @@ func get_input():
 				$ShotTimerPistol.start()
 			else:
 				$ReloadTimer.start()
+				ammo_counter.text = "RELOADING"
 				
 	elif selected_gun == "SMG":
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot and UI.entered == false:
@@ -104,6 +105,7 @@ func get_input():
 				$ShotTimerSMG.start()
 			else:
 				$ReloadTimer.start()
+				ammo_counter.text = "RELOADING"
 	
 	elif selected_gun == "LMG":
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot and UI.entered == false:
@@ -124,6 +126,7 @@ func get_input():
 				$ShotTimerLMG.start()
 			else:
 				$ReloadTimer.start()
+				ammo_counter.text = "RELOADING"
 	
 	elif selected_gun == "AR":
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot and UI.entered == false:
@@ -144,6 +147,7 @@ func get_input():
 				$ShotTimerAR.start()
 			else:
 				$ReloadTimer.start()
+				ammo_counter.text = "RELOADING"
 
 func _physics_process(_delta):
 	#player movement

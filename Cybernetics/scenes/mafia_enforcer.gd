@@ -10,7 +10,7 @@ signal hit_player
 var alive : bool
 var health : int
 var entered : bool
-var speed : int = 100
+var speed : int = 150
 var direction : Vector2
 const BASIC_DROP_CHANCE : float = 0.75
 
@@ -50,6 +50,7 @@ func die():
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"
 	$EnemyHealthBar.hide()
+	$HitTimer.stop()
 	get_parent().enemy_killed.emit()
 	if randf() <= BASIC_DROP_CHANCE:
 		drop_item()

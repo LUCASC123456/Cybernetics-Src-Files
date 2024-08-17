@@ -11,6 +11,7 @@ extends Area2D
 @onready var shot_timer_ar = get_node("/root/Main/Player/ShotTimerAR")
 
 var item_type : int # 0: health, 1: ammo
+var entered : bool
 
 #Basic item drops
 var health_box = preload("res://assets/Items/SimpleHealth.png")
@@ -19,9 +20,15 @@ var textures = [health_box, ammo_box]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	entered = false
 	$Sprite2D.texture = textures[item_type]
 
+func _process(_delta):
+	if entered == true:
+		_on_body_entered(player)
+
 func _on_body_entered(body):
+	entered = true
 	if item_type == 0:
 		if main.health < 100:
 			main.health += randi_range(10, 75)
@@ -58,3 +65,7 @@ func _on_body_entered(body):
 				queue_free()
 			else:
 				pass
+		
+
+func _on_body_exited(_body):
+	entered = false

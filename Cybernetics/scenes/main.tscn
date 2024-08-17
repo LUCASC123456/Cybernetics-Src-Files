@@ -40,6 +40,7 @@ visible = false
 
 [node name="MainMenu" parent="." instance=ExtResource("9_nogpj")]
 process_mode = 2
+visible = false
 
 [node name="PauseScreen" parent="." instance=ExtResource("10_lltoc")]
 visible = false
