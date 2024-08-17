@@ -12,6 +12,16 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	$PrimaryWeaponSelection.text = "PRIMARY: " + str(player.selected_gun)
+	if main.levels[0] == true:
+		$RoomCounter/RoomLabel.text = "ROOM: 1/5"
+	elif main.levels[1] == true:
+		$RoomCounter/RoomLabel.text = "ROOM: 2/5"
+	elif main.levels[2] == true:
+		$RoomCounter/RoomLabel.text = "ROOM: 3/5"
+	elif main.levels[3] == true:
+		$RoomCounter/RoomLabel.text = "ROOM: 4/5"
+	elif main.levels[4] == true:
+		$RoomCounter/RoomLabel.text = "ROOM: 5/5"
 
 func _on_pause_button_mouse_entered():
 	entered = true

@@ -103,13 +103,18 @@ func _on_timer_2_timeout():
 			elif i.position.y > 695:
 				i.position.x = randi_range(313, 355)
 				i.position.y = 645
+			else:
+				pass
 			
-			if player.position.y < 73:
-				player.position.x = randi_range(313, 455)
-				player.position.y = 123
-			elif player.position.y > 695:
-				player.position.x = randi_range(313, 355)
-				player.position.y = 645
+		if player.position.y < 73:
+			player.position.x = randi_range(313, 455)
+			player.position.y = 123
+		elif player.position.y > 695:
+			player.position.x = randi_range(313, 355)
+			player.position.y = 645
+		else:
+			pass
+		
 	elif main.levels[1] == true:
 		for i in range(4, len(main.x_coordinates_level_2)-4):
 			main.get_child(0).set_cell(1, Vector2i(main.x_coordinates_level_2[i], main.y_coordinates_level_2[i]), 0, Vector2i(1,1), 0)
@@ -128,6 +133,8 @@ func _on_timer_2_timeout():
 				elif i.position.x > 2137 and i.position.x < 2279:
 					i.position.x = randi_range(2137, 2279)
 					i.position.y = 645
+			else:
+				pass
 				
 		if player.position.y < 73:
 			if player.position.x > 1561 and player.position.x < 1703:
@@ -143,6 +150,9 @@ func _on_timer_2_timeout():
 			elif player.position.x > 2137 and player.position.x < 2279:
 				player.position.x = randi_range(2137, 2279)
 				player.position.y = 645
+		else:
+			pass
+			
 	elif main.levels[2] == true:
 		for i in range(4, len(main.x_coordinates_level_3)-4):
 			main.get_child(0).set_cell(1, Vector2i(main.x_coordinates_level_3[i], main.y_coordinates_level_3[i]), 0, Vector2i(1,1), 0)
@@ -153,6 +163,8 @@ func _on_timer_2_timeout():
 			elif i.position.x > 4679:
 				i.position.x = 4629
 				i.position.y = randi_range(1561, 1703)
+			else:
+				pass
 					
 		if player.position.x < 1753:
 			player.position.x = 1803
@@ -160,6 +172,9 @@ func _on_timer_2_timeout():
 		elif player.position.x > 4679:
 			player.position.x = 4629
 			player.position.y = randi_range(1561, 1703)
+		else:
+			pass
+			
 	elif main.levels[3] == true:
 		for i in range(4, len(main.x_coordinates_level_4)-4):
 			main.get_child(0).set_cell(1, Vector2i(main.x_coordinates_level_4[i], main.y_coordinates_level_4[i]), 0, Vector2i(1,1), 0)
@@ -173,6 +188,8 @@ func _on_timer_2_timeout():
 			elif i.position.y < 985:
 				i.position.x = randi_range(6937, 7319)
 				i.position.y = 935
+			else:
+				pass
 			
 		if player.position.x < 5929:
 			player.position.x = 5979
@@ -183,3 +200,5 @@ func _on_timer_2_timeout():
 		elif player.position.y < 985:
 			player.position.x = randi_range(6937, 7319)
 			player.position.y = 935
+		else:
+			pass

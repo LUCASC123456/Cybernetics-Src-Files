@@ -42,22 +42,22 @@ func reset():
 		mag_collection[0] = 15
 		mag_collection[1] = 15
 		mag_collection[2] = 15
-		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
 	elif selected_gun == "SMG":
 		mag_collection[0] = 18
 		mag_collection[1] = 18
 		mag_collection[2] = 18
-		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 MAGS: " + str(mags) + "/3"
+		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
 	elif selected_gun == "LMG":
 		mag_collection[0] = 50
 		mag_collection[1] = 50
 		mag_collection[2] = 50
-		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 MAGS: " + str(mags) + "/3"
+		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 	elif selected_gun == "AR":
 		mag_collection[0] = 30
 		mag_collection[1] = 30
 		mag_collection[2] = 30
-		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 MAGS: " + str(mags) + "/3"
+		ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 	can_shoot = true
 
 func get_input():
@@ -76,7 +76,7 @@ func get_input():
 					pass
 			else:
 				pass
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
 			var dir = get_global_mouse_position() - position
 			shoot.emit(position, dir)
 			can_shoot = false
@@ -97,7 +97,7 @@ func get_input():
 					pass
 			else:
 				pass
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
 			var dir = get_global_mouse_position() - position
 			shoot.emit(position, dir)
 			can_shoot = false
@@ -118,7 +118,7 @@ func get_input():
 					pass
 			else:
 				pass
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 			var dir = get_global_mouse_position() - position
 			shoot.emit(position, dir)
 			can_shoot = false
@@ -139,7 +139,7 @@ func get_input():
 					pass
 			else:
 				pass
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 			var dir = get_global_mouse_position() - position
 			shoot.emit(position, dir)
 			can_shoot = false
@@ -237,20 +237,20 @@ func ammo_gained():
 				pass
 			else:
 				mag_collection[mags-1] += randi_range(1, 15-mag_collection[mags-1])
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
 		elif mags > 0 and mags < 3:
 			mag_collection[mags-1] += randi_range(1,15)
 			if mag_collection[mags-1] > 15:
 				mag_collection[mags] = mag_collection[mags-1] - 15
 				mag_collection[mags-1] = 15
 				mags += 1
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
 			else:
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
 		elif mags == 0:
 			mags += 1
 			mag_collection[mags-1] += randi_range(1, 15)
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
 			can_shoot = true
 
 	elif selected_gun == "SMG":
@@ -259,20 +259,20 @@ func ammo_gained():
 				pass
 			else:
 				mag_collection[mags-1] += randi_range(1, 18-mag_collection[mags-1])
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
 		elif mags > 0 and mags < 3:
 			mag_collection[mags-1] += randi_range(1,18)
 			if mag_collection[mags-1] > 18:
 				mag_collection[mags] = mag_collection[mags-1] - 18
 				mag_collection[mags-1] = 18
 				mags += 1
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
 			else:
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
 		elif mags == 0:
 			mags += 1
 			mag_collection[mags-1] += randi_range(1, 18)
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
 			can_shoot = true
 	elif selected_gun == "LMG":
 		if mags == 3:
@@ -280,20 +280,20 @@ func ammo_gained():
 				pass
 			else:
 				mag_collection[mags-1] += randi_range(1, 50-mag_collection[mags-1])
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 		elif mags > 0 and mags < 3:
 			mag_collection[mags-1] += randi_range(1,50)
 			if mag_collection[mags-1] > 50:
 				mag_collection[mags] = mag_collection[mags-1] - 50
 				mag_collection[mags-1] = 50
 				mags += 1
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 			else:
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 		elif mags == 0:
 			mags += 1
 			mag_collection[mags-1] += randi_range(1, 50)
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 			can_shoot = true
 	elif selected_gun == "AR":
 		if mags == 3:
@@ -301,20 +301,20 @@ func ammo_gained():
 				pass
 			else:
 				mag_collection[mags-1] += randi_range(1, 30-mag_collection[mags-1])
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 		elif mags > 0 and mags < 3:
 			mag_collection[mags-1] += randi_range(1,30)
 			if mag_collection[mags-1] > 30:
 				mag_collection[mags] = mag_collection[mags-1] - 30
 				mag_collection[mags-1] = 30
 				mags += 1
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 			else:
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 MAGS: " + str(mags) + "/3"
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 		elif mags == 0:
 			mags += 1
 			mag_collection[mags-1] += randi_range(1, 30)
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 			can_shoot = true
 
 func _on_reload_timer_timeout():
@@ -322,40 +322,40 @@ func _on_reload_timer_timeout():
 		mags -= 1
 		if mags > 0:
 			mag_collection[mags-1] = 15
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
 			can_shoot = true
 		else:
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
 			can_shoot = false
 			
 	elif selected_gun == "SMG":
 		mags -= 1
 		if mags > 0:
 			mag_collection[mags-1] = 18
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
 			can_shoot = true
 		else:
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
 			can_shoot = false
 			
 	elif selected_gun == "LMG":
 		mags -= 1
 		if mags > 0:
 			mag_collection[mags-1] = 50
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 			can_shoot = true
 		else:
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 			can_shoot = false
 			
 	elif selected_gun == "AR":
 		mags -= 1
 		if mags > 0:
 			mag_collection[mags-1] = 30
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 			can_shoot = true
 		else:
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 MAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 			can_shoot = false
 			
 	
