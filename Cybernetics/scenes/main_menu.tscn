@@ -78,5 +78,15 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_3f852")
 text = "MARKET
 "
 
+[node name="Label" type="Label" parent="."]
+offset_left = 43.0
+offset_top = 28.0
+offset_right = 146.0
+offset_bottom = 122.0
+text = "CONTROLS:
+WASD: UP, LEFT, DOWN RIGHT
+HOLD DOWN LEFT CLICK: SHOOT WEAPON
+"
+
 [connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="ShopButton" to="." method="_on_shop_button_pressed"]

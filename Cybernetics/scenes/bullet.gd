@@ -20,10 +20,8 @@ func _ready():
 func _process(delta):
 	position += speed * direction * delta
 
-
 func _on_timer_timeout():
 	queue_free()
-
 
 func _on_body_entered(body):
 	if body.name == "World":

@@ -79,7 +79,6 @@ func new_game():
 		health = 100
 		enemies_left = enemy_level_count[0]
 		$Player._ready()
-		print($Player/AnimatedSprite2D.position.x)
 		$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)
 		$UI/HealthBar.value = health
 		$MainMenu.hide()
@@ -168,28 +167,24 @@ func _on_enemy_killed():
 	if enemies_left <= 0:
 		if levels[0] == true:
 			$CreditTimer.stop()
-			$EnemySpawner/Timer.stop()
 			for i in range(8, len(x_coordinates_level_1)):
 				$World.set_cell(1, Vector2i(x_coordinates_level_1[i], y_coordinates_level_1[i]), 0, Vector2i(0,0), -1)
 			for i in range(0, len(x_coordinates_level_2)-20):
 				$World.set_cell(1, Vector2i(x_coordinates_level_2[i], y_coordinates_level_2[i]), 0, Vector2i(0,0), -1)
 		elif levels[1] == true:
 			$CreditTimer.stop()
-			$EnemySpawner/Timer.stop()
 			for i in range(20, len(x_coordinates_level_2)):
 				$World.set_cell(1, Vector2i(x_coordinates_level_2[i], y_coordinates_level_2[i]), 0, Vector2i(0,0), -1)
 			for i in range(0, len(x_coordinates_level_3)-12):
 				$World.set_cell(1, Vector2i(x_coordinates_level_3[i], y_coordinates_level_3[i]), 0, Vector2i(0,0), -1)
 		elif levels[2] == true: 
 			$CreditTimer.stop()
-			$EnemySpawner/Timer.stop()
 			for i in range(12, len(x_coordinates_level_3)):
 				$World.set_cell(1, Vector2i(x_coordinates_level_3[i], y_coordinates_level_3[i]), 0, Vector2i(0,0), -1)
 			for i in range(0, len(x_coordinates_level_4)-29):
 				$World.set_cell(1, Vector2i(x_coordinates_level_4[i], y_coordinates_level_4[i]), 0, Vector2i(0,0), -1)
 		elif levels[3] == true: 
 			$CreditTimer.stop()
-			$EnemySpawner/Timer.stop()
 			for i in range(29, len(x_coordinates_level_4)):
 				$World.set_cell(1, Vector2i(x_coordinates_level_4[i], y_coordinates_level_4[i]), 0, Vector2i(0,0), -1)
 			for i in range(0, len(x_coordinates_level_5)):
@@ -254,6 +249,13 @@ func _on_restart_timer_timeout():
 	elif levels[4] == true:
 		$EnemySpawner/Timer.start()
 		$CreditTimer.start()
+		for i in range(0, len(x_coordinates_level_5)):
+			$World.set_cell(1, Vector2i(x_coordinates_level_5[i], y_coordinates_level_5[i]), 0, Vector2i(0,0), 0)
+		if $Player.position.y < 3097:
+			$Player.position.x = 8112
+			$Player.position.y = 3147
+		else:
+			pass
 	else:
 		pass
 

@@ -6,6 +6,7 @@ extends Node2D
 signal hit_p
 
 var mafia_enforcer_scene := preload("res://scenes/mafia_enforcer.tscn")
+
 var spawn_points_level_1 := []
 var spawn_points_level_2 := []
 var spawn_points_level_3 := []
@@ -32,10 +33,10 @@ func _ready():
 			spawn_points_level_4.append(i)
 
 func _on_timer_timeout():
-	var enemies_level_1 = get_tree().get_nodes_in_group("enemies_level_1")
-	var enemies_level_2 = get_tree().get_nodes_in_group("enemies_level_2")
-	var enemies_level_3 = get_tree().get_nodes_in_group("enemies_level_3")
-	var enemies_level_4 = get_tree().get_nodes_in_group("enemies_level_4")
+	enemies_level_1 = get_tree().get_nodes_in_group("enemies_level_1")
+	enemies_level_2 = get_tree().get_nodes_in_group("enemies_level_2")
+	enemies_level_3 = get_tree().get_nodes_in_group("enemies_level_3")
+	enemies_level_4 = get_tree().get_nodes_in_group("enemies_level_4")
 	
 	if main.levels[0] == true:
 		if enemies_level_1.size() < get_parent().enemy_level_count[0]:
@@ -46,8 +47,8 @@ func _on_timer_timeout():
 			mafia_enforcer_level_1.hit_player.connect(hit)
 			main.add_child(mafia_enforcer_level_1)
 			mafia_enforcer_level_1.add_to_group("enemies_level_1")
-		
 		else:
+			$Timer.stop()
 			$Timer2.start()
 	
 	elif main.levels[1] == true:
@@ -59,8 +60,8 @@ func _on_timer_timeout():
 			mafia_enforcer_level_2.hit_player.connect(hit)
 			main.add_child(mafia_enforcer_level_2)
 			mafia_enforcer_level_2.add_to_group("enemies_level_2")
-	
 		else:
+			$Timer.stop()
 			$Timer2.start()
 			
 	elif main.levels[2] == true:
@@ -72,8 +73,8 @@ func _on_timer_timeout():
 			mafia_enforcer_level_3.hit_player.connect(hit)
 			main.add_child(mafia_enforcer_level_3)
 			mafia_enforcer_level_3.add_to_group("enemies_level_3")
-			
 		else:
+			$Timer.stop()
 			$Timer2.start()
 			
 	elif main.levels[3] == true:
@@ -86,6 +87,7 @@ func _on_timer_timeout():
 			main.add_child(mafia_enforcer_level_4)
 			mafia_enforcer_level_4.add_to_group("enemies_level_4")
 		else:
+			$Timer.stop()
 			$Timer2.start()
 			
 func hit():

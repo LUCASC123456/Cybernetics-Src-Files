@@ -2,6 +2,9 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
+@onready var nav_agent := $NavigationAgent2D as NavigationAgent2D
+
+@export var target: Node2D = null
 
 var item_scene := preload("res://scenes/item.tscn")
 
@@ -14,7 +17,9 @@ var speed : int = 150
 var direction : Vector2
 const BASIC_DROP_CHANCE : float = 0.75
 
-func _ready():
+func _ready() -> void:
+	target = player
+	make_path()
 	var screen_rect = get_viewport_rect()
 	alive = true
 	health = 100
@@ -31,11 +36,11 @@ func _ready():
 		direction.x = 0
 		direction.y = dist.y
 
-func _physics_process(_delta):
+func _physics_process(_delta: float) -> void:
 	if alive:
 		$AnimatedSprite2D.animation = "run"
 		if entered:
-			direction = (player.position - position)
+			direction = to_local(nav_agent.get_next_path_position())
 		direction = direction.normalized()
 		velocity = direction * speed 
 		move_and_slide()
@@ -44,9 +49,14 @@ func _physics_process(_delta):
 			$AnimatedSprite2D.flip_h = velocity.x < 0
 	else:
 		pass
-		
+
+func make_path() -> void:
+	nav_agent.target_position = target.global_position
+	
+
 func die():
 	alive = false
+	nav_agent.debug_enabled = false
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"
 	$EnemyHealthBar.hide()
@@ -77,3 +87,6 @@ func _on_hit_timer_timeout():
 
 func _on_area_2d_body_exited(_body):
 	$HitTimer.stop()
+
+func _on_track_timer_timeout():
+	make_path()
