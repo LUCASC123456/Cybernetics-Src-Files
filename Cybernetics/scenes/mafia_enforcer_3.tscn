@@ -1,0 +1,115 @@
+[gd_scene load_steps=11 format=3 uid="uid://b31soq3xpb5b0"]
+
+[ext_resource type="Script" path="res://scenes/mafia_enforcer_3.gd" id="1_bt5ui"]
+[ext_resource type="Texture2D" uid="uid://dg1afwego6qqx" path="res://assets/Enemies/MafiaEnforcer/SimpleEnemyDeath.png" id="2_54ikq"]
+[ext_resource type="Texture2D" uid="uid://0lsev4w7ddf5" path="res://assets/Enemies/MafiaEnforcer/SimpleEnemyIdle.png" id="3_y25fy"]
+[ext_resource type="Texture2D" uid="uid://drf7a8vq783ln" path="res://assets/Enemies/MafiaEnforcer/SimpleEnemyRun.png" id="4_5nj31"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sw2sp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_54ikq")
+}],
+"loop": true,
+"name": &"dead",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_y25fy")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_5nj31")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_e6pcq"]
+radius = 25.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4qxcd"]
+size = Vector2(50, 50)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h74u3"]
+bg_color = Color(0, 0, 0, 0.65098)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mk4m2"]
+bg_color = Color(0.905254, 0, 0.0149213, 1)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ac7i3"]
+radius = 1.0
+
+[node name="MafiaEnforcer3" type="CharacterBody2D" groups=["enemies", "mafia_enforcer_3"]]
+process_mode = 1
+z_index = 3
+scale = Vector2(1.5, 1.5)
+collision_layer = 4
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_bt5ui")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_index = 3
+sprite_frames = SubResource("SpriteFrames_sw2sp")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 3
+position = Vector2(-6.35783e-07, -6.35783e-07)
+shape = SubResource("CircleShape2D_e6pcq")
+
+[node name="EntranceTimer" type="Timer" parent="."]
+wait_time = 2.25
+autostart = true
+
+[node name="Area2D" type="Area2D" parent="."]
+z_index = 3
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+z_index = 3
+position = Vector2(-1.27157e-06, -1.27157e-06)
+shape = SubResource("RectangleShape2D_4qxcd")
+
+[node name="EnemyHealthBar" type="ProgressBar" parent="."]
+z_index = 3
+offset_left = -38.0
+offset_top = -48.0
+offset_right = 38.0
+offset_bottom = -33.0
+theme_override_styles/background = SubResource("StyleBoxFlat_h74u3")
+theme_override_styles/fill = SubResource("StyleBoxFlat_mk4m2")
+value = 100.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+
+[node name="HitTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+debug_path_custom_line_width = 1.0
+
+[node name="TrackTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[node name="OutOfBoundsChecker" type="Area2D" parent="." groups=["out_of_bounds_checker"]]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OutOfBoundsChecker"]
+shape = SubResource("CircleShape2D_ac7i3")
+
+[connection signal="timeout" from="EntranceTimer" to="." method="_on_entrance_timer_timeout"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
+[connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
+[connection signal="timeout" from="TrackTimer" to="." method="_on_track_timer_timeout"]

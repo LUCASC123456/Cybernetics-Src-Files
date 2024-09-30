@@ -10,57 +10,55 @@ extends Area2D
 @onready var shot_timer_lmg = get_node("/root/Main/Player/ShotTimerLMG")
 @onready var shot_timer_ar = get_node("/root/Main/Player/ShotTimerAR")
 
-var item_type : int # 0: health, 1: ammo
+var item_type : int 
 var entered : bool
 
-#Basic item drops
 var health_box = preload("res://assets/Items/SimpleHealth.png")
 var ammo_box = preload("res://assets/Items/SimpleAmmo.png")
 var textures = [health_box, ammo_box]
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	entered = false
 	$Sprite2D.texture = textures[item_type]
 
 func _process(_delta):
-	if entered == true:
+	if entered:
 		_on_body_entered(player)
 
 func _on_body_entered(body):
 	entered = true
 	if item_type == 0:
-		if main.health < 100:
-			main.health += randi_range(10, 75)
-			if main.health >= 100:
-				main.health = 100
-				health_bar.value = main.health
+		if player.health < 100:
+			player.health += randi_range(10, 75)
+			if player.health >= 100:
+				player.health = 100
+				health_bar.value = player.health
 			else:
-				health_bar.value = main.health
+				health_bar.value = player.health
 			queue_free()
 		else:
 			pass
 	elif item_type == 1:
 		if player.selected_gun == "PISTOL":
-			if reload_timer.is_stopped() == true and shot_timer_pistol.is_stopped() == true and player.mag_collection[2] < 15:
+			if reload_timer.is_stopped() and shot_timer_pistol.is_stopped() and player.mag_collection[2] < 15:
 				body.ammo_gained()
 				queue_free()
 			else:
 				pass
 		elif player.selected_gun == "SMG":
-			if reload_timer.is_stopped() == true and shot_timer_smg.is_stopped() == true and player.mag_collection[2] < 18:
+			if reload_timer.is_stopped() and shot_timer_smg.is_stopped() and player.mag_collection[2] < 18:
 				body.ammo_gained()
 				queue_free()
 			else:
 				pass
 		elif player.selected_gun == "LMG":
-			if reload_timer.is_stopped() == true and shot_timer_lmg.is_stopped() == true and player.mag_collection[2] < 50:
+			if reload_timer.is_stopped() and shot_timer_lmg.is_stopped() and player.mag_collection[2] < 50:
 				body.ammo_gained()
 				queue_free()
 			else:
 				pass
 		elif player.selected_gun == "AR":
-			if reload_timer.is_stopped() == true and shot_timer_ar.is_stopped() == true and player.mag_collection[2] < 30:
+			if reload_timer.is_stopped() and shot_timer_ar.is_stopped() and player.mag_collection[2] < 30:
 				body.ammo_gained()
 				queue_free()
 			else:

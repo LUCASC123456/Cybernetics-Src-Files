@@ -18,6 +18,7 @@ bg_color = Color(0.217101, 0.217101, 0.217101, 1)
 bg_color = Color(0.374139, 0.374139, 0.374139, 1)
 
 [node name="GameWon" type="CanvasLayer"]
+process_mode = 2
 script = ExtResource("1_lphjt")
 
 [node name="Background4" type="Panel" parent="."]

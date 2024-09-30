@@ -1,276 +1,535 @@
-extends Node
+extends Node2D
 
 signal enemy_killed
 
-var health : int
 var enemies_left : int
+var credits_earned : int
+var target_area_nodes : Array
+var mafia_enforcer_5s : Array
 
 var enemy_level_count = [20, 30, 40, 50, 0]
 var levels = [true, false, false, false, false]
-var x_coordinates_level_1 = [6,7,8,9,6,7,8,9,15,15,15,15]
-var y_coordinates_level_1 = [0,0,0,0,15,15,15,15,6,7,8,9]
-var x_coordinates_level_2 = [24,24,24,24,32,33,34,35,44,45,46,47,32,33,34,35,44,45,46,47,55,55,55,55]
-var y_coordinates_level_2 = [6,7,8,9,0,0,0,0,0,0,0,0,15,15,15,15,15,15,15,15,6,7,8,9]
-var x_coordinates_level_3 = [65,66,67,68,35,35,35,35,98,98,98,98,65,66,67,68]
-var y_coordinates_level_3 = [19,19,19,19,32,33,34,35,32,33,34,35,48,48,48,48]
-var x_coordinates_level_4 = [127,128,129,130,122,122,122,122,122,122,122,122,144,145,146,147,148,149,150,151,152,174,174,174,174,174,174,174,174,167,168,169,170]
-var y_coordinates_level_4 = [48,48,48,48,30,31,32,33,34,35,36,37,19,19,19,19,19,19,19,19,19,30,31,32,33,34,35,36,37,48,48,48,48]
-var x_coordinates_level_5 = [167,168,169,170]
-var y_coordinates_level_5 = [63,63,63,63]
+
+var player_door_coordinates = {
+	"Level1" : [Vector2i(15,6), Vector2i(15,7), Vector2i(15,8), Vector2i(15,9)],
+	"Level2" : [[Vector2i(24,6), Vector2i(24,7), Vector2i(24,8), Vector2i(24,9)], [Vector2i(55,6), Vector2i(55,7), Vector2i(55,8), Vector2i(55,9)]],
+	"Level3" : [[Vector2i(65,19), Vector2i(66,19), Vector2i(67,19), Vector2i(68,19)], [Vector2i(65,48), Vector2i(66,48), Vector2i(67,48), Vector2i(68,48)]],
+	"Level4" : [[Vector2i(127,48), Vector2i(128,48), Vector2i(129,48), Vector2i(130,48)], [Vector2i(167,48), Vector2i(168,48), Vector2i(169,48), Vector2i(170,48)]],
+	"Level5" : [[Vector2i(167, 63), Vector2i(168, 63), Vector2i(169, 63), Vector2i(170, 63)], []]
+}
+
+var enemy_door_coordinates = {
+	"Level1" : [Vector2i(6,0), Vector2i(7,0), Vector2i(8,0), Vector2i(9,0), Vector2i(6,15), Vector2i(7,15), Vector2i(8,15), Vector2i(9,15)],
+	"Level2" : [Vector2i(32,0), Vector2i(33,0), Vector2i(34,0), Vector2i(35,0), Vector2i(44,0), Vector2i(45,0), Vector2i(46,0), Vector2i(47,0), Vector2i(32,15), Vector2i(33,15), Vector2i(34,15), Vector2i(35,15), Vector2i(44,15), Vector2i(45,15), Vector2i(46,15), Vector2i(47,15)],
+	"Level3" : [Vector2i(35,32), Vector2i(35,33), Vector2i(35,34), Vector2i(35,35), Vector2i(98,32), Vector2i(98,33), Vector2i(98,34), Vector2i(98,35)],
+	"Level4" : [Vector2i(122,30), Vector2i(122,31), Vector2i(122,32), Vector2i(122,33), Vector2i(122,34), Vector2i(122,35), Vector2i(122,36), Vector2i(122,37), Vector2i(144,19), Vector2i(145,19), Vector2i(146,19), Vector2i(147,19), Vector2i(148,19), Vector2i(149,19), Vector2i(150,19), Vector2i(151,19), Vector2i(152,19), Vector2i(174,30), Vector2i(174,31), Vector2i(174,32), Vector2i(174,33), Vector2i(174,34), Vector2i(174,35), Vector2i(174,36), Vector2i(174,37)],
+	"Level5" : []
+}
+
+func _on_tree_entered():
+	$MainMenu.load_data()
 
 func _ready():
 	get_tree().paused = true
-	$GameWon.credits_earned = 0
-	$RestartTimer.process_mode = Node.PROCESS_MODE_WHEN_PAUSED
+	$CreditTimer.stop()
+	$RestartTimer.stop()
+	$EnemySpawner/Timer.stop()
+	$EnemySpawner/Timer2.stop()
+	$RestartTimer.paused = false
+	credits_earned = 0
 	
-	$World/Level1/CollisionShape2D.set_deferred("disabled", false)
-	$World/Level2/CollisionShape2D.set_deferred("disabled", false)
-	$World/Level3/CollisionShape2D.set_deferred("disabled", false)
-	$World/Level4/CollisionShape2D.set_deferred("disabled", false)
-	$World/Level5/CollisionShape2D.set_deferred("disabled", false)
-	
-	get_tree().call_group("enemies_level_1", "queue_free")
-	get_tree().call_group("enemies_level_2", "queue_free")
-	get_tree().call_group("enemies_level_3", "queue_free")
-	get_tree().call_group("enemies_level_4", "queue_free")
+	get_tree().call_group("enemies", "queue_free")
+	get_tree().call_group("minions", "queue_free")
+	get_tree().call_group("target_area_nodes", "queue_free")
 	get_tree().call_group("bullets", "queue_free")
 	get_tree().call_group("items", "queue_free")
 	
+	for i in $World.get_children():
+		if i.name == "Level1":
+			for k in i.get_children():
+				k.set_deferred("disabled", false)
+		else:
+			for k in i.get_children():
+				k.set_deferred("disabled", true)
+				
 	for i in range(0, len(levels)):
 		if i == 0:
 			levels[i] = true
 		else:
 			levels[i] = false
 	
-	for i in range(8, len(x_coordinates_level_1)):
-		$World.set_cell(1, Vector2i(x_coordinates_level_1[i], y_coordinates_level_1[i]), 0, Vector2i(0,0), 0)
+	for i in player_door_coordinates["Level1"]:
+		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
 	
-	for i in range(0, len(x_coordinates_level_1)-4):
-		$World.set_cell(1, Vector2i(x_coordinates_level_1[i], y_coordinates_level_1[i]), 0, Vector2i(1,1), 0)
+	for i in enemy_door_coordinates["Level1"]:
+		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
 			
-	for i in range(4, len(x_coordinates_level_2)-4):
-		$World.set_cell(1, Vector2i(x_coordinates_level_2[i], y_coordinates_level_2[i]), 0, Vector2i(1,1), 0)
+	for i in enemy_door_coordinates["Level2"]:
+		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
 		
-	for i in range(20, len(x_coordinates_level_2)):
-		$World.set_cell(1, Vector2i(x_coordinates_level_2[i], y_coordinates_level_2[i]), 0, Vector2i(0,0), 0)
+	for i in player_door_coordinates["Level2"][1]:
+		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
 		
-	for i in range(4, len(x_coordinates_level_3)-4):
-		$World.set_cell(1, Vector2i(x_coordinates_level_3[i], y_coordinates_level_3[i]), 0, Vector2i(1,1), 0)
+	for i in enemy_door_coordinates["Level3"]:
+		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
 		
-	for i in range(12, len(x_coordinates_level_3)):
-		$World.set_cell(1, Vector2i(x_coordinates_level_3[i], y_coordinates_level_3[i]), 0, Vector2i(0,0), 0)
+	for i in player_door_coordinates["Level3"][1]:
+		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
 		
-	for i in range(4, len(x_coordinates_level_4)-4):
-		$World.set_cell(1, Vector2i(x_coordinates_level_4[i], y_coordinates_level_4[i]), 0, Vector2i(1,1), 0)
+	for i in enemy_door_coordinates["Level4"]:
+		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
 			
-	for i in range(29, len(x_coordinates_level_4)):
-		$World.set_cell(1, Vector2i(x_coordinates_level_4[i], y_coordinates_level_4[i]), 0, Vector2i(0,0), 0)
+	for i in player_door_coordinates["Level4"][1]:
+		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
 		
-	$UI.hide()
-	$PauseScreen.hide()
-	$GameOver.hide()
-	$GameWon.hide()
-	$MarketUI.hide()
-	$NotEnoughCredits.hide()
-	$MainMenu.show()
-	
+	for i in get_children():
+		if i is CanvasLayer:
+			if i.name == "MainMenu":
+				i.show()
+			else:
+				i.hide()
+		else:
+			pass
+
 func new_game():
-	if levels[0] == true:
-		health = 100
+	if levels[0]:
 		enemies_left = enemy_level_count[0]
 		$Player._ready()
-		$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)
-		$UI/HealthBar.value = health
 		$MainMenu.hide()
-		$RestartTimer.start()
-	elif levels[1] == true:
-		health = 100
+	elif levels[1]:
 		enemies_left = enemy_level_count[1]
 		$Player.reset()
 		get_tree().call_group("enemies_level_1", "queue_free")
+		get_tree().call_group("target_area_nodes", "queue_free")
+		get_tree().call_group("minions", "queue_free")
 		get_tree().call_group("bullets", "queue_free")
 		get_tree().call_group("items", "queue_free")
-		$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)
-		$UI/HealthBar.value = health
-		$RestartTimer.start()
 		
-	elif levels[2] == true:
-		health = 100
+	elif levels[2]:
 		enemies_left = enemy_level_count[2]
 		$Player.reset()
 		get_tree().call_group("enemies_level_2", "queue_free")
+		get_tree().call_group("target_area_nodes", "queue_free")
+		get_tree().call_group("minions", "queue_free")
 		get_tree().call_group("bullets", "queue_free")
 		get_tree().call_group("items", "queue_free")
-		$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)
-		$UI/HealthBar.value = health
-		$RestartTimer.start()
 		
-	elif levels[3] == true:
-		health = 100
+	elif levels[3]:
 		enemies_left = enemy_level_count[3]
 		$Player.reset()
 		get_tree().call_group("enemies_level_3", "queue_free")
+		get_tree().call_group("target_area_nodes", "queue_free")
+		get_tree().call_group("minions", "queue_free")
 		get_tree().call_group("bullets", "queue_free")
 		get_tree().call_group("items", "queue_free")
-		$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)
-		$UI/HealthBar.value = health
-		$RestartTimer.start()
 		
-	elif levels[4] == true:
-		health = 100
+	elif levels[4]:
 		enemies_left = enemy_level_count[4]
 		$Player.reset()
 		get_tree().call_group("enemies_level_4", "queue_free")
+		get_tree().call_group("target_area_nodes", "queue_free")
+		get_tree().call_group("minions", "queue_free")
 		get_tree().call_group("bullets", "queue_free")
 		get_tree().call_group("items", "queue_free")
-		$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)
-		$UI/HealthBar.value = health
-		$RestartTimer.start()
-
-func pause():
-	get_tree().paused = true
-	$PauseScreen.show()
-	$EnemySpawner/Timer.stop()
-	$CreditTimer.stop()
-
-func resume():
-	get_tree().paused = false
-	$PauseScreen.hide()
-	$EnemySpawner/Timer.start()
-	$CreditTimer.start()
 	
-# Called every frame. 'delta' is the elapsed time since the previous frame
-func _process(_delta):
-	pass
-
-func _on_enemy_spawner_hit_p():
-	var random = randi_range(10, 30)
-	health -= random
-	if $GameWon.credits_earned > 0:
-		$GameWon.credits_earned -= random
-		if $GameWon.credits_earned < 0:
-			$GameWon.credits_earned = 0
-		else:
-			pass
-	else:
-		pass
-	$UI/HealthBar.value = health
-	if health <= 0 and $UI/HealthBar.value <= 0:
-		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$GameOver.show()
-
-func _on_enemy_killed():
-	enemies_left -= 1
-	$UI/EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(enemies_left)
-	if enemies_left <= 0:
-		if levels[0] == true:
-			$CreditTimer.stop()
-			for i in range(8, len(x_coordinates_level_1)):
-				$World.set_cell(1, Vector2i(x_coordinates_level_1[i], y_coordinates_level_1[i]), 0, Vector2i(0,0), -1)
-			for i in range(0, len(x_coordinates_level_2)-20):
-				$World.set_cell(1, Vector2i(x_coordinates_level_2[i], y_coordinates_level_2[i]), 0, Vector2i(0,0), -1)
-		elif levels[1] == true:
-			$CreditTimer.stop()
-			for i in range(20, len(x_coordinates_level_2)):
-				$World.set_cell(1, Vector2i(x_coordinates_level_2[i], y_coordinates_level_2[i]), 0, Vector2i(0,0), -1)
-			for i in range(0, len(x_coordinates_level_3)-12):
-				$World.set_cell(1, Vector2i(x_coordinates_level_3[i], y_coordinates_level_3[i]), 0, Vector2i(0,0), -1)
-		elif levels[2] == true: 
-			$CreditTimer.stop()
-			for i in range(12, len(x_coordinates_level_3)):
-				$World.set_cell(1, Vector2i(x_coordinates_level_3[i], y_coordinates_level_3[i]), 0, Vector2i(0,0), -1)
-			for i in range(0, len(x_coordinates_level_4)-29):
-				$World.set_cell(1, Vector2i(x_coordinates_level_4[i], y_coordinates_level_4[i]), 0, Vector2i(0,0), -1)
-		elif levels[3] == true: 
-			$CreditTimer.stop()
-			for i in range(29, len(x_coordinates_level_4)):
-				$World.set_cell(1, Vector2i(x_coordinates_level_4[i], y_coordinates_level_4[i]), 0, Vector2i(0,0), -1)
-			for i in range(0, len(x_coordinates_level_5)):
-				$World.set_cell(1, Vector2i(x_coordinates_level_5[i], y_coordinates_level_5[i]), 0, Vector2i(0,0), -1)
-		elif levels[4] == true:
-			$CreditTimer.stop()
-			get_tree().paused = true
-			$GameWon/CreditsEarned.text = "CREDITS EARNED: " + str($GameWon.credits_earned)
-			$GameWon.show()
-		else:
-			pass
+	$RestartTimer.start()
 
 func _on_restart_timer_timeout():
-	if levels[0] == true:
-		$UI.show()
-		$CreditTimer.start()
-		$EnemySpawner/Timer.start()
+	if levels[0]:
 		get_tree().paused = false
-		for i in range(0, len(x_coordinates_level_1)-4):
-			$World.set_cell(1, Vector2i(x_coordinates_level_1[i], y_coordinates_level_1[i]), 0, Vector2i(1,1), -1)
-		$RestartTimer.process_mode = Node.PROCESS_MODE_INHERIT
-		$Player/AnimatedSprite2D/Camera2D.process_mode = Node.PROCESS_MODE_INHERIT
-		$Player/AnimatedSprite2D/Camera2D.position_smoothing_enabled = true
-		$Player/AnimatedSprite2D/Camera2D.drag_horizontal_enabled = true
-		$Player/AnimatedSprite2D/Camera2D.drag_vertical_enabled = true
-	elif levels[1] == true:
-		$EnemySpawner/Timer.start()
-		$CreditTimer.start()
-		for i in range(4, len(x_coordinates_level_2)-4):
-			$World.set_cell(1, Vector2i(x_coordinates_level_2[i], y_coordinates_level_2[i]), 0, Vector2i(1,1), -1)
-		for i in range(0, len(x_coordinates_level_2)-20):
-			$World.set_cell(1, Vector2i(x_coordinates_level_2[i], y_coordinates_level_2[i]), 0, Vector2i(0,0), 0)
-			if $Player.position.x < 1225:
-				$Player.position.x = 1275
-				$Player.position.y = 384
+		$UI.show()
+		for i in enemy_door_coordinates["Level1"]:
+			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
+	elif levels[1]:
+		for i in enemy_door_coordinates["Level2"]:
+			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
+		for i in player_door_coordinates["Level2"][0]:
+			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+	elif levels[2]:
+		for i in enemy_door_coordinates["Level3"]:
+			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
+		for i in player_door_coordinates["Level3"][0]:
+			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+	elif levels[3]:
+		for i in enemy_door_coordinates["Level4"]:
+			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
+		for i in player_door_coordinates["Level4"][0]:
+			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+	elif levels[4]:
+		for i in player_door_coordinates["Level5"]:
+			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+	
+	$CreditTimer.start()
+	$EnemySpawner/Timer.start()
+
+func _physics_process(_delta):
+	target_area_nodes = get_tree().get_nodes_in_group("target_area_nodes")
+	mafia_enforcer_5s = get_tree().get_nodes_in_group("mafia_enforcer_5")
+
+	if mafia_enforcer_5s.size() > 0:
+		for i in range(0, len(mafia_enforcer_5s)):
+			if mafia_enforcer_5s[i].alive:
+				target_area_nodes[i].draw_target_area(mafia_enforcer_5s[i].global_position)
 			else:
 				pass
-	elif levels[2] == true:
-		$EnemySpawner/Timer.start()
-		$CreditTimer.start()
-		for i in range(4, len(x_coordinates_level_3)-4):
-			$World.set_cell(1, Vector2i(x_coordinates_level_3[i], y_coordinates_level_3[i]), 0, Vector2i(1,1), -1)
-		for i in range(0, len(x_coordinates_level_3)-12):
-			$World.set_cell(1, Vector2i(x_coordinates_level_3[i], y_coordinates_level_3[i]), 0, Vector2i(0,0), 0)
-		if $Player.position.y < 985:
-			$Player.position.x = 3216
-			$Player.position.y = 1035
-		else:
-			pass
-	elif levels[3] == true:
-		$EnemySpawner/Timer.start()
-		$CreditTimer.start()
-		for i in range(4, len(x_coordinates_level_4)-4):
-			$World.set_cell(1, Vector2i(x_coordinates_level_4[i], y_coordinates_level_4[i]), 0, Vector2i(1,1), -1)
-		for i in range(0, len(x_coordinates_level_4)-29):
-			$World.set_cell(1, Vector2i(x_coordinates_level_4[i], y_coordinates_level_4[i]), 0, Vector2i(0,0), 0)
-		if $Player.position.y > 2279:
-			$Player.position.x = 6192.5
-			$Player.position.y = 2229
-		else:
-			pass
-	elif levels[4] == true:
-		$EnemySpawner/Timer.start()
-		$CreditTimer.start()
-		for i in range(0, len(x_coordinates_level_5)):
-			$World.set_cell(1, Vector2i(x_coordinates_level_5[i], y_coordinates_level_5[i]), 0, Vector2i(0,0), 0)
-		if $Player.position.y < 3097:
-			$Player.position.x = 8112
-			$Player.position.y = 3147
-		else:
-			pass
 	else:
 		pass
 
 func _on_credit_timer_timeout():
-	if $GameWon.credits_earned > 0:
-		$GameWon.credits_earned -= 2
-		if $GameWon.credits_earned < 0:
-			$GameWon.credits_earned = 0
+	if credits_earned > 0:
+		credits_earned -= 2
+		if credits_earned < 0:
+			credits_earned = 0
 		else:
 			pass
 	else:
 		pass
 
-func _on_tree_entered():
-	$MainMenu.load_data()
+func _on_enemy_killed():
+	enemies_left -= 1
+	if enemies_left <= 0:
+		$CreditTimer.stop()
+		if levels[0]:
+			for i in player_door_coordinates["Level1"]:
+				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+			for i in player_door_coordinates["Level2"][0]:
+				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+		elif levels[1]:
+			for i in player_door_coordinates["Level2"][1]:
+				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+			for i in player_door_coordinates["Level3"][0]:
+				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+		elif levels[2]: 
+			for i in player_door_coordinates["Level3"][1]:
+				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+			for i in player_door_coordinates["Level4"][0]:
+				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+		elif levels[3]: 
+			for i in player_door_coordinates["Level4"][1]:
+				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+			for i in player_door_coordinates["Level5"][0]:
+				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+		elif levels[4]:
+			get_tree().paused = true
+			$GameWon/CreditsEarned.text = "CREDITS EARNED: " + str(credits_earned)
+			$GameWon.show()
+		else:
+			pass
+
+func pause():
+	get_tree().paused = true
+	$RestartTimer.paused = true
+	$PauseScreen.show()
+
+func resume():
+	get_tree().paused = false
+	$RestartTimer.paused = false
+	$PauseScreen.hide()
+
+func _on_enemy_spawner_hit_p():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(5, 10)
+	elif levels[1]:
+		damage = randi_range(10, 15)
+	elif levels[2]:
+		damage = randi_range(15, 20)
+	elif levels[3]:
+		damage = randi_range(20, 25)
+		
+	$Player.health -= damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+		
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
+
+func _on_enemy_spawner_hit_p_2():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(5, 10)
+	elif levels[1]:
+		damage = randi_range(10, 15)
+	elif levels[2]:
+		damage = randi_range(15, 20)
+	elif levels[3]:
+		damage = randi_range(20, 25) 
+	
+	$Player.health -= damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+		
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
+
+func _on_enemy_spawner_hit_p_3():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(10, 20)
+	elif levels[1]:
+		damage = randi_range(15, 25)
+	elif levels[2]:
+		damage = randi_range(20, 30)
+	elif levels[3]:
+		damage = randi_range(25, 35) 
+		
+	$Player.health -= damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
+
+func _on_enemy_spawner_hit_p_4():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(10, 20)
+	elif levels[1]:
+		damage = randi_range(15, 25)
+	elif levels[2]:
+		damage = randi_range(20, 30)
+	elif levels[3]:
+		damage = randi_range(25, 35) 
+	
+	$Player.health -= damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
+
+func _on_enemy_spawner_hit_p_5():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(10, 15)
+	elif levels[1]:
+		damage = randi_range(15, 20)
+	elif levels[2]:
+		damage = randi_range(20, 25)
+	elif levels[3]:
+		damage = randi_range(25, 30)
+	
+	$Player.health -= damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+		
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
+
+func hit_player_5_lazer():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(15, 20)
+	elif levels[1]:
+		damage = randi_range(20, 25)
+	elif levels[2]:
+		damage = randi_range(25, 30)
+	elif levels[3]:
+		damage = randi_range(30, 35)
+	
+	$Player.health -= damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
+
+func _on_enemy_spawner_hit_p_6():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(10, 15)
+	elif levels[1]:
+		damage = randi_range(15, 20)
+	elif levels[2]:
+		damage = randi_range(20, 25)
+	elif levels[3]:
+		damage = randi_range(25, 35)
+	
+	$Player.health -= damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
+
+func _on_enemy_spawner_hit_p_7():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(5, 10)
+	elif levels[1]:
+		damage = randi_range(10, 15)
+	elif levels[2]:
+		damage = randi_range(15, 20)
+	elif levels[3]:
+		damage = randi_range(20, 25)
+	
+	$Player.health -= damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if get_node("MafiaEnforcer7").alive:
+		if get_node("MafiaEnforcer7").health == get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value:
+			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value += damage
+			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").value += damage
+			get_node("MafiaEnforcer7").health += damage
+		elif get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value - get_node("MafiaEnforcer7").health < damage:
+			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value += damage - (get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value - get_node("MafiaEnforcer7").health)
+			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").value += damage
+			get_node("MafiaEnforcer7").health += damage
+		else:
+			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").value += damage
+			get_node("MafiaEnforcer7").health += damage
+	else:
+		pass
+		
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
+
+func hit_player_8():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(5, 10)
+	elif levels[1]:
+		damage = randi_range(10, 15)
+	elif levels[2]:
+		damage = randi_range(15, 20)
+	elif levels[3]:
+		damage = randi_range(20, 25)
+	
+	$Player.health -= damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
+
+func hit_player_9():
+	var damamge : int
+	
+	if levels[0]:
+		damamge = randi_range(5, 10)
+	elif levels[1]:
+		damamge = randi_range(10, 15)
+	elif levels[2]:
+		damamge = randi_range(15, 20)
+	elif levels[3]:
+		damamge = randi_range(20, 25)
+	
+	$Player.health -= damamge
+	if credits_earned > 0:
+		credits_earned -= damamge
+		if credits_earned < 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$CreditTimer.stop()
+		$EnemySpawner/Timer.stop()
+		$EnemySpawner/Timer2.stop()
+		$GameOver.show()
 
 func _on_tree_exited():
 	$MainMenu.save_data()

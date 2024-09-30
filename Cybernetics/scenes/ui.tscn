@@ -9,6 +9,7 @@ bg_color = Color(0, 0, 0, 0.65098)
 bg_color = Color(0.905254, 0, 0.0149213, 1)
 
 [node name="UI" type="CanvasLayer"]
+process_mode = 1
 script = ExtResource("1_jivp1")
 
 [node name="AmmoCounter" type="Panel" parent="."]

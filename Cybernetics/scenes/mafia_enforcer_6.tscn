@@ -1,0 +1,106 @@
+[gd_scene load_steps=10 format=3 uid="uid://d31lgdegc61yv"]
+
+[ext_resource type="Script" path="res://scenes/mafia_enforcer_6.gd" id="1_maylv"]
+[ext_resource type="Texture2D" uid="uid://41ta3q10gep6" path="res://assets/Enemies/MafiaEnforcer6/SimpleEnemy6Death.png" id="2_2nkv0"]
+[ext_resource type="Texture2D" uid="uid://dq0gbwk75d27u" path="res://assets/Enemies/MafiaEnforcer6/SimpleEnemy6Idle.png" id="3_j8d5r"]
+[ext_resource type="Texture2D" uid="uid://c0684oajjsw61" path="res://assets/Enemies/MafiaEnforcer6/SimpleEnemy6Run.png" id="4_qmaf1"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bneqm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_2nkv0")
+}],
+"loop": true,
+"name": &"dead",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_j8d5r")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_qmaf1")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5jiti"]
+radius = 25.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h74u3"]
+bg_color = Color(0, 0, 0, 0.65098)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mk4m2"]
+bg_color = Color(0.905254, 0, 0.0149213, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_envtg"]
+size = Vector2(50, 50)
+
+[node name="MafiaEnforcer6" type="CharacterBody2D" groups=["enemies", "mafia_enforcer_6"]]
+process_mode = 1
+z_index = 3
+collision_layer = 4
+collision_mask = 0
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_maylv")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_index = 3
+position = Vector2(-1.52588e-05, -1.52588e-05)
+scale = Vector2(0.0625, 0.0625)
+sprite_frames = SubResource("SpriteFrames_bneqm")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 3
+shape = SubResource("CircleShape2D_5jiti")
+
+[node name="EnemyHealthBar" type="ProgressBar" parent="."]
+z_index = 3
+offset_left = -38.0
+offset_top = -48.0
+offset_right = 38.0
+offset_bottom = -33.0
+theme_override_styles/background = SubResource("StyleBoxFlat_h74u3")
+theme_override_styles/fill = SubResource("StyleBoxFlat_mk4m2")
+value = 100.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+
+[node name="Area2D" type="Area2D" parent="."]
+z_index = 3
+collision_layer = 4
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+z_index = 3
+shape = SubResource("RectangleShape2D_envtg")
+
+[node name="EntranceTimer" type="Timer" parent="."]
+wait_time = 1.5
+autostart = true
+
+[node name="HitTimer" type="Timer" parent="."]
+
+[node name="PhantomCheckTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="PhantomTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
+[connection signal="timeout" from="EntranceTimer" to="." method="_on_entrance_timer_timeout"]
+[connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
+[connection signal="timeout" from="PhantomCheckTimer" to="." method="_on_phantom_check_timer_timeout"]
+[connection signal="timeout" from="PhantomTimer" to="." method="_on_phantom_timer_timeout"]

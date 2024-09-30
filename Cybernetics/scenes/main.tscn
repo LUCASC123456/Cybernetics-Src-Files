@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://bobem383lawow"]
 
 [ext_resource type="PackedScene" uid="uid://caullttnbvnfk" path="res://scenes/world.tscn" id="1_omqkc"]
-[ext_resource type="Script" path="res://scenes/main.gd" id="1_tm84j"]
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_uwnhx"]
 [ext_resource type="PackedScene" uid="uid://o7kn1083pn2l" path="res://scenes/player.tscn" id="2_76vfn"]
 [ext_resource type="PackedScene" uid="uid://cija68e8tqh4n" path="res://scenes/game_over.tscn" id="2_mcsw5"]
 [ext_resource type="PackedScene" uid="uid://dfl0mq72bth36" path="res://scenes/enemy_spawner.tscn" id="3_r0pmp"]
@@ -14,41 +14,41 @@
 [ext_resource type="PackedScene" uid="uid://re6s5jcw6eiw" path="res://scenes/market_ui.tscn" id="12_rnwhq"]
 [ext_resource type="PackedScene" uid="uid://3k3j8g2awwi1" path="res://scenes/not_enough_credits.tscn" id="13_en3i7"]
 
-[node name="Main" type="Node"]
-script = ExtResource("1_tm84j")
+[node name="Main" type="Node2D"]
+script = ExtResource("1_uwnhx")
 
 [node name="World" parent="." instance=ExtResource("1_omqkc")]
 
 [node name="Player" parent="." instance=ExtResource("2_76vfn")]
 
 [node name="BulletManager" type="Node2D" parent="."]
+process_mode = 1
 script = ExtResource("4_1gnpv")
 bullet_scene = ExtResource("5_nuxkt")
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_r0pmp")]
 
 [node name="RestartTimer" type="Timer" parent="."]
-process_mode = 2
+process_mode = 3
 one_shot = true
 
 [node name="UI" parent="." instance=ExtResource("7_bcf5h")]
 visible = false
 
 [node name="GameOver" parent="." instance=ExtResource("2_mcsw5")]
-process_mode = 2
 visible = false
 
 [node name="MainMenu" parent="." instance=ExtResource("9_nogpj")]
-process_mode = 2
+visible = false
 
 [node name="PauseScreen" parent="." instance=ExtResource("10_lltoc")]
 visible = false
 
 [node name="GameWon" parent="." instance=ExtResource("11_apbxy")]
-process_mode = 2
 visible = false
 
 [node name="CreditTimer" type="Timer" parent="."]
+process_mode = 1
 
 [node name="MarketUI" parent="." instance=ExtResource("12_rnwhq")]
 visible = false
@@ -61,5 +61,11 @@ visible = false
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
 [connection signal="shoot" from="Player" to="BulletManager" method="_on_player_shoot"]
 [connection signal="hit_p" from="EnemySpawner" to="." method="_on_enemy_spawner_hit_p"]
+[connection signal="hit_p_2" from="EnemySpawner" to="." method="_on_enemy_spawner_hit_p_2"]
+[connection signal="hit_p_3" from="EnemySpawner" to="." method="_on_enemy_spawner_hit_p_3"]
+[connection signal="hit_p_4" from="EnemySpawner" to="." method="_on_enemy_spawner_hit_p_4"]
+[connection signal="hit_p_5" from="EnemySpawner" to="." method="_on_enemy_spawner_hit_p_5"]
+[connection signal="hit_p_6" from="EnemySpawner" to="." method="_on_enemy_spawner_hit_p_6"]
+[connection signal="hit_p_7" from="EnemySpawner" to="." method="_on_enemy_spawner_hit_p_7"]
 [connection signal="timeout" from="RestartTimer" to="." method="_on_restart_timer_timeout"]
 [connection signal="timeout" from="CreditTimer" to="." method="_on_credit_timer_timeout"]

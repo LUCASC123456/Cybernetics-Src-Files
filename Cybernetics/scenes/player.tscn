@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://o7kn1083pn2l"]
+[gd_scene load_steps=13 format=3 uid="uid://o7kn1083pn2l"]
 
 [ext_resource type="Script" path="res://scenes/player.gd" id="1_j7i8d"]
 [ext_resource type="Texture2D" uid="uid://x3tuphoufv4h" path="res://assets/Player/E/SimplePlayer.png" id="2_3iok0"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bya0jtj8o65nh" path="res://assets/Player/NW/SimplePlayer5.png" id="7_0qe65"]
 [ext_resource type="Texture2D" uid="uid://cnxit8li3iom8" path="res://assets/Player/N/SimplePlayer6.png" id="8_cj26u"]
 [ext_resource type="Texture2D" uid="uid://0iry3qrj06xg" path="res://assets/Player/NE/SimplePlayer7.png" id="9_yb866"]
+[ext_resource type="Script" path="res://scenes/camera.gd" id="10_3d8rw"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_txe1b"]
 animations = [{
@@ -81,28 +82,33 @@ animations = [{
 size = Vector2(50, 50)
 
 [node name="Player" type="CharacterBody2D"]
-z_index = 1
+process_mode = 1
+z_index = 4
 position = Vector2(384, 384)
 collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_j7i8d")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_index = 4
 sprite_frames = SubResource("SpriteFrames_txe1b")
 animation = &"walk7"
 
 [node name="Camera2D" type="Camera2D" parent="AnimatedSprite2D"]
+process_mode = 3
+z_index = 4
 limit_left = 0
 limit_top = 0
 limit_right = 2000
 limit_bottom = 2000
 limit_smoothed = true
 position_smoothing_enabled = true
-rotation_smoothing_enabled = true
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
+script = ExtResource("10_3d8rw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 4
 shape = SubResource("RectangleShape2D_ck7nk")
 
 [node name="ShotTimerPistol" type="Timer" parent="."]

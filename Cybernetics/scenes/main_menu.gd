@@ -1,7 +1,6 @@
 extends CanvasLayer
 
 @onready var main = get_node("/root/Main")
-@onready var main_menu = get_node("/root/Main/MainMenu")
 @onready var market = get_node("/root/Main/MarketUI")
 
 var save_path = "user://save"
@@ -31,7 +30,6 @@ func load_data():
 		
 
 func _on_shop_button_pressed():
-	print(store.selected)
-	main_menu.hide()
+	hide()
 	market.show()
-	market.get_child(5).text = "CREDITS AVAILABLE: " + str(main_menu.credits)
+	market.get_node("CreditsAvailable").text = "CREDITS AVAILABLE: " + str(credits)

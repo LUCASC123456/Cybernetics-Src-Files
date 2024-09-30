@@ -1,11 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://c61u0lmm3ud7i"]
+[gd_scene load_steps=11 format=3 uid="uid://c61u0lmm3ud7i"]
 
 [ext_resource type="Script" path="res://scenes/mafia_enforcer.gd" id="1_4t8d2"]
 [ext_resource type="Texture2D" uid="uid://dg1afwego6qqx" path="res://assets/Enemies/MafiaEnforcer/SimpleEnemyDeath.png" id="1_bfobo"]
 [ext_resource type="Texture2D" uid="uid://0lsev4w7ddf5" path="res://assets/Enemies/MafiaEnforcer/SimpleEnemyIdle.png" id="2_fidu5"]
 [ext_resource type="Texture2D" uid="uid://drf7a8vq783ln" path="res://assets/Enemies/MafiaEnforcer/SimpleEnemyRun.png" id="3_hicyj"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_fq06f"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_cyvph"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -32,44 +32,36 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_j812g"]
-radius = 25.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_jpmom"]
-radius = 25.0
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h74u3"]
 bg_color = Color(0, 0, 0, 0.65098)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mk4m2"]
 bg_color = Color(0.905254, 0, 0.0149213, 1)
 
-[node name="MafiaEnforcer" type="CharacterBody2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_cuye1"]
+radius = 25.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uiip2"]
+size = Vector2(50, 50)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v14n7"]
+radius = 1.0
+
+[node name="MafiaEnforcer" type="CharacterBody2D" groups=["enemies", "mafia_enforcer"]]
+process_mode = 1
+z_index = 3
 collision_layer = 4
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_4t8d2")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_fq06f")
-animation = &"idle"
-autoplay = "idle"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_j812g")
-
-[node name="EntranceTimer" type="Timer" parent="."]
-wait_time = 1.25
-autostart = true
-
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 4
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("CircleShape2D_jpmom")
+z_index = 3
+sprite_frames = SubResource("SpriteFrames_cyvph")
+animation = &"run"
 
 [node name="EnemyHealthBar" type="ProgressBar" parent="."]
+z_index = 3
 offset_left = -38.0
 offset_top = -48.0
 offset_right = 38.0
@@ -78,19 +70,44 @@ theme_override_styles/background = SubResource("StyleBoxFlat_h74u3")
 theme_override_styles/fill = SubResource("StyleBoxFlat_mk4m2")
 value = 100.0
 show_percentage = false
+metadata/_edit_use_anchors_ = true
 
-[node name="HitTimer" type="Timer" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 3
+shape = SubResource("CircleShape2D_cuye1")
+
+[node name="Area2D" type="Area2D" parent="."]
+z_index = 3
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+z_index = 3
+shape = SubResource("RectangleShape2D_uiip2")
+
+[node name="OutOfBoundsChecker" type="Area2D" parent="." groups=["enemies", "out_of_bounds_checker"]]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OutOfBoundsChecker"]
+shape = SubResource("CircleShape2D_v14n7")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_layers = 5
+avoidance_mask = 5
 debug_path_custom_line_width = 1.0
+
+[node name="EntranceTimer" type="Timer" parent="."]
+wait_time = 1.5
+autostart = true
+
+[node name="HitTimer" type="Timer" parent="."]
 
 [node name="TrackTimer" type="Timer" parent="."]
 wait_time = 0.1
 autostart = true
 
-[connection signal="hit_player" from="." to="." method="_on_hit_player"]
-[connection signal="timeout" from="EntranceTimer" to="." method="_on_entrance_timer_timeout"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
+[connection signal="timeout" from="EntranceTimer" to="." method="_on_entrance_timer_timeout"]
 [connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
 [connection signal="timeout" from="TrackTimer" to="." method="_on_track_timer_timeout"]

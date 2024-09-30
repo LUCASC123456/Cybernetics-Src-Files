@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4llbn88o314u"
-path="res://.godot/imported/SimpleEnemy2Idle.png-0c8e231586e58482e76268f5171c4e1f.ctex"
+uid="uid://b4i4ydf6njc7w"
+path="res://.godot/imported/SimpleEnemy8Run.png-3139e95612cede2078bc3dfd6838a5cc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Enemies/MafiaEnforcer2/SimpleEnemy2Idle.png"
-dest_files=["res://.godot/imported/SimpleEnemy2Idle.png-0c8e231586e58482e76268f5171c4e1f.ctex"]
+source_file="res://assets/Enemies/MafiaEnforcer8/SimpleEnemy8Run.png"
+dest_files=["res://.godot/imported/SimpleEnemy8Run.png-3139e95612cede2078bc3dfd6838a5cc.ctex"]
 
 [params]
 

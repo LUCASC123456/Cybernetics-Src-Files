@@ -3,27 +3,21 @@ extends CanvasLayer
 @onready var main_menu = get_node("/root/Main/MainMenu")
 @onready var not_enough_credits = get_node("/root/Main/NotEnoughCredits")
 @onready var market = get_node("/root/Main/MarketUI")
-@onready var buttons = market.get_child(6)
+@onready var buttons = market.get_node("Control")
 
 var pistol_price = 0
 var smg_price = 400
 var lmg_price = 1000
 var ar_price = 600
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	main_menu.load_data()
 	for item in range(buttons.get_child_count()):
 		if main_menu.store.bought[item] == true:
 			buttons.get_node("Button" + str(item+1)).text = "EQUIP"
+	
 	buttons.get_node("Button" + str(main_menu.store.selected+1)).text = "EQUIPPED"
 	buttons.get_node("Button" + str(main_menu.store.selected+1)).add_to_group("selected")
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	pass
-
 
 func _selected(node, no):
 	main_menu.load_data()
@@ -42,11 +36,11 @@ func _buy(price, item_no):
 			main_menu.credits -= price
 			main_menu.store.bought[item_no] = true
 			buttons.get_node("Button" + str(item_no+1)).text = "EQUIP"
-			market.get_child(5).text = "CREDITS AVAILABLE: " + str(main_menu.credits)
+			market.get_node("CreditsAvailable").text = "CREDITS AVAILABLE: " + str(main_menu.credits)
 			main_menu.save_data()
 		else:
 			var rem = price - main_menu.credits
-			not_enough_credits.get_child(1).text = "YOU NEED " + str(rem) + " MORE CREDITS\n TO PURCHASE THIS ITEM"
+			not_enough_credits.get_node("NotEnoughCreditsLabel").text = "YOU NEED " + str(rem) + " MORE CREDITS\n TO PURCHASE THIS ITEM"
 			not_enough_credits.show()
 	else:
 		_selected(buttons.get_node("Button" + str(item_no+1)), item_no)

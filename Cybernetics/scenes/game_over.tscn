@@ -18,6 +18,7 @@ bg_color = Color(0.217101, 0.217101, 0.217101, 1)
 bg_color = Color(0.374139, 0.374139, 0.374139, 1)
 
 [node name="GameOver" type="CanvasLayer"]
+process_mode = 2
 script = ExtResource("1_jspbh")
 
 [node name="Background2" type="Panel" parent="."]

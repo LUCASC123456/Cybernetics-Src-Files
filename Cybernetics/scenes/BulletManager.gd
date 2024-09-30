@@ -8,4 +8,3 @@ func _on_player_shoot(pos, dir):
 	bullet.position = pos
 	bullet.direction = dir.normalized()
 	bullet.add_to_group("bullets")
-

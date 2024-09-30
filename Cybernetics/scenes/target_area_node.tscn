@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://dv44gd1m3msiy"]
+
+[ext_resource type="Script" path="res://scenes/target_area_node.gd" id="1_p436f"]
+
+[node name="TargetAreaNode" type="Node2D" groups=["target_area_nodes"]]
+process_mode = 1
+script = ExtResource("1_p436f")
+
+[node name="LazerReachArea" type="Area2D" parent="."]
+z_index = 2
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LazerReachArea"]
+z_index = 2
+
+[node name="TargetArea" type="Polygon2D" parent="LazerReachArea"]
+z_index = 2
+color = Color(0.24797, 3.63868e-05, 0.931896, 0.313726)
+
+[connection signal="body_entered" from="LazerReachArea" to="." method="_on_lazer_reach_area_body_entered"]
+[connection signal="body_exited" from="LazerReachArea" to="." method="_on_lazer_reach_area_body_exited"]
