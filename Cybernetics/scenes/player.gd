@@ -238,7 +238,7 @@ func _physics_process(_delta):
 func ammo_gained():
 	if $ReloadTimer.is_stopped():
 		if selected_gun == "PISTOL":
-			if $ShotTimerPistolTimer.is_stopped():
+			if $ShotTimerPistol.is_stopped():
 				if mags == 3:
 					if mag_collection[mags-1] == 15:
 						pass
