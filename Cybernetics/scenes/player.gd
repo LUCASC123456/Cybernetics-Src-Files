@@ -139,25 +139,41 @@ func get_input():
 
 func _process(_delta):
 	if selected_gun == "PISTOL":
-		if $ReloadTimer.is_stopped():
+		if mags != 0:
+			if $ReloadTimer.is_stopped():
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
+			else:
+				ammo_counter.text = "RELOADING"
+		else:
+			mag_collection[mags] = 0
 			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
-		else:
-			ammo_counter.text = "RELOADING"
 	elif selected_gun == "SMG":
-		if $ReloadTimer.is_stopped():
+		if mags != 0:
+			if $ReloadTimer.is_stopped():
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
+			else:
+				ammo_counter.text = "RELOADING"
+		else:
+			mag_collection[mags] = 0
 			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
-		else:
-			ammo_counter.text = "RELOADING"
 	elif selected_gun == "LMG":
-		if $ReloadTimer.is_stopped():
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
+		if mags != 0:
+			if $ReloadTimer.is_stopped():
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
+			else:
+				ammo_counter.text = "RELOADING"
 		else:
-			ammo_counter.text = "RELOADING"
-	elif selected_gun == "AR":
-		if $ReloadTimer.is_stopped():
+			mag_collection[mags] = 0
 			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
+	elif selected_gun == "AR":
+		if mags != 0:
+			if $ReloadTimer.is_stopped():
+				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
+			else:
+				ammo_counter.text = "RELOADING"
 		else:
-			ammo_counter.text = "RELOADING"
+			mag_collection[mags] = 0
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 	
 func _physics_process(_delta):
 	get_input()
@@ -183,7 +199,6 @@ func _physics_process(_delta):
 			position = Vector2(7128,1632)
 		else:
 			pass
-			
 	elif main.levels[4]:
 		if out_of_bounds:
 			position = Vector2(8112,4968)
@@ -191,7 +206,7 @@ func _physics_process(_delta):
 			pass
 	else:
 		if world.passage_way == "passage_way_1":
-			if world.door_closed:
+			if world.exit_door_closed:
 				if position.x < 793:
 					position = Vector2(843,384)
 				else:
@@ -199,7 +214,7 @@ func _physics_process(_delta):
 			else:
 				pass
 		elif world.passage_way == "passage_way_2":
-			if world.door_closed:
+			if world.exit_door_closed:
 				if position.x < 2713:
 					position = Vector2(2763,384)
 				else:
@@ -207,7 +222,7 @@ func _physics_process(_delta):
 			else:
 				pass
 		elif world.passage_way == "passage_way_3":
-			if world.door_closed:
+			if world.exit_door_closed:
 				if position.y < 2377:
 					position = Vector2(3216,2427)
 				else:
@@ -215,7 +230,7 @@ func _physics_process(_delta):
 			else:
 				pass
 		elif world.passage_way == "passage_way_4":
-			if world.door_closed:
+			if world.exit_door_closed:
 				if position.y < 2377:
 					position = Vector2(8112,2427)
 				else:

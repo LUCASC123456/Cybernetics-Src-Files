@@ -18,10 +18,11 @@ var i : int
 var alive : bool
 var entered : bool
 var out_of_bounds : bool
+var player_colliding : bool
 var damage_resistant : bool
 var teleport_activated : bool
 var lazer_activated : bool
-var teleported : bool = false
+var teleported : bool
 var lazer_reach : bool
 var direction : Vector2
 var probability : float
@@ -39,7 +40,6 @@ func _ready() -> void:
 	health = 100
 	speed = 100
 	i = int(name.lstrip("MafiaEnforcer5"))
-	print(i)
 	
 	var dist = target.position - position
 	if start_dir == "horizontal":
@@ -271,6 +271,7 @@ func _on_lazer_beam_timer_timeout():
 	$TeleportChanceTimer.start()
 
 func _on_area_2d_body_entered(_body):
+	player_colliding = true
 	if alive and entered:
 		if speed == 100:
 			hit_player_5.emit()
@@ -281,6 +282,7 @@ func _on_area_2d_body_entered(_body):
 		pass
 
 func _on_area_2d_body_exited(_body):
+	player_colliding = true
 	$HitTimer.stop()
 
 func _on_hit_timer_timeout():

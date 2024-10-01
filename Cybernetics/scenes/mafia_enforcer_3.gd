@@ -17,6 +17,7 @@ var alive : bool
 var entered : bool
 var damage_resistant : bool
 var out_of_bounds : bool
+var player_colliding : bool
 var direction : Vector2
 const BASIC_DROP_CHANCE : float = 0.75
 
@@ -97,6 +98,7 @@ func _on_entrance_timer_timeout():
 	entered = true
 
 func _on_area_2d_body_entered(_body):
+	player_colliding = true
 	if alive and entered:
 		hit_player_3.emit()
 		$HitTimer.start()
@@ -107,6 +109,7 @@ func _on_hit_timer_timeout():
 	hit_player_3.emit()
 
 func _on_area_2d_body_exited(_body):
+	player_colliding = false
 	$HitTimer.stop()
 
 func _on_track_timer_timeout():

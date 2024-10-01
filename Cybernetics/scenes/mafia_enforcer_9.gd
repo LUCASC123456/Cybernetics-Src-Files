@@ -22,6 +22,7 @@ var alive : bool
 var entered : bool
 var damage_resistant : bool
 var out_of_bounds : bool
+var player_colliding : bool
 var direction : Vector2
 var vision_point = Vector2.ZERO
 var exclusion_container : Array
@@ -58,6 +59,18 @@ func _physics_process(_delta: float) -> void:
 			
 			for i in $Area2D.get_overlapping_bodies():
 				exclusion_container.append(i.get_rid())
+			
+			for i in main.get_children():
+				if i is CharacterBody2D:
+					if i.name != "Player":
+						if i.player_colliding:
+							exclusion_container.append(i.get_rid())
+						else:
+							pass
+					else:
+						pass
+				else:
+					pass
 			
 			var space_state = get_world_2d().direct_space_state
 			var query = PhysicsRayQueryParameters2D.create(global_transform.origin, player.global_transform.origin, 7, exclusion_container)
@@ -182,6 +195,8 @@ func _on_area_2d_body_entered(body):
 				pass
 		else:
 			pass
+	elif body.name == "Player":
+		player_colliding = true
 	else:
 		pass
 
@@ -197,5 +212,7 @@ func _on_area_2d_body_exited(body):
 				pass
 		else:
 			pass
+	elif body.name == "Player":
+		player_colliding = false
 	else:
 		pass

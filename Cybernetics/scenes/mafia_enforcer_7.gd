@@ -21,6 +21,7 @@ var entered : bool
 var summoning : bool 
 var damage_resistant : bool
 var out_of_bounds : bool
+var player_colliding : bool
 var direction : Vector2
 var probability : float
 const BASIC_DROP_CHANCE : float = 0.75
@@ -44,6 +45,9 @@ func _ready() -> void:
 	elif start_dir == "vertical":
 		direction.x = 0
 		direction.y = dist.y
+
+func _on_entrance_timer_timeout():
+	entered = true
 
 func _physics_process(_delta: float) -> void:
 	if alive:
@@ -95,31 +99,6 @@ func _physics_process(_delta: float) -> void:
 
 func make_path() -> void:
 	nav_agent.target_position = target.global_position
-	
-func die():
-	z_index = 1
-	collision_layer = 0
-	alive = false
-	$TrackTimer.stop()
-	$SummonCheckTimer.stop()
-	$SummonTimer.stop()
-	$AnimatedSprite2D.stop()
-	$AnimatedSprite2D.animation = "dead"
-	$EnemyHealthBar.hide()
-	get_parent().enemy_killed.emit()
-	
-	if randf() <= BASIC_DROP_CHANCE:
-		drop_item()
-
-func drop_item():
-	var item = item_scene.instantiate()
-	item.position = position
-	item.item_type = randi_range(0, 1)
-	main.call_deferred("add_child", item)
-	item.add_to_group("items")
-
-func _on_entrance_timer_timeout():
-	entered = true
 
 func _on_track_timer_timeout():
 	make_path()
@@ -162,3 +141,31 @@ func _on_summon_timer_timeout():
 		summoning = false
 		$SummonTimer.stop()
 		$SummonCheckTimer.start()
+
+func _on_area_2d_body_entered(_body):
+	player_colliding = true
+
+func _on_area_2d_body_exited(_body):
+	player_colliding = false
+
+func die():
+	z_index = 1
+	collision_layer = 0
+	alive = false
+	$TrackTimer.stop()
+	$SummonCheckTimer.stop()
+	$SummonTimer.stop()
+	$AnimatedSprite2D.stop()
+	$AnimatedSprite2D.animation = "dead"
+	$EnemyHealthBar.hide()
+	get_parent().enemy_killed.emit()
+	
+	if randf() <= BASIC_DROP_CHANCE:
+		drop_item()
+
+func drop_item():
+	var item = item_scene.instantiate()
+	item.position = position
+	item.item_type = randi_range(0, 1)
+	main.call_deferred("add_child", item)
+	item.add_to_group("items")

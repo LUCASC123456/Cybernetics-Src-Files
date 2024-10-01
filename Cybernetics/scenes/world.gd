@@ -3,13 +3,13 @@ extends TileMap
 @onready var main = get_node("/root/Main")
 
 var passage_way : String
-var door_closed : bool
+var exit_door_closed : bool
 	
 func _on_level_1_body_entered(body):
 	if body.name == "Player":
 		body.out_of_bounds = false
 		main.levels[0] = true
-		door_closed = false
+		exit_door_closed = false
 	else:
 		pass
 	
@@ -39,7 +39,7 @@ func _on_level_2_body_entered(body):
 	if body.name == "Player":
 		body.out_of_bounds = false
 		main.levels[1] = true
-		door_closed = false
+		exit_door_closed = false
 		main.new_game()
 	else:
 		pass
@@ -72,7 +72,7 @@ func _on_level_3_body_entered(body):
 	if body.name == "Player":
 		body.out_of_bounds = false
 		main.levels[2] = true
-		door_closed = false
+		exit_door_closed = false
 		main.new_game()
 	else:
 		pass
@@ -105,7 +105,7 @@ func _on_level_4_body_entered(body):
 	if body.name == "Player":
 		body.out_of_bounds = false
 		main.levels[3] = true
-		door_closed = false
+		exit_door_closed = false
 		main.new_game()
 	else:
 		pass
@@ -233,4 +233,4 @@ func _on_exit_door_timer_timeout():
 		for i in main.player_door_coordinates["Level4"][1]:
 			set_cell(1, i, 0, Vector2i(0,0), 0)
 	
-	door_closed = true
+	exit_door_closed = true

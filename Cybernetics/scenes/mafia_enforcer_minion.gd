@@ -16,6 +16,7 @@ var alive : bool
 var entered : bool
 var out_of_bounds : bool
 var damage_resistant : bool
+var player_colliding : bool
 var direction : Vector2
 var central_spawn_point : Vector2
 var probability : float
@@ -127,6 +128,7 @@ func _on_entrance_timer_timeout():
 	entered = true
 
 func _on_area_2d_body_entered(_body):
+	player_colliding = true
 	if alive and entered:
 		hit_player_7.emit()
 		$HitTimer.start()
@@ -137,6 +139,7 @@ func _on_hit_timer_timeout():
 	hit_player_7.emit()
 
 func _on_area_2d_body_exited(_body):
+	player_colliding = false
 	$HitTimer.stop()
 		
 func _on_track_timer_timeout():

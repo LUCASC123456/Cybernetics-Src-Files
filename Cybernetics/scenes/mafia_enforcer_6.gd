@@ -16,6 +16,7 @@ var speed : int
 var alive : bool
 var entered : bool
 var damage_resistant : bool
+var player_colliding : bool
 var phantom_sight_reach : bool
 var phantom_attack : bool
 var phantom_collide : bool
@@ -134,6 +135,7 @@ func _on_phantom_timer_timeout():
 
 func _on_area_2d_body_entered(body):
 	if body.name == "Player":
+		player_colliding = true
 		if alive and entered:
 			hit_player_6.emit()
 			$HitTimer.start()
@@ -151,6 +153,7 @@ func _on_hit_timer_timeout():
 
 func _on_area_2d_body_exited(body):
 	if body.name == "Player":
+		player_colliding = false
 		$HitTimer.stop()
 	elif body.name == "World":
 		z_index = 3
