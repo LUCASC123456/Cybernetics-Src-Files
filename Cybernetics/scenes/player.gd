@@ -22,12 +22,10 @@ var mag_collection = [0,0,0]
 
 func _ready():
 	speed = 250
-	
 	position = Vector2(384, 384)
-	
 	main_menu.load_data()
 	selected_gun = guns[main_menu.store.selected]
-	
+	can_shoot = true
 	reset()
 
 func reset():
@@ -46,96 +44,106 @@ func reset():
 	elif selected_gun == "AR":
 		for i in range(0, len(mag_collection)):
 			mag_collection[i] = 30
-	
-	can_shoot = true
 
 func get_input():
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	velocity = input_dir.normalized() * speed
 	
 	if selected_gun == "PISTOL":
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot and UI.ui_mouse_entered == false:
-			mag_collection[mags-1] -= 1
-			if main.credits_earned > 0:
-				main.credits_earned -= 2
-				if main.credits_earned < 0:
-					main.credits_earned = 0
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
+			if UI.ui_mouse_entered == false:
+				mag_collection[mags-1] -= 1
+				if main.credits_earned > 0:
+					main.credits_earned -= 2
+					if main.credits_earned < 0:
+						main.credits_earned = 0
+					else:
+						pass
 				else:
 					pass
+					
+				var dir = get_global_mouse_position() - position
+				shoot.emit(position, dir)
+				can_shoot = false
+				
+				if mag_collection[mags-1] > 0:
+					$ShotTimerPistol.start()
+				else:
+					$ReloadTimer.start()
 			else:
 				pass
-			
-			var dir = get_global_mouse_position() - position
-			shoot.emit(position, dir)
-			can_shoot = false
-			
-			if mag_collection[mags-1] > 0:
-				$ShotTimerPistol.start()
-			else:
-				$ReloadTimer.start()
 				
 	elif selected_gun == "SMG":
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot and UI.ui_mouse_entered == false:
-			mag_collection[mags-1] -= 1
-			if main.credits_earned > 0:
-				main.credits_earned -= 2
-				if main.credits_earned < 0:
-					main.credits_earned = 0
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
+			if UI.ui_mouse_entered == false:
+				mag_collection[mags-1] -= 1
+				if main.credits_earned > 0:
+					main.credits_earned -= 2
+					if main.credits_earned < 0:
+						main.credits_earned = 0
+					else:
+						pass
 				else:
 					pass
+			
+				var dir = get_global_mouse_position() - position
+				shoot.emit(position, dir)
+				can_shoot = false
+				
+				if mag_collection[mags-1] > 0:
+					$ShotTimerSMG.start()
+				else:
+					$ReloadTimer.start()
 			else:
 				pass
-			
-			var dir = get_global_mouse_position() - position
-			shoot.emit(position, dir)
-			can_shoot = false
-			
-			if mag_collection[mags-1] > 0:
-				$ShotTimerSMG.start()
-			else:
-				$ReloadTimer.start()
-	
+				
 	elif selected_gun == "LMG":
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot and UI.ui_mouse_entered == false:
-			mag_collection[mags-1] -= 1
-			if main.credits_earned > 0:
-				main.credits_earned -= 2
-				if main.credits_earned < 0:
-					main.credits_earned = 0
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
+			if UI.ui_mouse_entered == false:
+				mag_collection[mags-1] -= 1
+				if main.credits_earned > 0:
+					main.credits_earned -= 2
+					if main.credits_earned < 0:
+						main.credits_earned = 0
+					else:
+						pass
 				else:
 					pass
+			
+				var dir = get_global_mouse_position() - position
+				shoot.emit(position, dir)
+				can_shoot = false
+				
+				if mag_collection[mags-1] > 0:
+					$ShotTimerLMG.start()
+				else:
+					$ReloadTimer.start()
 			else:
 				pass
-			
-			var dir = get_global_mouse_position() - position
-			shoot.emit(position, dir)
-			can_shoot = false
-			
-			if mag_collection[mags-1] > 0:
-				$ShotTimerLMG.start()
-			else:
-				$ReloadTimer.start()
-	
+				
 	elif selected_gun == "AR":
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot and UI.ui_mouse_entered == false:
-			mag_collection[mags-1] -= 1
-			if main.credits_earned > 0:
-				main.credits_earned -= 2
-				if main.credits_earned < 0:
-					main.credits_earned = 0
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
+			if UI.ui_mouse_entered == false:
+				mag_collection[mags-1] -= 1
+				if main.credits_earned > 0:
+					main.credits_earned -= 2
+					if main.credits_earned < 0:
+						main.credits_earned = 0
+					else:
+						pass
 				else:
 					pass
+				
+				var dir = get_global_mouse_position() - position
+				shoot.emit(position, dir)
+				can_shoot = false
+				
+				if mag_collection[mags-1] > 0:
+					$ShotTimerAR.start()
+				else:
+					$ReloadTimer.start()
 			else:
 				pass
-			
-			var dir = get_global_mouse_position() - position
-			shoot.emit(position, dir)
-			can_shoot = false
-			
-			if mag_collection[mags-1] > 0:
-				$ShotTimerAR.start()
-			else:
-				$ReloadTimer.start()
 
 func _process(_delta):
 	if selected_gun == "PISTOL":

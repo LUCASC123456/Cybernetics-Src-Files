@@ -163,6 +163,7 @@ func _on_restart_timer_timeout():
 	$EnemySpawner/Timer.start()
 
 func _physics_process(_delta):
+	print(credits_earned)
 	target_area_nodes = get_tree().get_nodes_in_group("target_area_nodes")
 	mafia_enforcer_5s = get_tree().get_nodes_in_group("mafia_enforcer_5")
 
@@ -237,7 +238,7 @@ func _on_enemy_spawner_hit_p():
 		damage = randi_range(15, 20)
 	elif levels[3]:
 		damage = randi_range(20, 25)
-		
+	
 	$Player.health -= damage
 	if credits_earned > 0:
 		credits_earned -= damage

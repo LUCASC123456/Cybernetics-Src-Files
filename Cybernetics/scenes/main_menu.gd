@@ -32,4 +32,3 @@ func load_data():
 func _on_shop_button_pressed():
 	hide()
 	market.show()
-	market.get_node("CreditsAvailable").text = "CREDITS AVAILABLE: " + str(credits)

@@ -19,6 +19,9 @@ func _ready():
 	buttons.get_node("Button" + str(main_menu.store.selected+1)).text = "EQUIPPED"
 	buttons.get_node("Button" + str(main_menu.store.selected+1)).add_to_group("selected")
 
+func _process(_delta):
+	$CreditsAvailable.text = "CREDITS AVAILABLE: " + str(main_menu.credits)
+
 func _selected(node, no):
 	main_menu.load_data()
 	for button in get_tree().get_nodes_in_group("selected"):
@@ -36,7 +39,6 @@ func _buy(price, item_no):
 			main_menu.credits -= price
 			main_menu.store.bought[item_no] = true
 			buttons.get_node("Button" + str(item_no+1)).text = "EQUIP"
-			market.get_node("CreditsAvailable").text = "CREDITS AVAILABLE: " + str(main_menu.credits)
 			main_menu.save_data()
 		else:
 			var rem = price - main_menu.credits
