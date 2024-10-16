@@ -9,8 +9,6 @@ extends CharacterBody2D
 
 var item_scene := preload("res://scenes/item.tscn")
 
-signal hit_player_2
-
 var health : int
 var speed : int
 var alive : bool
@@ -38,6 +36,9 @@ func _ready() -> void:
 		direction.x = 0
 		direction.y = dist.y
 
+func _on_entrance_timer_timeout():
+	entered = true
+
 func _physics_process(_delta: float) -> void:
 	if alive:
 		$AnimatedSprite2D.animation = "run"
@@ -54,8 +55,6 @@ func _physics_process(_delta: float) -> void:
 					position = Vector2(3216,1624)
 				elif main.levels[3]:
 					position = Vector2(7128,1632)
-				elif main.levels[4]:
-					position = Vector2(8112,4968)
 			else:
 				pass
 		else:
@@ -72,7 +71,25 @@ func _physics_process(_delta: float) -> void:
 
 func make_path() -> void:
 	nav_agent.target_position = target.global_position
-	
+
+func _on_track_timer_timeout():
+	make_path()
+
+func _on_area_2d_body_entered(_body):
+	player_colliding = true
+	if alive and entered:
+		main.hit_player_2()
+		$HitTimer.start()
+	else:
+		pass
+
+func _on_hit_timer_timeout():
+	main.hit_player_2()
+
+func _on_area_2d_body_exited(_body):
+	player_colliding = false
+	$HitTimer.stop()
+
 func die():
 	z_index = 1
 	collision_layer = 0
@@ -82,7 +99,7 @@ func die():
 	$TrackTimer.stop()
 	$AnimatedSprite2D.animation = "dead"
 	$EnemyHealthBar.hide()
-	get_parent().enemy_killed.emit()
+	main.enemy_killed.emit()
 	
 	if randf() <= BASIC_DROP_CHANCE:
 		drop_item()
@@ -93,24 +110,3 @@ func drop_item():
 	item.item_type = randi_range(0, 1)
 	main.call_deferred("add_child", item)
 	item.add_to_group("items")
-
-func _on_entrance_timer_timeout():
-	entered = true
-
-func _on_area_2d_body_entered(_body):
-	player_colliding = true
-	if alive and entered:
-		hit_player_2.emit()
-		$HitTimer.start()
-	else:
-		pass
-
-func _on_hit_timer_timeout():
-	hit_player_2.emit()
-
-func _on_area_2d_body_exited(_body):
-	player_colliding = false
-	$HitTimer.stop()
-
-func _on_track_timer_timeout():
-	make_path()

@@ -9,9 +9,9 @@ func _ready():
 	ui_mouse_entered = false
 
 func _process(_delta):
+	$HealthBar.value = player.health
 	$PrimaryWeaponSelection.text = "PRIMARY: " + str(player.selected_gun)
 	$EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(main.enemies_left)
-	$HealthBar.value = player.health
 	
 	if main.levels[0]:
 		$RoomCounter/RoomLabel.text = "ROOM: 1/5"
@@ -30,11 +30,11 @@ func _on_pause_button_mouse_entered():
 func _on_pause_button_mouse_exited():
 	ui_mouse_entered = false
 
-func _on_pause_button_pressed():
-	main.pause()
-
 func _on_primary_weapon_selection_mouse_entered():
 	ui_mouse_entered = true
 
 func _on_primary_weapon_selection_mouse_exited():
 	ui_mouse_entered = false
+
+func _on_pause_button_pressed():
+	main.pause()

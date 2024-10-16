@@ -10,8 +10,6 @@ extends CharacterBody2D
 var item_scene := preload("res://scenes/item.tscn")
 var can_see_player := false
 
-signal hit_player_4
-
 var health : int
 var speed : int
 var time : float
@@ -44,6 +42,9 @@ func _ready() -> void:
 		direction.x = 0
 		direction.y = dist.y
 
+func _on_entrance_timer_timeout():
+	entered = true
+
 func _physics_process(delta):
 	if alive:
 		$AnimatedSprite2D.animation = "run"
@@ -53,6 +54,18 @@ func _physics_process(delta):
 			
 			for i in $Area2D.get_overlapping_bodies():
 				exclusion_container.append(i.get_rid())
+			
+			for i in main.get_children():
+				if i is CharacterBody2D:
+					if i.name != "Player":
+						if i.player_colliding:
+							exclusion_container.append(i.get_rid())
+						else:
+							pass
+					else:
+						pass
+				else:
+					pass
 				
 			var space_state = get_world_2d().direct_space_state
 			var query = PhysicsRayQueryParameters2D.create(global_transform.origin, player.global_transform.origin, 7, exclusion_container)
@@ -81,13 +94,9 @@ func _physics_process(delta):
 					time = 0
 					if $WaitTimer.is_stopped():
 						$WaitTimer.start()
-					else:
-						pass
 				elif time == 0:
 					if $WaitTimer.is_stopped():
 						dashing = true
-					else:
-						pass
 			else:
 				if time == 1 or time == 0:
 					$WaitTimer.stop()
@@ -104,8 +113,6 @@ func _physics_process(delta):
 					position = Vector2(3216,1624)
 				elif main.levels[3]:
 					position = Vector2(7128,1632)
-				elif main.levels[4]:
-					position = Vector2(8112,4968)
 			else:
 				pass
 		else:
@@ -122,7 +129,28 @@ func _physics_process(delta):
 
 func make_path() -> void:
 	nav_agent.target_position = target.global_position
-	
+
+func _on_track_timer_timeout():
+	make_path()
+
+func _on_wait_timer_timeout():
+	direction = target.global_position - position
+
+func _on_area_2d_body_entered(_body):
+	player_colliding = true
+	if alive and entered:
+		main.hit_player_4()
+		$HitTimer.start()
+	else:
+		pass
+
+func _on_hit_timer_timeout():
+	main.hit_player_4()
+
+func _on_area_2d_body_exited(_body):
+	player_colliding = false
+	$HitTimer.stop()
+
 func die():
 	z_index = 1
 	collision_layer = 0
@@ -133,7 +161,7 @@ func die():
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"
 	$EnemyHealthBar.hide()
-	get_parent().enemy_killed.emit()
+	main.enemy_killed.emit()
 	
 	if randf() <= BASIC_DROP_CHANCE:
 		drop_item()
@@ -144,27 +172,3 @@ func drop_item():
 	item.item_type = randi_range(0, 1)
 	main.call_deferred("add_child", item)
 	item.add_to_group("items")
-
-func _on_entrance_timer_timeout():
-	entered = true
-
-func _on_area_2d_body_entered(_body):
-	player_colliding = true
-	if alive and entered:
-		hit_player_4.emit()
-		$HitTimer.start()
-	else:
-		pass
-
-func _on_hit_timer_timeout():
-	hit_player_4.emit()
-
-func _on_area_2d_body_exited(_body):
-	player_colliding = false
-	$HitTimer.stop()
-
-func _on_track_timer_timeout():
-	make_path()
-
-func _on_wait_timer_timeout():
-	direction = target.global_position - position

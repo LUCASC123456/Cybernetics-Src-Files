@@ -10,8 +10,6 @@ extends CharacterBody2D
 
 var item_scene := preload("res://scenes/item.tscn")
 
-signal hit_player_5
-
 var health : int
 var speed : int 
 var i : int
@@ -48,6 +46,9 @@ func _ready() -> void:
 	elif start_dir == "vertical":
 		direction.x = 0
 		direction.y = dist.y
+
+func _on_entrance_timer_timeout():
+	entered = true
 
 func _physics_process(delta):
 	if alive:
@@ -148,16 +149,7 @@ func _physics_process(delta):
 				damage_resistant = false
 				
 				if out_of_bounds:
-					if main.levels[0]:
-						position = Vector2(384,384)
-					elif main.levels[1]:
-						position = Vector2(1920,384)
-					elif main.levels[2]:
-						position = Vector2(3216,1624)
-					elif main.levels[3]:
-						position = Vector2(7128,1632)
-					elif main.levels[4]:
-						position = Vector2(8112,4968)
+					position = Vector2(7128,1632)
 				else:
 					pass
 		else:
@@ -174,39 +166,6 @@ func _physics_process(delta):
 
 func make_path() -> void:
 	nav_agent.target_position = target.global_position
-
-func die():
-	z_index = 1
-	collision_layer = 0
-	alive = false
-	los.enabled = false
-	lazer_reach = false
-	lazer_activated = false
-	teleport_activated = false
-	$HitTimer.stop()
-	$TrackTimer.stop()
-	$TeleportChanceTimer.stop()
-	$TeleportTimer.stop()
-	$LazerBeamChanceTimer.stop()
-	$LazerBeamTimer.stop()
-	$AnimatedSprite2D.stop()
-	$AnimatedSprite2D.animation = "dead"
-	$EnemyHealthBar.hide()
-	get_parent().enemy_killed.emit()
-	main.target_area_nodes[i].draw_target_area(global_position)
-	
-	if randf() <= BASIC_DROP_CHANCE:
-		drop_item()
-
-func drop_item():
-	var item = item_scene.instantiate()
-	item.position = position
-	item.item_type = randi_range(0, 1)
-	main.call_deferred("add_child", item)
-	item.add_to_group("items")
-
-func _on_entrance_timer_timeout():
-	entered = true
 
 func _on_track_timer_timeout():
 	make_path()
@@ -274,9 +233,7 @@ func _on_area_2d_body_entered(_body):
 	player_colliding = true
 	if alive and entered:
 		if speed == 100:
-			hit_player_5.emit()
-		else:
-			pass
+			main.hit_player_5()
 		$HitTimer.start()
 	else:
 		pass
@@ -287,6 +244,36 @@ func _on_area_2d_body_exited(_body):
 
 func _on_hit_timer_timeout():
 	if speed == 100:
-		hit_player_5.emit()
+		main.hit_player_5()
 	else:
 		pass
+
+func die():
+	z_index = 1
+	collision_layer = 0
+	alive = false
+	los.enabled = false
+	lazer_reach = false
+	lazer_activated = false
+	teleport_activated = false
+	$HitTimer.stop()
+	$TrackTimer.stop()
+	$TeleportChanceTimer.stop()
+	$TeleportTimer.stop()
+	$LazerBeamChanceTimer.stop()
+	$LazerBeamTimer.stop()
+	$AnimatedSprite2D.stop()
+	$AnimatedSprite2D.animation = "dead"
+	$EnemyHealthBar.hide()
+	main.enemy_killed.emit()
+	main.target_area_nodes[i].draw_target_area(global_position)
+	
+	if randf() <= BASIC_DROP_CHANCE:
+		drop_item()
+
+func drop_item():
+	var item = item_scene.instantiate()
+	item.position = position
+	item.item_type = randi_range(0, 1)
+	main.call_deferred("add_child", item)
+	item.add_to_group("items")

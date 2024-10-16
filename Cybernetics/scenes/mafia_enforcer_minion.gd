@@ -8,8 +8,6 @@ extends CharacterBody2D
 
 var item_scene := preload("res://scenes/item.tscn")
 
-signal hit_player_7
-
 var health : int
 var speed : int
 var alive : bool
@@ -32,6 +30,9 @@ func _ready() -> void:
 	health = 150
 	speed = 0
 	main.enemies_left += 1
+
+func _on_entrance_timer_timeout():
+	entered = true
 
 func _process(_delta):
 	if alive:
@@ -61,31 +62,13 @@ func _physics_process(_delta: float) -> void:
 			damage_resistant = false
 			direction = to_local(nav_agent.get_next_path_position())
 			
-			if main.levels[0]:
-				if out_of_bounds:
-					position = Vector2(384,384)
-				else:
-					pass
-			elif main.levels[1]:
-				if out_of_bounds:
-					position = Vector2(1920,384)
-				else:
-					pass
-			elif main.levels[2]:
-				if out_of_bounds:
+			if out_of_bounds:
+				if main.levels[2]:
 					position = Vector2(3216,1624)
-				else:
-					pass
-			elif main.levels[3]:
-				if out_of_bounds:
+				elif main.levels[3]:
 					position = Vector2(7128,1632)
-				else:
-					pass
-			elif main.levels[4]:
-				if out_of_bounds:
-					position = Vector2(8112,4968)
-				else:
-					pass
+			else:
+				pass
 		else:
 			speed = 0
 			visible = false
@@ -102,7 +85,25 @@ func _physics_process(_delta: float) -> void:
 
 func make_path() -> void:
 	nav_agent.target_position = target.global_position
-	
+
+func _on_track_timer_timeout():
+	make_path()
+
+func _on_area_2d_body_entered(_body):
+	player_colliding = true
+	if alive and entered:
+		main.hit_player_7()
+		$HitTimer.start()
+	else:
+		pass
+		
+func _on_hit_timer_timeout():
+	main.hit_player_7()
+
+func _on_area_2d_body_exited(_body):
+	player_colliding = false
+	$HitTimer.stop()
+
 func die():
 	z_index = 1
 	collision_layer = 0
@@ -112,7 +113,7 @@ func die():
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"
 	$EnemyHealthBar.hide()
-	get_parent().enemy_killed.emit()
+	main.enemy_killed.emit()
 	
 	if randf() <= BASIC_DROP_CHANCE:
 		drop_item()
@@ -123,24 +124,3 @@ func drop_item():
 	item.item_type = randi_range(0, 1)
 	main.call_deferred("add_child", item)
 	item.add_to_group("items")
-
-func _on_entrance_timer_timeout():
-	entered = true
-
-func _on_area_2d_body_entered(_body):
-	player_colliding = true
-	if alive and entered:
-		hit_player_7.emit()
-		$HitTimer.start()
-	else:
-		pass
-
-func _on_hit_timer_timeout():
-	hit_player_7.emit()
-
-func _on_area_2d_body_exited(_body):
-	player_colliding = false
-	$HitTimer.stop()
-		
-func _on_track_timer_timeout():
-	make_path()

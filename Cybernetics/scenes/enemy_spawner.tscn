@@ -122,5 +122,9 @@ position = Vector2(8452, 1674)
 
 [node name="Level5" type="Node2D" parent="."]
 
+[node name="Marker2D34" type="Marker2D" parent="Level5" groups=["horizontal"]]
+visible = false
+position = Vector2(8112, 6336)
+
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="Timer2" to="." method="_on_timer_2_timeout"]

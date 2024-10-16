@@ -4,6 +4,7 @@
 
 [node name="TargetAreaNode" type="Node2D" groups=["target_area_nodes"]]
 process_mode = 1
+visible = false
 script = ExtResource("1_p436f")
 
 [node name="LazerReachArea" type="Area2D" parent="."]

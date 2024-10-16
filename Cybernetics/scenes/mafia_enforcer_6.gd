@@ -9,8 +9,6 @@ extends CharacterBody2D
 var item_scene := preload("res://scenes/item.tscn")
 var can_see_player := false
 
-signal hit_player_6
-
 var health : int
 var speed : int
 var alive : bool
@@ -42,6 +40,9 @@ func _ready() -> void:
 		direction.x = 0
 		direction.y = dist.y
 
+func _on_entrance_timer_timeout():
+	entered = true
+
 func _physics_process(_delta: float) -> void:
 	if alive:
 		$AnimatedSprite2D.animation = "run"
@@ -49,7 +50,22 @@ func _physics_process(_delta: float) -> void:
 			exclusion_container.clear()
 			
 			for i in $Area2D.get_overlapping_bodies():
-				exclusion_container.append(i.get_rid())
+				if i is TileMap:
+					pass
+				else:
+					exclusion_container.append(i.get_rid())
+			
+			for i in main.get_children():
+				if i is CharacterBody2D:
+					if i.name != "Player":
+						if i.player_colliding:
+							exclusion_container.append(i.get_rid())
+						else:
+							pass
+					else:
+						pass
+				else:
+					pass
 			
 			var space_state = get_world_2d().direct_space_state
 			var query = PhysicsRayQueryParameters2D.create(global_transform.origin, player.global_transform.origin, 7, exclusion_container)
@@ -87,34 +103,6 @@ func _physics_process(_delta: float) -> void:
 			$AnimatedSprite2D.flip_h = velocity.x < 0
 	else:
 		pass
-	
-
-func die():
-	z_index = 1
-	collision_layer = 0
-	alive = false
-	phantom_attack = false
-	phantom_collide = false
-	$HitTimer.stop()
-	$PhantomCheckTimer.stop()
-	$PhantomTimer.stop()
-	$AnimatedSprite2D.stop()
-	$AnimatedSprite2D.animation = "dead"
-	$EnemyHealthBar.hide()
-	get_parent().enemy_killed.emit()
-	
-	if randf() <= BASIC_DROP_CHANCE:
-		drop_item()
-
-func drop_item():
-	var item = item_scene.instantiate()
-	item.position = position
-	item.item_type = randi_range(0, 1)
-	main.call_deferred("add_child", item)
-	item.add_to_group("items")
-
-func _on_entrance_timer_timeout():
-	entered = true
 
 func _on_phantom_check_timer_timeout():
 	if alive and entered:
@@ -137,7 +125,7 @@ func _on_area_2d_body_entered(body):
 	if body.name == "Player":
 		player_colliding = true
 		if alive and entered:
-			hit_player_6.emit()
+			main.hit_player_6()
 			$HitTimer.start()
 		else:
 			pass
@@ -149,7 +137,7 @@ func _on_area_2d_body_entered(body):
 			z_index = 3
 
 func _on_hit_timer_timeout():
-	hit_player_6.emit()
+	main.hit_player_6()
 
 func _on_area_2d_body_exited(body):
 	if body.name == "Player":
@@ -160,3 +148,27 @@ func _on_area_2d_body_exited(body):
 		phantom_collide = false
 	else:
 		pass
+
+func die():
+	z_index = 1
+	collision_layer = 0
+	alive = false
+	phantom_attack = false
+	phantom_collide = false
+	$HitTimer.stop()
+	$PhantomCheckTimer.stop()
+	$PhantomTimer.stop()
+	$AnimatedSprite2D.stop()
+	$AnimatedSprite2D.animation = "dead"
+	$EnemyHealthBar.hide()
+	main.enemy_killed.emit()
+	
+	if randf() <= BASIC_DROP_CHANCE:
+		drop_item()
+
+func drop_item():
+	var item = item_scene.instantiate()
+	item.position = position
+	item.item_type = randi_range(0, 1)
+	main.call_deferred("add_child", item)
+	item.add_to_group("items")

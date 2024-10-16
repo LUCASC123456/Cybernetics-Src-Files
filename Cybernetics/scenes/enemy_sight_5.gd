@@ -10,6 +10,7 @@ var is_casting: bool = false :
 			appear()
 		else:
 			disapear()
+		
 		set_physics_process(is_casting)
 		
 func _ready():
@@ -34,15 +35,15 @@ func _physics_process(_delta: float) -> void:
 	force_raycast_update()
 	
 	if is_colliding():
+		cast_point_2 = to_local(get_collision_point())
 		if get_collider().name == "Player":
-			cast_point_2 = to_local(get_collision_point())
 			main.hit_player_5_lazer()
 			get_parent().speed = 100
 			get_parent().lazer_activated = false
 			get_parent().get_node("LazerBeamTimer").stop()
 			get_parent().get_node("LazerBeamChanceTimer").start()
 		else:
-			cast_point_2 = to_local(get_collision_point())
+			pass
 	else:
 		pass
 	

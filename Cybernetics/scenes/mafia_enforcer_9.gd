@@ -121,16 +121,12 @@ func _physics_process(_delta: float) -> void:
 				speed = 100
 					
 			if out_of_bounds:
-				if main.levels[0]:
-					position = Vector2(384,384)
-				elif main.levels[1]:
+				if main.levels[1]:
 					position = Vector2(1920,384)
 				elif main.levels[2]:
 					position = Vector2(3216,1624)
 				elif main.levels[3]:
 					position = Vector2(7128,1632)
-				elif main.levels[4]:
-					position = Vector2(8112,4968)
 			else:
 				pass
 		else:
@@ -145,6 +141,12 @@ func _physics_process(_delta: float) -> void:
 	else:
 		pass
 
+func make_path() -> void:
+	nav_agent.target_position = target.global_position
+
+func _on_track_timer_timeout():
+	make_path()
+
 func shoot():
 	if ENEMY_BULLET:
 		var bullet: Node2D = ENEMY_BULLET.instantiate()
@@ -154,33 +156,6 @@ func shoot():
 		bullet.global_rotation = (target.global_position - global_position).angle()
 	
 	shot_timer.start()
-
-func make_path() -> void:
-	nav_agent.target_position = target.global_position
-
-func _on_track_timer_timeout():
-	make_path()
-
-func die():
-	z_index = 1
-	collision_layer = 0
-	alive = false
-	$ShotTimer.stop()
-	$ReloadTimer.stop()
-	$AnimatedSprite2D.stop()
-	$AnimatedSprite2D.animation = "dead"
-	$EnemyHealthBar.hide()
-	get_parent().enemy_killed.emit()
-	
-	if randf() <= BASIC_DROP_CHANCE:
-		drop_item()
-
-func drop_item():
-	var item = item_scene.instantiate()
-	item.position = position
-	item.item_type = randi_range(0, 1)
-	main.call_deferred("add_child", item)
-	item.add_to_group("items")
 
 func _on_area_2d_body_entered(body):
 	if body.is_in_group("enemies"):
@@ -216,3 +191,24 @@ func _on_area_2d_body_exited(body):
 		player_colliding = false
 	else:
 		pass
+
+func die():
+	z_index = 1
+	collision_layer = 0
+	alive = false
+	$ShotTimer.stop()
+	$ReloadTimer.stop()
+	$AnimatedSprite2D.stop()
+	$AnimatedSprite2D.animation = "dead"
+	$EnemyHealthBar.hide()
+	main.enemy_killed.emit()
+	
+	if randf() <= BASIC_DROP_CHANCE:
+		drop_item()
+
+func drop_item():
+	var item = item_scene.instantiate()
+	item.position = position
+	item.item_type = randi_range(0, 1)
+	main.call_deferred("add_child", item)
+	item.add_to_group("items")

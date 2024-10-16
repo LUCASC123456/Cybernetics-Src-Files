@@ -28,7 +28,6 @@ func load_data():
 	else:
 		credits = 0
 		
-
 func _on_shop_button_pressed():
 	hide()
 	market.show()

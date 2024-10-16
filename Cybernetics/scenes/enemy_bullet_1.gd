@@ -2,8 +2,9 @@ extends Area2D
 
 @onready var main = get_node("/root/Main")
 
-const RIGHT = Vector2.RIGHT
-@export var SPEED: int = 750
+@export var speed: int = 750
+
+const direction = Vector2.RIGHT
 
 var area_collider_count : int
 var bullet_collisions : bool
@@ -12,8 +13,8 @@ func ready():
 	bullet_collisions = false
 
 func _physics_process(delta):
-	var movement = RIGHT.rotated(rotation) * SPEED * delta
-	global_position += movement
+	var velocity = direction.rotated(rotation) * speed * delta
+	global_position += velocity
 
 func _on_body_entered(body):
 	if body.name == "Player":

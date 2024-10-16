@@ -9,17 +9,20 @@ var FOV_increment = 2 * PI / 60
 
 func _ready():
 	i = int(name.lstrip("TargetNode2D"))
-	print(i)
 	
-func draw_target_area(position):
-	if main.mafia_enforcer_5s[i].alive:
-		$LazerReachArea.monitoring = true
-		$LazerReachArea/CollisionPolygon2D.disabled = false
-		set_target_area(get_FOV_circle(position,500))
+func draw_target_area(pos):
+	if main.levels[3]:
+		if main.mafia_enforcer_5s[i].alive:
+			set_target_area(get_FOV_circle(pos,500))
+		else:
+			set_target_area(get_FOV_circle(pos,0))
+	elif main.levels[1] or main.levels[4]:
+		if main.boss.alive:
+			set_target_area(get_FOV_circle(pos,1000))
+		else:
+			set_target_area(get_FOV_circle(pos,0))
 	else:
-		$LazerReachArea.monitoring = false
-		$LazerReachArea/CollisionPolygon2D.disabled = true
-		set_target_area(get_FOV_circle(position,0))
+		pass
 		
 func get_FOV_circle(from:Vector2,radius):
 	return raycast_arc(from,radius,FOV_increment,2*PI)
@@ -49,10 +52,17 @@ func set_target_area(points:PackedVector2Array):
 	$LazerReachArea/CollisionPolygon2D.polygon = points
 
 func _on_lazer_reach_area_body_entered(_body):
-	main.mafia_enforcer_5s[i].lazer_reach = true
+	if main.levels[3]:
+		main.mafia_enforcer_5s[i].lazer_reach = true
+	elif main.levels[1] or main.levels[4]:
+		main.boss.can_see_player = true
+	else:
+		pass
 
 func _on_lazer_reach_area_body_exited(_body):
-	if get_tree().paused == false:
+	if main.levels[3]:
 		main.mafia_enforcer_5s[i].lazer_reach = false
+	elif main.levels[1] or main.levels[4]:
+		main.boss.can_see_player = false
 	else:
 		pass

@@ -4,10 +4,17 @@ signal enemy_killed
 
 var enemies_left : int
 var credits_earned : int
+var enemies_killed : int
+var damage_inflicted : int
+var damage_taken : int
+var time_taken : int
+var bullets_fired : int
+var levels_completed : int
 var target_area_nodes : Array
 var mafia_enforcer_5s : Array
+var boss : CharacterBody2D
 
-var enemy_level_count = [20, 30, 40, 50, 0]
+var enemy_level_count = [20, 30, 40, 50, 1]
 var levels = [true, false, false, false, false]
 
 var player_door_coordinates = {
@@ -15,7 +22,7 @@ var player_door_coordinates = {
 	"Level2" : [[Vector2i(24,6), Vector2i(24,7), Vector2i(24,8), Vector2i(24,9)], [Vector2i(55,6), Vector2i(55,7), Vector2i(55,8), Vector2i(55,9)]],
 	"Level3" : [[Vector2i(65,19), Vector2i(66,19), Vector2i(67,19), Vector2i(68,19)], [Vector2i(65,48), Vector2i(66,48), Vector2i(67,48), Vector2i(68,48)]],
 	"Level4" : [[Vector2i(127,48), Vector2i(128,48), Vector2i(129,48), Vector2i(130,48)], [Vector2i(167,48), Vector2i(168,48), Vector2i(169,48), Vector2i(170,48)]],
-	"Level5" : [[Vector2i(167, 63), Vector2i(168, 63), Vector2i(169, 63), Vector2i(170, 63)], []]
+	"Level5" : [Vector2i(167, 63), Vector2i(168, 63), Vector2i(169, 63), Vector2i(170, 63)]
 }
 
 var enemy_door_coordinates = {
@@ -31,12 +38,18 @@ func _on_tree_entered():
 
 func _ready():
 	get_tree().paused = true
-	$CreditTimer.stop()
+	$RestartTimer.paused = false
 	$RestartTimer.stop()
+	$CreditTimer.stop()
 	$EnemySpawner/Timer.stop()
 	$EnemySpawner/Timer2.stop()
-	$RestartTimer.paused = false
 	credits_earned = 0
+	enemies_killed = 0
+	damage_inflicted = 0
+	damage_taken = 0
+	time_taken = 0
+	bullets_fired = 0
+	levels_completed = 0
 	
 	get_tree().call_group("enemies", "queue_free")
 	get_tree().call_group("minions", "queue_free")
@@ -45,12 +58,15 @@ func _ready():
 	get_tree().call_group("items", "queue_free")
 	
 	for i in $World.get_children():
-		if i.name == "Level1":
-			for k in i.get_children():
-				k.set_deferred("disabled", false)
+		if i.is_in_group("levels"):
+			if i.name == "Level1":
+				for k in i.get_children():
+					k.set_deferred("disabled", false)
+			else:
+				for k in i.get_children():
+					k.set_deferred("disabled", true)
 		else:
-			for k in i.get_children():
-				k.set_deferred("disabled", true)
+			pass
 				
 	for i in range(0, len(levels)):
 		if i == 0:
@@ -93,12 +109,12 @@ func _ready():
 
 func new_game():
 	if levels[0]:
-		enemies_left = enemy_level_count[0]
 		$Player._ready()
 		$MainMenu.hide()
+		enemies_left = enemy_level_count[0]
 	elif levels[1]:
-		enemies_left = enemy_level_count[1]
 		$Player.reset()
+		enemies_left = enemy_level_count[1]
 		get_tree().call_group("enemies_level_1", "queue_free")
 		get_tree().call_group("target_area_nodes", "queue_free")
 		get_tree().call_group("minions", "queue_free")
@@ -106,8 +122,8 @@ func new_game():
 		get_tree().call_group("items", "queue_free")
 		
 	elif levels[2]:
-		enemies_left = enemy_level_count[2]
 		$Player.reset()
+		enemies_left = enemy_level_count[2]
 		get_tree().call_group("enemies_level_2", "queue_free")
 		get_tree().call_group("target_area_nodes", "queue_free")
 		get_tree().call_group("minions", "queue_free")
@@ -131,6 +147,8 @@ func new_game():
 		get_tree().call_group("minions", "queue_free")
 		get_tree().call_group("bullets", "queue_free")
 		get_tree().call_group("items", "queue_free")
+	else:
+		pass
 	
 	$RestartTimer.start()
 
@@ -158,14 +176,16 @@ func _on_restart_timer_timeout():
 	elif levels[4]:
 		for i in player_door_coordinates["Level5"]:
 			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+	else:
+		pass
 	
 	$CreditTimer.start()
 	$EnemySpawner/Timer.start()
 
 func _physics_process(_delta):
-	print(credits_earned)
 	target_area_nodes = get_tree().get_nodes_in_group("target_area_nodes")
 	mafia_enforcer_5s = get_tree().get_nodes_in_group("mafia_enforcer_5")
+	boss = get_tree().get_first_node_in_group("boss")
 
 	if mafia_enforcer_5s.size() > 0:
 		for i in range(0, len(mafia_enforcer_5s)):
@@ -173,13 +193,16 @@ func _physics_process(_delta):
 				target_area_nodes[i].draw_target_area(mafia_enforcer_5s[i].global_position)
 			else:
 				pass
+	elif boss:
+		target_area_nodes[0].draw_target_area(boss.global_position)
 	else:
 		pass
 
 func _on_credit_timer_timeout():
+	time_taken += 1
 	if credits_earned > 0:
 		credits_earned -= 2
-		if credits_earned < 0:
+		if credits_earned <= 0:
 			credits_earned = 0
 		else:
 			pass
@@ -188,8 +211,11 @@ func _on_credit_timer_timeout():
 
 func _on_enemy_killed():
 	enemies_left -= 1
+	enemies_killed += 1
 	if enemies_left <= 0:
+		levels_completed += 1
 		$CreditTimer.stop()
+		
 		if levels[0]:
 			for i in player_door_coordinates["Level1"]:
 				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
@@ -208,14 +234,14 @@ func _on_enemy_killed():
 		elif levels[3]: 
 			for i in player_door_coordinates["Level4"][1]:
 				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
-			for i in player_door_coordinates["Level5"][0]:
+			for i in player_door_coordinates["Level5"]:
 				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
-		elif levels[4]:
-			get_tree().paused = true
-			$GameWon/CreditsEarned.text = "CREDITS EARNED: " + str(credits_earned)
-			$GameWon.show()
 		else:
-			pass
+			get_tree().paused = true
+			$GameWon.show()
+			$GameWon.display_stats()
+	else:
+		pass
 
 func pause():
 	get_tree().paused = true
@@ -227,7 +253,7 @@ func resume():
 	$RestartTimer.paused = false
 	$PauseScreen.hide()
 
-func _on_enemy_spawner_hit_p():
+func hit_player():
 	var damage : int
 	
 	if levels[0]:
@@ -238,11 +264,14 @@ func _on_enemy_spawner_hit_p():
 		damage = randi_range(15, 20)
 	elif levels[3]:
 		damage = randi_range(20, 25)
+	else:
+		pass
 	
 	$Player.health -= damage
+	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
-		if credits_earned < 0:
+		if credits_earned <= 0:
 			credits_earned = 0
 		else:
 			pass
@@ -251,12 +280,12 @@ func _on_enemy_spawner_hit_p():
 		
 	if $Player.health <= 0:
 		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
 		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
 
-func _on_enemy_spawner_hit_p_2():
+func hit_player_2():
 	var damage : int
 	
 	if levels[0]:
@@ -266,99 +295,15 @@ func _on_enemy_spawner_hit_p_2():
 	elif levels[2]:
 		damage = randi_range(15, 20)
 	elif levels[3]:
-		damage = randi_range(20, 25) 
-	
-	$Player.health -= damage
-	if credits_earned > 0:
-		credits_earned -= damage
-		if credits_earned < 0:
-			credits_earned = 0
-		else:
-			pass
-	else:
-		pass
-		
-	if $Player.health <= 0:
-		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
-		$GameOver.show()
-
-func _on_enemy_spawner_hit_p_3():
-	var damage : int
-	
-	if levels[0]:
-		damage = randi_range(10, 20)
-	elif levels[1]:
-		damage = randi_range(15, 25)
-	elif levels[2]:
-		damage = randi_range(20, 30)
-	elif levels[3]:
-		damage = randi_range(25, 35) 
-		
-	$Player.health -= damage
-	if credits_earned > 0:
-		credits_earned -= damage
-		if credits_earned < 0:
-			credits_earned = 0
-		else:
-			pass
-	else:
-		pass
-
-	if $Player.health <= 0:
-		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
-		$GameOver.show()
-
-func _on_enemy_spawner_hit_p_4():
-	var damage : int
-	
-	if levels[0]:
-		damage = randi_range(10, 20)
-	elif levels[1]:
-		damage = randi_range(15, 25)
-	elif levels[2]:
-		damage = randi_range(20, 30)
-	elif levels[3]:
-		damage = randi_range(25, 35) 
-	
-	$Player.health -= damage
-	if credits_earned > 0:
-		credits_earned -= damage
-		if credits_earned < 0:
-			credits_earned = 0
-		else:
-			pass
-	else:
-		pass
-	
-	if $Player.health <= 0:
-		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
-		$GameOver.show()
-
-func _on_enemy_spawner_hit_p_5():
-	var damage : int
-	
-	if levels[0]:
-		damage = randi_range(10, 15)
-	elif levels[1]:
-		damage = randi_range(15, 20)
-	elif levels[2]:
 		damage = randi_range(20, 25)
-	elif levels[3]:
-		damage = randi_range(25, 30)
+	else:
+		pass
 	
 	$Player.health -= damage
+	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
-		if credits_earned < 0:
+		if credits_earned <= 0:
 			credits_earned = 0
 		else:
 			pass
@@ -367,27 +312,108 @@ func _on_enemy_spawner_hit_p_5():
 		
 	if $Player.health <= 0:
 		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
 		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
+
+func hit_player_3():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(10, 20)
+	elif levels[1]:
+		damage = randi_range(15, 25)
+	elif levels[2]:
+		damage = randi_range(20, 30)
+	elif levels[3]:
+		damage = randi_range(25, 35)
+	else:
+		pass 
+		
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
+
+func hit_player_4():
+	var damage : int
+	
+	if levels[0]:
+		damage = randi_range(10, 20)
+	elif levels[1]:
+		damage = randi_range(15, 25)
+	elif levels[2]:
+		damage = randi_range(20, 30)
+	elif levels[3]:
+		damage = randi_range(25, 35) 
+	else:
+		pass
+	
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
+
+func hit_player_5():
+	var damage : int
+		
+	damage = randi_range(10, 15)
+		
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+		
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
 
 func hit_player_5_lazer():
 	var damage : int
 	
-	if levels[0]:
-		damage = randi_range(15, 20)
-	elif levels[1]:
-		damage = randi_range(20, 25)
-	elif levels[2]:
-		damage = randi_range(25, 30)
-	elif levels[3]:
-		damage = randi_range(30, 35)
+	damage = randi_range(15, 20)
 	
 	$Player.health -= damage
+	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
-		if credits_earned < 0:
+		if credits_earned <= 0:
 			credits_earned = 0
 		else:
 			pass
@@ -396,27 +422,26 @@ func hit_player_5_lazer():
 
 	if $Player.health <= 0:
 		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
 		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
 
-func _on_enemy_spawner_hit_p_6():
+func hit_player_6():
 	var damage : int
 	
-	if levels[0]:
+	if levels[2]:
 		damage = randi_range(10, 15)
-	elif levels[1]:
-		damage = randi_range(15, 20)
-	elif levels[2]:
-		damage = randi_range(20, 25)
 	elif levels[3]:
-		damage = randi_range(25, 35)
+		damage = randi_range(15, 20)
+	else:
+		pass
 	
 	$Player.health -= damage
+	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
-		if credits_earned < 0:
+		if credits_earned <= 0:
 			credits_earned = 0
 		else:
 			pass
@@ -425,71 +450,56 @@ func _on_enemy_spawner_hit_p_6():
 	
 	if $Player.health <= 0:
 		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
 		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
 
-func _on_enemy_spawner_hit_p_7():
+func hit_player_7():
 	var damage : int
 	
-	if levels[0]:
+	if levels[2]:
 		damage = randi_range(5, 10)
-	elif levels[1]:
-		damage = randi_range(10, 15)
-	elif levels[2]:
-		damage = randi_range(15, 20)
 	elif levels[3]:
-		damage = randi_range(20, 25)
-	
-	$Player.health -= damage
-	if credits_earned > 0:
-		credits_earned -= damage
-		if credits_earned < 0:
-			credits_earned = 0
-		else:
-			pass
+		damage = randi_range(10, 15)
 	else:
 		pass
 	
-	if get_node("MafiaEnforcer7").alive:
-		if get_node("MafiaEnforcer7").health == get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value:
-			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value += damage
-			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").value += damage
-			get_node("MafiaEnforcer7").health += damage
-		elif get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value - get_node("MafiaEnforcer7").health < damage:
-			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value += damage - (get_node("MafiaEnforcer7").get_node("EnemyHealthBar").max_value - get_node("MafiaEnforcer7").health)
-			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").value += damage
-			get_node("MafiaEnforcer7").health += damage
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
 		else:
-			get_node("MafiaEnforcer7").get_node("EnemyHealthBar").value += damage
-			get_node("MafiaEnforcer7").health += damage
+			pass
 	else:
 		pass
 		
 	if $Player.health <= 0:
 		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
 		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
 
 func hit_player_8():
 	var damage : int
 	
-	if levels[0]:
+	if levels[1]:
 		damage = randi_range(5, 10)
-	elif levels[1]:
-		damage = randi_range(10, 15)
 	elif levels[2]:
-		damage = randi_range(15, 20)
+		damage = randi_range(10, 15)
 	elif levels[3]:
-		damage = randi_range(20, 25)
+		damage = randi_range(15, 20)
+	else:
+		pass
 	
 	$Player.health -= damage
+	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
-		if credits_earned < 0:
+		if credits_earned <= 0:
 			credits_earned = 0
 		else:
 			pass
@@ -498,27 +508,28 @@ func hit_player_8():
 	
 	if $Player.health <= 0:
 		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
 		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
 
 func hit_player_9():
-	var damamge : int
+	var damage : int
 	
-	if levels[0]:
-		damamge = randi_range(5, 10)
-	elif levels[1]:
-		damamge = randi_range(10, 15)
+	if levels[1]:
+		damage = randi_range(5, 10)
 	elif levels[2]:
-		damamge = randi_range(15, 20)
+		damage = randi_range(10, 15)
 	elif levels[3]:
-		damamge = randi_range(20, 25)
+		damage = randi_range(15, 20)
+	else:
+		pass
 	
-	$Player.health -= damamge
+	$Player.health -= damage
+	damage_taken += damage
 	if credits_earned > 0:
-		credits_earned -= damamge
-		if credits_earned < 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
 			credits_earned = 0
 		else:
 			pass
@@ -527,10 +538,148 @@ func hit_player_9():
 	
 	if $Player.health <= 0:
 		get_tree().paused = true
-		$CreditTimer.stop()
-		$EnemySpawner/Timer.stop()
-		$EnemySpawner/Timer2.stop()
 		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
+
+func hit_player_10():
+	var damage : int
+	
+	damage = randi_range(20, 25)
+	
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
+
+func hit_player_10_bullet():
+	var damage : int
+	
+	damage = randi_range(5, 10)
+	
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
+
+func hit_player_10_lazer():
+	var damage : int
+	
+	damage = randi_range(10, 15)
+	
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
+
+func hit_player_10_flame_thrower():
+	var damage : int
+	
+	damage = randi_range(5, 10)
+	
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
+
+func hit_player_10_fly():
+	var damage : int
+	
+	damage = randi_range(20, 25)
+	
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
+
+func hit_player_10_missile():
+	var damage : int
+	
+	damage = randi_range(20, 25)
+	
+	$Player.health -= damage
+	damage_taken += damage
+	if credits_earned > 0:
+		credits_earned -= damage
+		if credits_earned <= 0:
+			credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if $Player.health <= 0:
+		get_tree().paused = true
+		$GameOver.show()
+		$GameOver.display_stats()
+	else:
+		pass
 
 func _on_tree_exited():
 	$MainMenu.save_data()

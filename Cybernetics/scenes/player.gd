@@ -52,6 +52,7 @@ func get_input():
 	if selected_gun == "PISTOL":
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
 			if UI.ui_mouse_entered == false:
+				main.bullets_fired += 1
 				mag_collection[mags-1] -= 1
 				if main.credits_earned > 0:
 					main.credits_earned -= 2
@@ -76,6 +77,7 @@ func get_input():
 	elif selected_gun == "SMG":
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
 			if UI.ui_mouse_entered == false:
+				main.bullets_fired += 1
 				mag_collection[mags-1] -= 1
 				if main.credits_earned > 0:
 					main.credits_earned -= 2
@@ -100,6 +102,7 @@ func get_input():
 	elif selected_gun == "LMG":
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
 			if UI.ui_mouse_entered == false:
+				main.bullets_fired += 1
 				mag_collection[mags-1] -= 1
 				if main.credits_earned > 0:
 					main.credits_earned -= 2
@@ -124,6 +127,7 @@ func get_input():
 	elif selected_gun == "AR":
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
 			if UI.ui_mouse_entered == false:
+				main.bullets_fired += 1
 				mag_collection[mags-1] -= 1
 				if main.credits_earned > 0:
 					main.credits_earned -= 2
@@ -213,38 +217,19 @@ func _physics_process(_delta):
 		else:
 			pass
 	else:
-		if world.passage_way == "passage_way_1":
-			if world.exit_door_closed:
-				if position.x < 793:
-					position = Vector2(843,384)
-				else:
-					pass
+		if world.level_exit_door_closed:
+			if world.passage_way == "passage_way_1_exited":
+				position = Vector2(843,384)
+			elif world.passage_way == "passage_way_2_exited":
+				position = Vector2(2763,384)
+			elif world.passage_way == "passage_way_3_exited":
+				position = Vector2(3216,2427)
+			elif world.passage_way == "passage_way_4_exited":
+				position = Vector2(8112,2427)
 			else:
 				pass
-		elif world.passage_way == "passage_way_2":
-			if world.exit_door_closed:
-				if position.x < 2713:
-					position = Vector2(2763,384)
-				else:
-					pass
-			else:
-				pass
-		elif world.passage_way == "passage_way_3":
-			if world.exit_door_closed:
-				if position.y < 2377:
-					position = Vector2(3216,2427)
-				else:
-					pass
-			else:
-				pass
-		elif world.passage_way == "passage_way_4":
-			if world.exit_door_closed:
-				if position.y < 2377:
-					position = Vector2(8112,2427)
-				else:
-					pass
-			else:
-				pass
+		else:
+			pass
 	
 	var mouse = get_local_mouse_position()
 	var angle = snappedf(mouse.angle(), PI/4) / (PI/4)

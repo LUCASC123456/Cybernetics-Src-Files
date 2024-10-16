@@ -73,16 +73,10 @@ func _physics_process(_delta: float) -> void:
 					speed = 100
 			
 			if out_of_bounds:
-				if main.levels[0]:
-					position = Vector2(384,384)
-				elif main.levels[1]:
-					position = Vector2(1920,384)
-				elif main.levels[2]:
+				if main.levels[2]:
 					position = Vector2(3216,1624)
 				elif main.levels[3]:
 					position = Vector2(7128,1632)
-				elif main.levels[4]:
-					position = Vector2(8112,4968)
 			else:
 				pass
 		else:
@@ -158,7 +152,7 @@ func die():
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"
 	$EnemyHealthBar.hide()
-	get_parent().enemy_killed.emit()
+	main.enemy_killed.emit()
 	
 	if randf() <= BASIC_DROP_CHANCE:
 		drop_item()
