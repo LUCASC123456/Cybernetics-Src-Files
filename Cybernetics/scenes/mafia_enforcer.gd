@@ -18,7 +18,10 @@ var out_of_bounds : bool
 var player_colliding : bool
 var direction : Vector2
 const BASIC_DROP_CHANCE : float = 0.75
-		
+
+var minimap_icon = "enemy"
+var marker_added : bool
+
 func _ready() -> void:
 	target = player
 	make_path()

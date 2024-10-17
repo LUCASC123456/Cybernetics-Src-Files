@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cxn0y"]
 size = Vector2(40, 40)
 
-[node name="Item" type="Area2D"]
+[node name="Item" type="Area2D" groups=["minimap_objects"]]
 process_mode = 1
 z_index = 2
 collision_layer = 16

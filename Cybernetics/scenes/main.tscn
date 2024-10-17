@@ -28,10 +28,6 @@ bullet_scene = ExtResource("5_nuxkt")
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_r0pmp")]
 
-[node name="RestartTimer" type="Timer" parent="."]
-process_mode = 3
-one_shot = true
-
 [node name="UI" parent="." instance=ExtResource("7_bcf5h")]
 visible = false
 
@@ -50,6 +46,10 @@ visible = false
 [node name="CreditTimer" type="Timer" parent="."]
 process_mode = 1
 
+[node name="RestartTimer" type="Timer" parent="."]
+process_mode = 3
+one_shot = true
+
 [node name="MarketUI" parent="." instance=ExtResource("12_rnwhq")]
 visible = false
 
@@ -60,5 +60,5 @@ visible = false
 [connection signal="tree_entered" from="." to="." method="_on_tree_entered"]
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
 [connection signal="shoot" from="Player" to="BulletManager" method="_on_player_shoot"]
-[connection signal="timeout" from="RestartTimer" to="." method="_on_restart_timer_timeout"]
 [connection signal="timeout" from="CreditTimer" to="." method="_on_credit_timer_timeout"]
+[connection signal="timeout" from="RestartTimer" to="." method="_on_restart_timer_timeout"]

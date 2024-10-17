@@ -28,6 +28,10 @@ var vision_point = Vector2.ZERO
 var exclusion_container : Array
 const BASIC_DROP_CHANCE : float = 0.75
 
+var minimap_icon = "enemy"
+var marker_added : bool
+var marker_removed : bool
+
 func _ready() -> void:
 	target = player
 	make_path()
@@ -196,6 +200,7 @@ func die():
 	z_index = 1
 	collision_layer = 0
 	alive = false
+	marker_removed = true
 	$ShotTimer.stop()
 	$ReloadTimer.stop()
 	$AnimatedSprite2D.stop()

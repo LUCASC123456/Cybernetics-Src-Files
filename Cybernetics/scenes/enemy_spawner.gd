@@ -3,6 +3,7 @@ extends Node2D
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
 @onready var world = get_node("/root/Main/World")
+@onready var ui = get_node("/root/Main/UI")
 
 var mafia_enforcer_scene := preload("res://scenes/mafia_enforcer.tscn")
 var mafia_enforcer_scene_2 := preload("res://scenes/mafia_enforcer_2.tscn")
@@ -76,7 +77,6 @@ func _on_timer_timeout():
 				mafia_enforcer_level_1.position = spawn_level_1.position
 				main.add_child(mafia_enforcer_level_1)
 				mafia_enforcer_level_1.add_to_group("enemies_level_1")
-			
 			elif probability < 0.6 and probability >= 0.3:
 				var spawn_level_1 = spawn_points_level_1[randi() % spawn_points_level_1.size()]
 				

@@ -29,6 +29,10 @@ const BASIC_DROP_CHANCE : float = 0.75
 const TELEPORT_CHANCE : float = 0.25
 const LAZERBEAM_CHANCE : float = 0.25
 
+var minimap_icon = "enemy"
+var marker_added : bool
+var marker_removed : bool
+
 func _ready() -> void:
 	target = player
 	make_path()
@@ -252,6 +256,7 @@ func die():
 	z_index = 1
 	collision_layer = 0
 	alive = false
+	marker_removed = true
 	los.enabled = false
 	lazer_reach = false
 	lazer_activated = false

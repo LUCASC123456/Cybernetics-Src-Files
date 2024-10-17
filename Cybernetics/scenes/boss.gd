@@ -31,7 +31,10 @@ var rotate_clockwise : bool
 var direction : Vector2
 const acceleration := 100
 const deceleration := 100
-		
+
+var minimap_icon = "enemy"
+var marker_added : bool
+
 func _ready():
 	target = player
 	make_path()

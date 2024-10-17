@@ -1,6 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://bamn4ssgqwx4c"]
+[gd_scene load_steps=9 format=3 uid="uid://bamn4ssgqwx4c"]
 
 [ext_resource type="Script" path="res://scenes/ui.gd" id="1_jivp1"]
+[ext_resource type="Script" path="res://scenes/SubViewport.gd" id="3_wrbff"]
+[ext_resource type="Texture2D" uid="uid://cltcgbeciimd1" path="res://assets/EnemyMarker.png" id="4_2qoty"]
+[ext_resource type="Texture2D" uid="uid://ka37fl8au5rm" path="res://assets/PlayerMarker.png" id="4_axa78"]
+[ext_resource type="Texture2D" uid="uid://dgd04yolvs20t" path="res://assets/MiniMap.png" id="4_edwwg"]
+[ext_resource type="Texture2D" uid="uid://bdovm2h8socp0" path="res://assets/AlertMarker.png" id="5_nn277"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ts838"]
 bg_color = Color(0, 0, 0, 0.65098)
@@ -43,10 +48,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HealthBar" type="ProgressBar" parent="."]
-offset_left = 549.0
-offset_top = 633.0
-offset_right = 729.0
-offset_bottom = 673.0
+offset_left = 527.0
+offset_top = 673.0
+offset_right = 677.0
+offset_bottom = 703.0
+rotation = -1.5708
 theme_override_styles/background = SubResource("StyleBoxFlat_ts838")
 theme_override_styles/fill = SubResource("StyleBoxFlat_u1n4b")
 value = 100.0
@@ -91,6 +97,39 @@ text = "ROOM: 0
 "
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Minimap" type="SubViewportContainer" parent="."]
+process_mode = 3
+offset_left = 563.0
+offset_top = 523.0
+offset_right = 713.0
+offset_bottom = 673.0
+
+[node name="SubViewport" type="SubViewport" parent="Minimap"]
+handle_input_locally = false
+size = Vector2i(150, 150)
+render_target_update_mode = 4
+script = ExtResource("3_wrbff")
+
+[node name="AlertMarker" type="Sprite2D" parent="Minimap/SubViewport"]
+visible = false
+texture = ExtResource("5_nn277")
+
+[node name="Background" type="Sprite2D" parent="Minimap/SubViewport"]
+texture = ExtResource("4_edwwg")
+centered = false
+
+[node name="Camera2D" type="Camera2D" parent="Minimap/SubViewport"]
+zoom = Vector2(0.2, 0.2)
+
+[node name="EnemyMarker" type="Sprite2D" parent="Minimap/SubViewport"]
+visible = false
+texture = ExtResource("4_2qoty")
+
+[node name="PlayerMarker" type="Sprite2D" parent="Minimap"]
+position = Vector2(75, 75)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("4_axa78")
 
 [connection signal="mouse_entered" from="PauseButton" to="." method="_on_pause_button_mouse_entered"]
 [connection signal="mouse_exited" from="PauseButton" to="." method="_on_pause_button_mouse_exited"]

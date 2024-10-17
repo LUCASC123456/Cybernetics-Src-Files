@@ -47,7 +47,7 @@ bg_color = Color(0, 0, 0, 0.65098)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mk4m2"]
 bg_color = Color(0.905254, 0, 0.0149213, 1)
 
-[node name="MafiaEnforcer7" type="CharacterBody2D" groups=["enemies", "mafia_enforcer_7"]]
+[node name="MafiaEnforcer7" type="CharacterBody2D" groups=["enemies", "mafia_enforcer_7", "minimap_objects"]]
 process_mode = 1
 z_index = 3
 collision_layer = 4

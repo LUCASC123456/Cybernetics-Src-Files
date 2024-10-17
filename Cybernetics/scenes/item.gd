@@ -17,6 +17,9 @@ var health_box = preload("res://assets/Items/SimpleHealth.png")
 var ammo_box = preload("res://assets/Items/SimpleAmmo.png")
 var textures = [health_box, ammo_box]
 
+var minimap_icon = "alert"
+var marker_added : bool
+
 func _ready():
 	entered = false
 	$Sprite2D.texture = textures[item_type]
