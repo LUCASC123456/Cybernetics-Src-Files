@@ -1,5 +1,16 @@
 extends Node2D
 
+@onready var world = $World
+@onready var player = $Player
+@onready var enemy_spawner = $EnemySpawner
+@onready var ui = $UI
+@onready var game_over = $GameOver
+@onready var main_menu = $MainMenu
+@onready var pause_screen = $PauseScreen
+@onready var game_won = $GameWon
+@onready var credit_timer = $CreditTimer
+@onready var restart_timer = $RestartTimer
+
 signal enemy_killed
 
 var enemies_left : int
@@ -38,11 +49,11 @@ func _on_tree_entered():
 
 func _ready():
 	get_tree().paused = true
-	$RestartTimer.paused = false
-	$RestartTimer.stop()
-	$CreditTimer.stop()
-	$EnemySpawner/Timer.stop()
-	$EnemySpawner/Timer2.stop()
+	restart_timer.paused = false
+	restart_timer.stop()
+	credit_timer.stop()
+	enemy_spawner.get_node("Timer").stop()
+	enemy_spawner.get_node("Timer2").stop()
 	credits_earned = 0
 	enemies_killed = 0
 	damage_inflicted = 0
@@ -57,7 +68,7 @@ func _ready():
 	get_tree().call_group("bullets", "queue_free")
 	get_tree().call_group("items", "queue_free")
 	
-	for i in $World.get_children():
+	for i in world.get_children():
 		if i.is_in_group("levels"):
 			if i.name == "Level1":
 				for k in i.get_children():
@@ -75,28 +86,28 @@ func _ready():
 			levels[i] = false
 	
 	for i in player_door_coordinates["Level1"]:
-		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+		world.set_cell(1, i, 0, Vector2i(0,0), 0)
 	
 	for i in enemy_door_coordinates["Level1"]:
-		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
+		world.set_cell(1, i, 0, Vector2i(1,1), 0)
 			
 	for i in enemy_door_coordinates["Level2"]:
-		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
+		world.set_cell(1, i, 0, Vector2i(1,1), 0)
 		
 	for i in player_door_coordinates["Level2"][1]:
-		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+		world.set_cell(1, i, 0, Vector2i(0,0), 0)
 		
 	for i in enemy_door_coordinates["Level3"]:
-		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
+		world.set_cell(1, i, 0, Vector2i(1,1), 0)
 		
 	for i in player_door_coordinates["Level3"][1]:
-		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+		world.set_cell(1, i, 0, Vector2i(0,0), 0)
 		
 	for i in enemy_door_coordinates["Level4"]:
-		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
+		world.set_cell(1, i, 0, Vector2i(1,1), 0)
 			
 	for i in player_door_coordinates["Level4"][1]:
-		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+		world.set_cell(1, i, 0, Vector2i(0,0), 0)
 		
 	for i in get_children():
 		if i is CanvasLayer:
@@ -109,11 +120,11 @@ func _ready():
 
 func new_game():
 	if levels[0]:
-		$Player._ready()
-		$MainMenu.hide()
+		player._ready()
+		main_menu.hide()
 		enemies_left = enemy_level_count[0]
 	elif levels[1]:
-		$Player.reset()
+		player.reset()
 		enemies_left = enemy_level_count[1]
 		get_tree().call_group("enemies_level_1", "queue_free")
 		get_tree().call_group("target_area_nodes", "queue_free")
@@ -122,7 +133,7 @@ func new_game():
 		get_tree().call_group("items", "queue_free")
 		
 	elif levels[2]:
-		$Player.reset()
+		player.reset()
 		enemies_left = enemy_level_count[2]
 		get_tree().call_group("enemies_level_2", "queue_free")
 		get_tree().call_group("target_area_nodes", "queue_free")
@@ -132,7 +143,7 @@ func new_game():
 		
 	elif levels[3]:
 		enemies_left = enemy_level_count[3]
-		$Player.reset()
+		player.reset()
 		get_tree().call_group("enemies_level_3", "queue_free")
 		get_tree().call_group("target_area_nodes", "queue_free")
 		get_tree().call_group("minions", "queue_free")
@@ -141,7 +152,7 @@ func new_game():
 		
 	elif levels[4]:
 		enemies_left = enemy_level_count[4]
-		$Player.reset()
+		player.reset()
 		get_tree().call_group("enemies_level_4", "queue_free")
 		get_tree().call_group("target_area_nodes", "queue_free")
 		get_tree().call_group("minions", "queue_free")
@@ -150,37 +161,37 @@ func new_game():
 	else:
 		pass
 	
-	$RestartTimer.start()
+	restart_timer.start()
 
 func _on_restart_timer_timeout():
 	if levels[0]:
 		get_tree().paused = false
-		$UI.show()
+		ui.show()
 		for i in enemy_door_coordinates["Level1"]:
-			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
+			world.set_cell(1, i, 0, Vector2i(1,1), -1)
 	elif levels[1]:
 		for i in enemy_door_coordinates["Level2"]:
-			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
+			world.set_cell(1, i, 0, Vector2i(1,1), -1)
 		for i in player_door_coordinates["Level2"][0]:
-			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+			world.set_cell(1, i, 0, Vector2i(0,0), 0)
 	elif levels[2]:
 		for i in enemy_door_coordinates["Level3"]:
-			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
+			world.set_cell(1, i, 0, Vector2i(1,1), -1)
 		for i in player_door_coordinates["Level3"][0]:
-			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+			world.set_cell(1, i, 0, Vector2i(0,0), 0)
 	elif levels[3]:
 		for i in enemy_door_coordinates["Level4"]:
-			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
+			world.set_cell(1, i, 0, Vector2i(1,1), -1)
 		for i in player_door_coordinates["Level4"][0]:
-			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+			world.set_cell(1, i, 0, Vector2i(0,0), 0)
 	elif levels[4]:
 		for i in player_door_coordinates["Level5"]:
-			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+			world.set_cell(1, i, 0, Vector2i(0,0), 0)
 	else:
 		pass
 	
-	$CreditTimer.start()
-	$EnemySpawner/Timer.start()
+	credit_timer.start()
+	enemy_spawner.get_node("Timer").start()
 
 func _physics_process(_delta):
 	target_area_nodes = get_tree().get_nodes_in_group("target_area_nodes")
@@ -214,44 +225,44 @@ func _on_enemy_killed():
 	enemies_killed += 1
 	if enemies_left <= 0:
 		levels_completed += 1
-		$CreditTimer.stop()
+		credit_timer.stop()
 		
 		if levels[0]:
 			for i in player_door_coordinates["Level1"]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+				world.set_cell(1, i, 0, Vector2i(0,0), -1)
 			for i in player_door_coordinates["Level2"][0]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+				world.set_cell(1, i, 0, Vector2i(0,0), -1)
 		elif levels[1]:
 			for i in player_door_coordinates["Level2"][1]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+				world.set_cell(1, i, 0, Vector2i(0,0), -1)
 			for i in player_door_coordinates["Level3"][0]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+				world.set_cell(1, i, 0, Vector2i(0,0), -1)
 		elif levels[2]: 
 			for i in player_door_coordinates["Level3"][1]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+				world.set_cell(1, i, 0, Vector2i(0,0), -1)
 			for i in player_door_coordinates["Level4"][0]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+				world.set_cell(1, i, 0, Vector2i(0,0), -1)
 		elif levels[3]: 
 			for i in player_door_coordinates["Level4"][1]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+				world.set_cell(1, i, 0, Vector2i(0,0), -1)
 			for i in player_door_coordinates["Level5"]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+				world.set_cell(1, i, 0, Vector2i(0,0), -1)
 		else:
 			get_tree().paused = true
-			$GameWon.show()
-			$GameWon.display_stats()
+			game_won.show()
+			game_won.display_stats()
 	else:
 		pass
 
 func pause():
 	get_tree().paused = true
-	$RestartTimer.paused = true
-	$PauseScreen.show()
+	restart_timer.paused = true
+	pause_screen.show()
 
 func resume():
 	get_tree().paused = false
-	$RestartTimer.paused = false
-	$PauseScreen.hide()
+	restart_timer.paused = false
+	pause_screen.hide()
 
 func hit_player():
 	var damage : int
@@ -267,7 +278,17 @@ func hit_player():
 	else:
 		pass
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -278,10 +299,10 @@ func hit_player():
 	else:
 		pass
 		
-	if $Player.health <= 0:
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -299,7 +320,17 @@ func hit_player_2():
 	else:
 		pass
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -310,10 +341,10 @@ func hit_player_2():
 	else:
 		pass
 		
-	if $Player.health <= 0:
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -331,7 +362,17 @@ func hit_player_3():
 	else:
 		pass 
 		
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -341,11 +382,11 @@ func hit_player_3():
 			pass
 	else:
 		pass
-
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -363,7 +404,17 @@ func hit_player_4():
 	else:
 		pass
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -373,11 +424,11 @@ func hit_player_4():
 			pass
 	else:
 		pass
-	
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -386,7 +437,17 @@ func hit_player_5():
 		
 	damage = randi_range(10, 15)
 		
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -397,10 +458,10 @@ func hit_player_5():
 	else:
 		pass
 		
-	if $Player.health <= 0:
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -409,7 +470,17 @@ func hit_player_5_lazer():
 	
 	damage = randi_range(15, 20)
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -419,11 +490,11 @@ func hit_player_5_lazer():
 			pass
 	else:
 		pass
-
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -437,7 +508,17 @@ func hit_player_6():
 	else:
 		pass
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -447,11 +528,11 @@ func hit_player_6():
 			pass
 	else:
 		pass
-	
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -465,7 +546,17 @@ func hit_player_7():
 	else:
 		pass
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -476,10 +567,10 @@ func hit_player_7():
 	else:
 		pass
 		
-	if $Player.health <= 0:
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -495,7 +586,17 @@ func hit_player_8():
 	else:
 		pass
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -505,11 +606,11 @@ func hit_player_8():
 			pass
 	else:
 		pass
-	
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -525,7 +626,17 @@ func hit_player_9():
 	else:
 		pass
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -535,11 +646,11 @@ func hit_player_9():
 			pass
 	else:
 		pass
-	
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -548,7 +659,17 @@ func hit_player_10():
 	
 	damage = randi_range(20, 25)
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -558,11 +679,11 @@ func hit_player_10():
 			pass
 	else:
 		pass
-	
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -571,7 +692,17 @@ func hit_player_10_bullet():
 	
 	damage = randi_range(5, 10)
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -581,11 +712,11 @@ func hit_player_10_bullet():
 			pass
 	else:
 		pass
-	
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -594,7 +725,17 @@ func hit_player_10_lazer():
 	
 	damage = randi_range(10, 15)
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -604,11 +745,11 @@ func hit_player_10_lazer():
 			pass
 	else:
 		pass
-	
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -617,7 +758,17 @@ func hit_player_10_flame_thrower():
 	
 	damage = randi_range(5, 10)
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -627,34 +778,11 @@ func hit_player_10_flame_thrower():
 			pass
 	else:
 		pass
-	
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
-	else:
-		pass
-
-func hit_player_10_fly():
-	var damage : int
-	
-	damage = randi_range(20, 25)
-	
-	$Player.health -= damage
-	damage_taken += damage
-	if credits_earned > 0:
-		credits_earned -= damage
-		if credits_earned <= 0:
-			credits_earned = 0
-		else:
-			pass
-	else:
-		pass
-	
-	if $Player.health <= 0:
-		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 
@@ -663,7 +791,17 @@ func hit_player_10_missile():
 	
 	damage = randi_range(20, 25)
 	
-	$Player.health -= damage
+	if player.sheild > 0:
+		player.sheild -= damage
+		
+		if player.sheild < 0:
+			player.health += player.sheild
+			player.sheild = 0
+		else:
+			pass
+	else:
+		player.health -= damage
+	
 	damage_taken += damage
 	if credits_earned > 0:
 		credits_earned -= damage
@@ -673,11 +811,11 @@ func hit_player_10_missile():
 			pass
 	else:
 		pass
-	
-	if $Player.health <= 0:
+		
+	if player.health <= 0:
 		get_tree().paused = true
-		$GameOver.show()
-		$GameOver.display_stats()
+		game_over.show()
+		game_over.display_stats()
 	else:
 		pass
 

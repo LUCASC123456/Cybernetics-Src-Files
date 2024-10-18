@@ -10,6 +10,7 @@ func _ready():
 
 func _process(_delta):
 	$HealthBar.value = player.health
+	$SheildBar.value = player.sheild
 	$PrimaryWeaponSelection.text = "PRIMARY: " + str(player.selected_gun)
 	$EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(main.enemies_left)
 	

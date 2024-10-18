@@ -13,6 +13,7 @@ signal shoot
 var speed : int
 var mags : int
 var health : int
+var sheild : int
 var can_shoot : bool
 var out_of_bounds : bool
 var selected_gun : String
@@ -29,7 +30,8 @@ func _ready():
 	reset()
 
 func reset():
-	health = 100
+	health = 200
+	sheild = 200
 	mags = 3
 	
 	if selected_gun == "PISTOL":
