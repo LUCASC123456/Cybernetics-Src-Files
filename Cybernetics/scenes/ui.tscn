@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bamn4ssgqwx4c"]
+[gd_scene load_steps=13 format=3 uid="uid://bamn4ssgqwx4c"]
 
 [ext_resource type="Script" path="res://scenes/ui.gd" id="1_jivp1"]
 [ext_resource type="Script" path="res://scenes/SubViewport.gd" id="3_wrbff"]
@@ -19,14 +19,20 @@ bg_color = Color(0, 0, 0, 0.65098)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m14jr"]
 bg_color = Color(0, 0.633052, 0.966609, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ccrrq"]
+bg_color = Color(0, 0, 0, 0.65098)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6laru"]
+bg_color = Color(0.883011, 0.481476, 1.15514e-06, 1)
+
 [node name="UI" type="CanvasLayer"]
 process_mode = 1
 script = ExtResource("1_jivp1")
 
 [node name="AmmoCounter" type="Panel" parent="."]
-offset_left = 215.0
+offset_left = 144.0
 offset_top = 633.0
-offset_right = 285.0
+offset_right = 214.0
 offset_bottom = 673.0
 
 [node name="AmmoLabel" type="Label" parent="AmmoCounter"]
@@ -53,11 +59,27 @@ text = "ENMIES LEFT: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="PowerupTeller" type="Panel" parent="."]
+offset_left = 413.0
+offset_top = 633.0
+offset_right = 503.0
+offset_bottom = 673.0
+
+[node name="PowerupLabel" type="Label" parent="PowerupTeller"]
+layout_mode = 0
+offset_right = 90.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 10
+text = "POWERUP:
+NONE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="HealthBar" type="ProgressBar" parent="."]
-offset_left = 527.0
+offset_left = 553.0
 offset_top = 673.0
-offset_right = 677.0
-offset_bottom = 703.0
+offset_right = 703.0
+offset_bottom = 693.0
 rotation = -1.5708
 theme_override_styles/background = SubResource("StyleBoxFlat_ts838")
 theme_override_styles/fill = SubResource("StyleBoxFlat_u1n4b")
@@ -66,15 +88,26 @@ value = 200.0
 show_percentage = false
 
 [node name="SheildBar" type="ProgressBar" parent="."]
-offset_left = 719.0
+offset_left = 528.0
 offset_top = 673.0
-offset_right = 869.0
-offset_bottom = 703.0
+offset_right = 678.0
+offset_bottom = 693.0
 rotation = -1.5708
 theme_override_styles/background = SubResource("StyleBoxFlat_8er42")
 theme_override_styles/fill = SubResource("StyleBoxFlat_m14jr")
 max_value = 200.0
 value = 200.0
+show_percentage = false
+
+[node name="AdrenalineBar" type="ProgressBar" parent="."]
+offset_left = 733.0
+offset_top = 673.0
+offset_right = 883.0
+offset_bottom = 693.0
+rotation = -1.5708
+theme_override_styles/background = SubResource("StyleBoxFlat_ccrrq")
+theme_override_styles/fill = SubResource("StyleBoxFlat_6laru")
+max_value = 1.0
 show_percentage = false
 
 [node name="PauseButton" type="Button" parent="."]
@@ -85,9 +118,9 @@ offset_bottom = 673.0
 text = "PAUSE"
 
 [node name="PrimaryWeaponSelection" type="Button" parent="."]
-offset_left = 291.5
+offset_left = 220.5
 offset_top = 633.0
-offset_right = 476.5
+offset_right = 405.5
 offset_bottom = 673.0
 theme_override_font_sizes/font_size = 15
 disabled = true
@@ -119,9 +152,9 @@ vertical_alignment = 1
 
 [node name="Minimap" type="SubViewportContainer" parent="."]
 process_mode = 3
-offset_left = 563.0
+offset_left = 578.0
 offset_top = 523.0
-offset_right = 713.0
+offset_right = 728.0
 offset_bottom = 673.0
 
 [node name="SubViewport" type="SubViewport" parent="Minimap"]

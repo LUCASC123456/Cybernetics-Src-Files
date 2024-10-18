@@ -23,11 +23,12 @@ var lazer_activated : bool
 var teleported : bool
 var lazer_reach : bool
 var direction : Vector2
-var probability : float
 var angle_to_target: float
-const BASIC_DROP_CHANCE : float = 0.75
-const TELEPORT_CHANCE : float = 0.25
-const LAZERBEAM_CHANCE : float = 0.25
+const teleport_chance : float = 0.25
+const lazerbeam_chance : float = 0.25
+
+const basic_drop_chance : float = 0.75
+const complex_drop_chance : float = 0.5
 
 var minimap_icon = "enemy"
 var marker_added : bool
@@ -176,8 +177,8 @@ func _on_track_timer_timeout():
 
 func _on_teleport_chance_timer_timeout():
 	if alive and entered:
-		probability = randf()
-		if probability <= TELEPORT_CHANCE:
+		var probability = randf()
+		if probability <= teleport_chance:
 			if lazer_activated == false:
 				speed = 0
 				visible = false
@@ -195,8 +196,8 @@ func _on_teleport_chance_timer_timeout():
 func _on_lazer_beam_chance_timer_timeout():
 	if alive and entered:
 		if lazer_reach:
-			probability = randf()
-			if probability <= LAZERBEAM_CHANCE:
+			var probability = randf()
+			if probability <= lazerbeam_chance:
 				if teleport_activated == false:
 					speed = 0
 					lazer_activated = true
@@ -213,7 +214,7 @@ func _on_lazer_beam_chance_timer_timeout():
 		pass
 
 func teleport():
-	probability = randf()
+	var probability = randf()
 	if probability > 0.75:
 		position = Vector2(target.global_position.x + randi_range(100, 300), target.global_position.y + randi_range(100, 300))
 	elif probability <= 0.75 and probability > 0.5:
@@ -273,12 +274,27 @@ func die():
 	main.enemy_killed.emit()
 	main.target_area_nodes[i].draw_target_area(global_position)
 	
-	if randf() <= BASIC_DROP_CHANCE:
-		drop_item()
-
-func drop_item():
+	var probability : float
+	probability = randf()
+	if probability <= basic_drop_chance:
+		drop_item_basic()
+	else:
+		probability = randf()
+		if probability <= complex_drop_chance:
+			drop_item_complex()
+		else:
+			pass
+			
+func drop_item_basic():
 	var item = item_scene.instantiate()
 	item.position = position
-	item.item_type = randi_range(0, 1)
+	item.item_type = randi_range(0, 2)
+	main.call_deferred("add_child", item)
+	item.add_to_group("items")
+
+func drop_item_complex():
+	var item = item_scene.instantiate()
+	item.position = position
+	item.item_type = randi_range(3, 5)
 	main.call_deferred("add_child", item)
 	item.add_to_group("items")

@@ -53,6 +53,10 @@ func _ready():
 		if i is Marker2D:
 			spawn_points_level_5.append(i)
 
+func reset():
+	$Timer.stop()
+	$Timer2.stop()
+
 func _on_timer_timeout():
 	enemies_level_1 = get_tree().get_nodes_in_group("enemies_level_1")
 	enemies_level_2 = get_tree().get_nodes_in_group("enemies_level_2")

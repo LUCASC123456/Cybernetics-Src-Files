@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b2iq67tykn0bk"
-path="res://.godot/imported/SimpleAmmo.png-d89cd66de79f5b779f3d177e64fcc120.ctex"
+uid="uid://113smt5nygoo"
+path="res://.godot/imported/SimpleBoost.png-d8f04c2881431fc5bad213157cd3af9d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Items/SimpleAmmo.png"
-dest_files=["res://.godot/imported/SimpleAmmo.png-d89cd66de79f5b779f3d177e64fcc120.ctex"]
+source_file="res://assets/Items/SimpleBoost.png"
+dest_files=["res://.godot/imported/SimpleBoost.png-d8f04c2881431fc5bad213157cd3af9d.ctex"]
 
 [params]
 

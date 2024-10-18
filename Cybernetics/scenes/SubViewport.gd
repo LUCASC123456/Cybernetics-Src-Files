@@ -33,8 +33,8 @@ func _process(_delta):
 			object.marker_added = true
 		
 		var obj_pos = object.position
-		obj_pos.x = clamp(obj_pos.x, player.position.x-375, player.position.x+375)
-		obj_pos.y = clamp(obj_pos.y, player.position.y-375, player.position.y+375)
+		obj_pos.x = clamp(obj_pos.x, player.position.x-360, player.position.x+360)
+		obj_pos.y = clamp(obj_pos.y, player.position.y-360, player.position.y+360)
 		markers[object].position = obj_pos
 	
 	for key in markers:

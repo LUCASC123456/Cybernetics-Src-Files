@@ -16,6 +16,9 @@ var health : int
 var sheild : int
 var can_shoot : bool
 var out_of_bounds : bool
+var boost_activated : bool
+var force_field_activated : bool
+var double_damage_activated : bool
 var selected_gun : String
 
 var guns = ["PISTOL", "SMG", "LMG", "AR"]
@@ -24,9 +27,20 @@ var mag_collection = [0,0,0]
 func _ready():
 	speed = 250
 	position = Vector2(384, 384)
+	
 	main_menu.load_data()
 	selected_gun = guns[main_menu.store.selected]
 	can_shoot = true
+	
+	boost_activated = false
+	$BoostTimer.stop()
+	
+	force_field_activated = false
+	$ForceFieldTimer.stop()
+	
+	double_damage_activated = false
+	$DoubleDamageTimer.stop()
+	
 	reset()
 
 func reset():
@@ -237,6 +251,11 @@ func _physics_process(_delta):
 	var angle = snappedf(mouse.angle(), PI/4) / (PI/4)
 	angle = wrapi(int(angle), 0, 8)
 	
+	if boost_activated:
+		speed = 500
+	else:
+		speed = 250
+	
 	$AnimatedSprite2D.animation = "walk" + str(angle)
 	
 	if velocity.length() != 0:
@@ -381,3 +400,13 @@ func _on_shot_timer_lmg_timeout():
 
 func _on_shot_timer_ar_timeout():
 	can_shoot = true
+
+
+func _on_boost_timer_timeout():
+	boost_activated = false
+
+func _on_force_field_timer_timeout():
+	force_field_activated = false
+
+func _on_double_damage_timer_timeout():
+	double_damage_activated = false

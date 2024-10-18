@@ -324,7 +324,11 @@ func _on_body_entered(body):
 				else:
 					queue_free()
 			else:
-				body.health -= damage
+				if player.double_damage_activated:
+					body.health -= damage*2
+				else:
+					body.health -= damage
+				
 				main.damage_inflicted += damage
 				main.credits_earned += floor(damage/5)
 				body.get_node("EnemyHealthBar").value = body.health

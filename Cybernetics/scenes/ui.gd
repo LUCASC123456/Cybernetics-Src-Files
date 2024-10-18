@@ -11,6 +11,24 @@ func _ready():
 func _process(_delta):
 	$HealthBar.value = player.health
 	$SheildBar.value = player.sheild
+	
+	if player.boost_activated:
+		$PowerupTeller/PowerupLabel.text = "POWERUP:\nBOOST"
+		$AdrenalineBar.max_value = player.get_node("BoostTimer").wait_time
+		$AdrenalineBar.value = player.get_node("BoostTimer").time_left
+	elif player.force_field_activated:
+		$PowerupTeller/PowerupLabel.text = "POWERUP:\nFORCE FIELD"
+		$AdrenalineBar.max_value = player.get_node("ForceFieldTimer").wait_time
+		$AdrenalineBar.value = player.get_node("ForceFieldTimer").time_left
+	elif player.double_damage_activated:
+		$PowerupTeller/PowerupLabel.text = "POWERUP:\nDOUBLE DAMAGE"
+		$AdrenalineBar.max_value = player.get_node("DoubleDamageTimer").wait_time
+		$AdrenalineBar.value = player.get_node("DoubleDamageTimer").time_left
+	else:
+		$PowerupTeller/PowerupLabel.text = "POWERUP:\nNONE"
+		$AdrenalineBar.max_value = 1
+		$AdrenalineBar.value = 0
+	
 	$PrimaryWeaponSelection.text = "PRIMARY: " + str(player.selected_gun)
 	$EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(main.enemies_left)
 	

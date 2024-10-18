@@ -17,7 +17,9 @@ var damage_resistant : bool
 var out_of_bounds : bool
 var player_colliding : bool
 var direction : Vector2
-const BASIC_DROP_CHANCE : float = 0.75
+
+const basic_drop_chance : float = 0.75
+const complex_drop_chance : float = 0.5
 
 var minimap_icon = "enemy"
 var marker_added : bool
@@ -104,12 +106,27 @@ func die():
 	$EnemyHealthBar.hide()
 	main.enemy_killed.emit()
 	
-	if randf() <= BASIC_DROP_CHANCE:
-		drop_item()
-
-func drop_item():
+	var probability : float
+	probability = randf()
+	if probability <= basic_drop_chance:
+		drop_item_basic()
+	else:
+		probability = randf()
+		if probability <= complex_drop_chance:
+			drop_item_complex()
+		else:
+			pass
+			
+func drop_item_basic():
 	var item = item_scene.instantiate()
 	item.position = position
-	item.item_type = randi_range(0, 1)
+	item.item_type = randi_range(0, 2)
+	main.call_deferred("add_child", item)
+	item.add_to_group("items")
+
+func drop_item_complex():
+	var item = item_scene.instantiate()
+	item.position = position
+	item.item_type = randi_range(3, 5)
 	main.call_deferred("add_child", item)
 	item.add_to_group("items")

@@ -131,8 +131,20 @@ one_shot = true
 wait_time = 3.0
 one_shot = true
 
+[node name="BoostTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ForceFieldTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="DoubleDamageTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="timeout" from="ShotTimerPistol" to="." method="_on_shot_timer_pistol_timeout"]
 [connection signal="timeout" from="ShotTimerSMG" to="." method="_on_shot_timer_smg_timeout"]
 [connection signal="timeout" from="ShotTimerLMG" to="." method="_on_shot_timer_lmg_timeout"]
 [connection signal="timeout" from="ShotTimerAR" to="." method="_on_shot_timer_ar_timeout"]
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
+[connection signal="timeout" from="BoostTimer" to="." method="_on_boost_timer_timeout"]
+[connection signal="timeout" from="ForceFieldTimer" to="." method="_on_force_field_timer_timeout"]
+[connection signal="timeout" from="DoubleDamageTimer" to="." method="_on_double_damage_timer_timeout"]

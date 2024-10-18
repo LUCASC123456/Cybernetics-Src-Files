@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b2iq67tykn0bk"
-path="res://.godot/imported/SimpleAmmo.png-d89cd66de79f5b779f3d177e64fcc120.ctex"
+uid="uid://c4r0onq1xknaj"
+path="res://.godot/imported/SimpleDoubleDamage.png-cb5aefda69c95cd2d94463053f2be59a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Items/SimpleAmmo.png"
-dest_files=["res://.godot/imported/SimpleAmmo.png-d89cd66de79f5b779f3d177e64fcc120.ctex"]
+source_file="res://assets/Items/SimpleDoubleDamage.png"
+dest_files=["res://.godot/imported/SimpleDoubleDamage.png-cb5aefda69c95cd2d94463053f2be59a.ctex"]
 
 [params]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://b6u6nfgqa5dtb"]
 
 [ext_resource type="Script" path="res://scenes/item.gd" id="1_bokm2"]
-[ext_resource type="Texture2D" uid="uid://dyr8ykxfq0qb3" path="res://assets/Items/SimpleHealth.png" id="1_fihfq"]
+[ext_resource type="Texture2D" uid="uid://dkcv72kum36q7" path="res://assets/Items/SimpleHealth.png" id="1_fihfq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cxn0y"]
 size = Vector2(40, 40)
@@ -15,7 +15,6 @@ script = ExtResource("1_bokm2")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 3
-scale = Vector2(0.05, 0.05)
 texture = ExtResource("1_fihfq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
