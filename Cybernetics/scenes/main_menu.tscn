@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c3vfi2w4cr36"]
+[gd_scene load_steps=9 format=3 uid="uid://c3vfi2w4cr36"]
 
 [ext_resource type="Script" path="res://scenes/main_menu.gd" id="1_7stuu"]
 
@@ -17,11 +17,20 @@ bg_color = Color(0.217101, 0.217101, 0.217101, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3f852"]
 bg_color = Color(0.374139, 0.374139, 0.374139, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6aywo"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cvo61"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_be1s4"]
+bg_color = Color(0.372549, 0.372549, 0.372549, 1)
+
 [node name="MainMenu" type="CanvasLayer"]
 process_mode = 2
 script = ExtResource("1_7stuu")
 
-[node name="Background1" type="Panel" parent="."]
+[node name="Background" type="Panel" parent="."]
 offset_right = 768.0
 offset_bottom = 768.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_8wu3h")
@@ -32,10 +41,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -215.0
-offset_top = -178.0
-offset_right = 215.0
-offset_bottom = -75.0
+offset_left = -243.0
+offset_top = -248.0
+offset_right = 244.0
+offset_bottom = -145.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 75
@@ -43,16 +52,26 @@ text = "CYBERNETICS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Label" type="Label" parent="."]
+offset_left = 43.0
+offset_top = 28.0
+offset_right = 370.0
+offset_bottom = 122.0
+text = "CONTROLS:
+WASD: UP, LEFT, DOWN RIGHT
+HOLD DOWN LEFT CLICK: SHOOT WEAPON
+"
+
 [node name="PlayButton" type="Button" parent="."]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -104.5
-offset_top = -318.0
-offset_right = 104.5
-offset_bottom = -258.0
+offset_left = -102.0
+offset_top = -378.0
+offset_right = 107.0
+offset_bottom = -318.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_mtgpl")
@@ -67,10 +86,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -104.5
-offset_top = -243.0
-offset_right = 104.5
-offset_bottom = -183.0
+offset_left = -102.0
+offset_top = -303.0
+offset_right = 107.0
+offset_bottom = -243.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_mtgpl")
@@ -79,15 +98,23 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_3f852")
 text = "MARKET
 "
 
-[node name="Label" type="Label" parent="."]
-offset_left = 43.0
-offset_top = 28.0
-offset_right = 146.0
-offset_bottom = 122.0
-text = "CONTROLS:
-WASD: UP, LEFT, DOWN RIGHT
-HOLD DOWN LEFT CLICK: SHOOT WEAPON
-"
+[node name="SettingsButton" type="Button" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -228.0
+offset_right = 107.0
+offset_bottom = -168.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_6aywo")
+theme_override_styles/hover = SubResource("StyleBoxFlat_cvo61")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_be1s4")
+text = "SETTINGS"
 
 [connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="ShopButton" to="." method="_on_shop_button_pressed"]
+[connection signal="pressed" from="SettingsButton" to="." method="_on_settings_button_pressed"]

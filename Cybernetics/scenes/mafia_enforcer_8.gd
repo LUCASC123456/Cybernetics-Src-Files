@@ -6,7 +6,7 @@ extends CharacterBody2D
 @onready var reload_timer = $ReloadTimer
 @onready var shot_timer = $ShotTimer
 
-@export var ENEMY_BULLET: PackedScene = null
+@export var enemy_bullet: PackedScene = null
 @export var target: Node2D = null
 @export var start_dir : String
 
@@ -24,15 +24,13 @@ var damage_resistant : bool
 var out_of_bounds : bool
 var player_colliding : bool
 var direction : Vector2
-var vision_point = Vector2.ZERO
-var exclusion_container : Array
+var vision_point : Vector2
 
 const basic_drop_chance : float = 0.75
 const complex_drop_chance : float = 0.5
 
 var minimap_icon = "enemy"
 var marker_added : bool
-var marker_removed : bool
 
 func _ready() -> void:
 	target = player
@@ -61,16 +59,16 @@ func _physics_process(_delta: float) -> void:
 		$AnimatedSprite2D.animation = "run"
 		if entered:
 			damage_resistant = false
-			exclusion_container.clear()
+			var exclusion_list := []
 			
 			for i in $Area2D.get_overlapping_bodies():
-				exclusion_container.append(i.get_rid())
+				exclusion_list.append(i.get_rid())
 			
 			for i in main.get_children():
 				if i is CharacterBody2D:
 					if i.name != "Player":
 						if i.player_colliding:
-							exclusion_container.append(i.get_rid())
+							exclusion_list.append(i.get_rid())
 						else:
 							pass
 					else:
@@ -79,12 +77,12 @@ func _physics_process(_delta: float) -> void:
 					pass
 				
 			var space_state = get_world_2d().direct_space_state
-			var query = PhysicsRayQueryParameters2D.create(global_transform.origin, player.global_transform.origin, 7, exclusion_container)
+			var query = PhysicsRayQueryParameters2D.create(global_transform.origin, player.global_transform.origin, 7, exclusion_list)
 			var result = space_state.intersect_ray(query)
 			direction = to_local(nav_agent.get_next_path_position())
 			
 			if result:
-				if result.collider == player:
+				if result.collider == target:
 					can_see_player = true
 				else:
 					can_see_player = false
@@ -104,26 +102,30 @@ func _physics_process(_delta: float) -> void:
 				
 				if nav_agent.distance_to_target() < stopping_distance-10:
 					if $SpeedChangeTimer.is_stopped():
-						$SpeedChangeTimer.wait_time = 0.1
-						$SpeedChangeTimer.start()
+						$SpeedChangeTimer.start(0.1)
 						speed = -100
+					else:
+						pass
 				elif nav_agent.distance_to_target() >= stopping_distance-10 and nav_agent.distance_to_target() <= stopping_distance+10:
 					if $SpeedChangeTimer.is_stopped():
-						$SpeedChangeTimer.wait_time = 0.1
-						$SpeedChangeTimer.start()
+						$SpeedChangeTimer.start(0.1)
 						speed = 0
+					else:
+						pass
 				elif nav_agent.distance_to_target() > stopping_distance+10:
 					if $SpeedChangeTimer.is_stopped():
-						$SpeedChangeTimer.wait_time = 0.1
-						$SpeedChangeTimer.start()
+						$SpeedChangeTimer.start(0.1)
 						speed = 100
+					else:
+						pass
+				else:
+					pass
 			else:
 				if result.collider.is_in_group("enemies"):
-					$SpeedChangeTimer.wait_time = 0.1
+					$SpeedChangeTimer.start(0.1)
 				else:
-					$SpeedChangeTimer.wait_time = randf_range(0.5, 1)
+					$SpeedChangeTimer.start(randf_range(0.5, 1))
 				
-				$SpeedChangeTimer.start()
 				speed = 100
 					
 			if out_of_bounds:
@@ -133,6 +135,8 @@ func _physics_process(_delta: float) -> void:
 					position = Vector2(3216,1624)
 				elif main.levels[3]:
 					position = Vector2(7128,1632)
+				else:
+					pass
 			else:
 				pass
 		else:
@@ -154,12 +158,14 @@ func _on_track_timer_timeout():
 	make_path()
 
 func shoot():
-	if ENEMY_BULLET:
-		var bullet : Node2D = ENEMY_BULLET.instantiate()
+	if enemy_bullet:
+		var bullet : Node2D = enemy_bullet.instantiate()
 		bullet.add_to_group("bullets")
 		get_tree().current_scene.add_child(bullet)
 		bullet.global_position = global_position
 		bullet.global_rotation = (target.global_position - global_position).angle()
+	else:
+		pass
 	
 	shot_timer.start()
 
@@ -202,7 +208,6 @@ func die():
 	z_index = 1
 	collision_layer = 0
 	alive = false
-	marker_removed = true
 	$ShotTimer.stop()
 	$ReloadTimer.stop()
 	$AnimatedSprite2D.stop()

@@ -32,7 +32,6 @@ const complex_drop_chance : float = 0.5
 
 var minimap_icon = "enemy"
 var marker_added : bool
-var marker_removed : bool
 
 func _ready() -> void:
 	target = player
@@ -179,7 +178,7 @@ func _on_teleport_chance_timer_timeout():
 	if alive and entered:
 		var probability = randf()
 		if probability <= teleport_chance:
-			if lazer_activated == false:
+			if not lazer_activated:
 				speed = 0
 				visible = false
 				teleport_activated = true
@@ -198,7 +197,7 @@ func _on_lazer_beam_chance_timer_timeout():
 		if lazer_reach:
 			var probability = randf()
 			if probability <= lazerbeam_chance:
-				if teleport_activated == false:
+				if not teleport_activated:
 					speed = 0
 					lazer_activated = true
 					$LazerBeamTimer.start()
@@ -223,6 +222,8 @@ func teleport():
 		position = Vector2(target.global_position.x + randi_range(100, 300), target.global_position.y - randi_range(100, 300))
 	elif probability <= 0.25:
 		position = Vector2(target.global_position.x - randi_range(100, 300), target.global_position.y + randi_range(100, 300))
+	else:
+		pass
 
 func _on_teleport_timer_timeout():
 	teleport()
@@ -257,7 +258,6 @@ func die():
 	z_index = 1
 	collision_layer = 0
 	alive = false
-	marker_removed = true
 	los.enabled = false
 	lazer_reach = false
 	lazer_activated = false

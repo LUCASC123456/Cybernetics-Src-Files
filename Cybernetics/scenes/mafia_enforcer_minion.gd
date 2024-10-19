@@ -23,7 +23,6 @@ const complex_drop_chance : float = 0.5
 
 var minimap_icon = "enemy"
 var marker_added : bool
-var marker_removed : bool
 
 func _ready() -> void:
 	target = player
@@ -52,9 +51,16 @@ func _process(_delta):
 				position = Vector2(central_spawn_point.x + randi_range(50, 100), central_spawn_point.y - randi_range(50, 100))
 			elif probability <= 0.25:
 				position = Vector2(central_spawn_point.x - randi_range(50, 100), central_spawn_point.y + randi_range(50, 100))
+			else:
+				pass
 		else:
-			if entered == false and $EntranceTimer.is_stopped():
-				$EntranceTimer.start()
+			if not entered:
+				if $EntranceTimer.is_stopped():
+					$EntranceTimer.start()
+				else:
+					pass
+			else:
+				pass
 	else:
 		pass
 
@@ -72,6 +78,8 @@ func _physics_process(_delta: float) -> void:
 					position = Vector2(3216,1624)
 				elif main.levels[3]:
 					position = Vector2(7128,1632)
+				else:
+					pass
 			else:
 				pass
 		else:
@@ -113,7 +121,6 @@ func die():
 	z_index = 1
 	collision_layer = 0
 	alive = false
-	marker_removed = true
 	$HitTimer.stop()
 	$TrackTimer.stop()
 	$AnimatedSprite2D.stop()

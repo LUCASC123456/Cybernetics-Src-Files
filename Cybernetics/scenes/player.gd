@@ -62,12 +62,12 @@ func reset():
 			mag_collection[i] = 30
 
 func get_input():
-	var input_dir = Input.get_vector("left", "right", "up", "down")
+	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = input_dir.normalized() * speed
 	
 	if selected_gun == "PISTOL":
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
-			if UI.ui_mouse_entered == false:
+		if Input.is_action_just_pressed("shoot") and can_shoot:
+			if not UI.ui_mouse_entered:
 				main.bullets_fired += 1
 				mag_collection[mags-1] -= 1
 				if main.credits_earned > 0:
@@ -89,10 +89,11 @@ func get_input():
 					$ReloadTimer.start()
 			else:
 				pass
-				
+		else:
+			pass		
 	elif selected_gun == "SMG":
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
-			if UI.ui_mouse_entered == false:
+		if Input.is_action_pressed("shoot") and can_shoot:
+			if not UI.ui_mouse_entered:
 				main.bullets_fired += 1
 				mag_collection[mags-1] -= 1
 				if main.credits_earned > 0:
@@ -114,10 +115,11 @@ func get_input():
 					$ReloadTimer.start()
 			else:
 				pass
-				
+		else:
+			pass		
 	elif selected_gun == "LMG":
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
-			if UI.ui_mouse_entered == false:
+		if Input.is_action_pressed("shoot") and can_shoot:
+			if not UI.ui_mouse_entered:
 				main.bullets_fired += 1
 				mag_collection[mags-1] -= 1
 				if main.credits_earned > 0:
@@ -139,10 +141,11 @@ func get_input():
 					$ReloadTimer.start()
 			else:
 				pass
-				
+		else:
+			pass		
 	elif selected_gun == "AR":
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and can_shoot:
-			if UI.ui_mouse_entered == false:
+		if Input.is_action_pressed("shoot") and can_shoot:
+			if not UI.ui_mouse_entered:
 				main.bullets_fired += 1
 				mag_collection[mags-1] -= 1
 				if main.credits_earned > 0:
@@ -164,7 +167,9 @@ func get_input():
 					$ReloadTimer.start()
 			else:
 				pass
-
+		else:
+			pass
+			
 func _process(_delta):
 	if selected_gun == "PISTOL":
 		if mags != 0:
@@ -192,7 +197,7 @@ func _process(_delta):
 				ammo_counter.text = "RELOADING"
 		else:
 			mag_collection[mags] = 0
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
 	elif selected_gun == "AR":
 		if mags != 0:
 			if $ReloadTimer.is_stopped():
@@ -201,7 +206,7 @@ func _process(_delta):
 				ammo_counter.text = "RELOADING"
 		else:
 			mag_collection[mags] = 0
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
+			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 	
 func _physics_process(_delta):
 	get_input()

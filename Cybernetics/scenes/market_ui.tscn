@@ -36,11 +36,15 @@ offset_bottom = 768.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_eaugh")
 
 [node name="SubBackground1" type="Panel" parent="."]
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 766.0
+offset_right = 768.0
 offset_bottom = 103.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_wiysv")
+
+[node name="SubBackground2" type="Panel" parent="."]
+offset_top = 642.0
+offset_right = 768.0
+offset_bottom = 768.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pw0sc")
 
 [node name="Market" type="Label" parent="."]
 anchors_preset = 8
@@ -48,9 +52,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -383.0
+offset_left = -384.0
 offset_top = -384.0
-offset_right = 382.0
+offset_right = 384.0
 offset_bottom = -281.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -58,13 +62,6 @@ theme_override_font_sizes/font_size = 75
 text = "MARKET"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="SubBackground2" type="Panel" parent="."]
-offset_left = 2.0
-offset_top = 642.0
-offset_right = 766.0
-offset_bottom = 766.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_pw0sc")
 
 [node name="ExitButton" type="Button" parent="."]
 anchors_preset = 7

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bobem383lawow"]
+[gd_scene load_steps=15 format=3 uid="uid://bobem383lawow"]
 
 [ext_resource type="PackedScene" uid="uid://caullttnbvnfk" path="res://scenes/world.tscn" id="1_omqkc"]
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_uwnhx"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://cs6ky3u2k6bjh" path="res://scenes/game_won.tscn" id="11_apbxy"]
 [ext_resource type="PackedScene" uid="uid://re6s5jcw6eiw" path="res://scenes/market_ui.tscn" id="12_rnwhq"]
 [ext_resource type="PackedScene" uid="uid://3k3j8g2awwi1" path="res://scenes/not_enough_credits.tscn" id="13_en3i7"]
+[ext_resource type="PackedScene" uid="uid://dsol8hwihl6dx" path="res://scenes/settings.tscn" id="14_4p8dr"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_uwnhx")
@@ -43,18 +44,21 @@ visible = false
 [node name="GameWon" parent="." instance=ExtResource("11_apbxy")]
 visible = false
 
+[node name="MarketUI" parent="." instance=ExtResource("12_rnwhq")]
+visible = false
+
+[node name="NotEnoughCredits" parent="." instance=ExtResource("13_en3i7")]
+visible = false
+
+[node name="Settings" parent="." instance=ExtResource("14_4p8dr")]
+visible = false
+
 [node name="CreditTimer" type="Timer" parent="."]
 process_mode = 1
 
 [node name="RestartTimer" type="Timer" parent="."]
 process_mode = 3
 one_shot = true
-
-[node name="MarketUI" parent="." instance=ExtResource("12_rnwhq")]
-visible = false
-
-[node name="NotEnoughCredits" parent="." instance=ExtResource("13_en3i7")]
-visible = false
 
 [connection signal="enemy_killed" from="." to="." method="_on_enemy_killed"]
 [connection signal="tree_entered" from="." to="." method="_on_tree_entered"]

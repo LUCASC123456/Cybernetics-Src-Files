@@ -20,15 +20,13 @@ var out_of_bounds : bool
 var dashing : bool
 var player_colliding : bool
 var direction : Vector2
-var vision_point = Vector2.ZERO
-var exclusion_container : Array
+var vision_point : Vector2
 
 const basic_drop_chance : float = 0.75
 const complex_drop_chance : float = 0.5
 
 var minimap_icon = "enemy"
 var marker_added : bool
-var marker_removed : bool
 
 func _ready() -> void:
 	target = player
@@ -56,16 +54,16 @@ func _physics_process(delta):
 		$AnimatedSprite2D.animation = "run"
 		if entered:
 			damage_resistant = false
-			exclusion_container.clear()
+			var exclusion_list := []
 			
 			for i in $Area2D.get_overlapping_bodies():
-				exclusion_container.append(i.get_rid())
+				exclusion_list.append(i.get_rid())
 			
 			for i in main.get_children():
 				if i is CharacterBody2D:
 					if i.name != "Player":
 						if i.player_colliding:
-							exclusion_container.append(i.get_rid())
+							exclusion_list.append(i.get_rid())
 						else:
 							pass
 					else:
@@ -74,7 +72,7 @@ func _physics_process(delta):
 					pass
 				
 			var space_state = get_world_2d().direct_space_state
-			var query = PhysicsRayQueryParameters2D.create(global_transform.origin, player.global_transform.origin, 7, exclusion_container)
+			var query = PhysicsRayQueryParameters2D.create(global_transform.origin, player.global_transform.origin, 7, exclusion_list)
 			var result = space_state.intersect_ray(query)
 			
 			if result:
@@ -119,6 +117,8 @@ func _physics_process(delta):
 					position = Vector2(3216,1624)
 				elif main.levels[3]:
 					position = Vector2(7128,1632)
+				else:
+					pass
 			else:
 				pass
 		else:
@@ -161,7 +161,6 @@ func die():
 	z_index = 1
 	collision_layer = 0
 	alive = false
-	marker_removed = true
 	$HitTimer.stop()
 	$TrackTimer.stop()
 	$WaitTimer.stop()

@@ -19,8 +19,7 @@ var phantom_sight_reach : bool
 var phantom_attack : bool
 var phantom_collide : bool
 var direction : Vector2
-var vision_point = Vector2.ZERO
-var exclusion_container : Array
+var vision_point : Vector2
 const phantom_chance : float = 0.66
 
 const basic_drop_chance : float = 0.75
@@ -28,7 +27,6 @@ const complex_drop_chance : float = 0.5
 
 var minimap_icon = "enemy"
 var marker_added : bool
-var marker_removed : bool
 
 func _ready() -> void:
 	target = player
@@ -52,19 +50,19 @@ func _physics_process(_delta: float) -> void:
 	if alive:
 		$AnimatedSprite2D.animation = "run"
 		if entered:
-			exclusion_container.clear()
+			var exclusion_list := []
 			
 			for i in $Area2D.get_overlapping_bodies():
 				if i is TileMap:
 					pass
 				else:
-					exclusion_container.append(i.get_rid())
+					exclusion_list.append(i.get_rid())
 			
 			for i in main.get_children():
 				if i is CharacterBody2D:
 					if i.name != "Player":
 						if i.player_colliding:
-							exclusion_container.append(i.get_rid())
+							exclusion_list.append(i.get_rid())
 						else:
 							pass
 					else:
@@ -73,8 +71,9 @@ func _physics_process(_delta: float) -> void:
 					pass
 			
 			var space_state = get_world_2d().direct_space_state
-			var query = PhysicsRayQueryParameters2D.create(global_transform.origin, player.global_transform.origin, 7, exclusion_container)
+			var query = PhysicsRayQueryParameters2D.create(global_transform.origin, player.global_transform.origin, 7, exclusion_list)
 			var result = space_state.intersect_ray(query)
+			direction = (target.position - position)
 			
 			if result:
 				if result.collider == target:
@@ -92,11 +91,11 @@ func _physics_process(_delta: float) -> void:
 			if phantom_collide or phantom_attack:
 				$AnimatedSprite2D.modulate.a = 0.5
 				damage_resistant = true
-			elif phantom_collide == false and phantom_attack == false:
+			elif not phantom_collide and not phantom_attack:
 				$AnimatedSprite2D.modulate.a = 1
 				damage_resistant = false
-			
-			direction = (target.position - position)
+			else:
+				pass
 		else:
 			damage_resistant = true
 	
@@ -158,7 +157,6 @@ func die():
 	z_index = 1
 	collision_layer = 0
 	alive = false
-	marker_removed = true
 	phantom_attack = false
 	phantom_collide = false
 	$HitTimer.stop()

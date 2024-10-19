@@ -30,7 +30,6 @@ const complex_drop_chance : float = 0.5
 
 var minimap_icon = "enemy"
 var marker_added : bool
-var marker_removed : bool
 
 func _ready() -> void:
 	target = player
@@ -61,27 +60,34 @@ func _physics_process(_delta: float) -> void:
 			damage_resistant = false
 			direction = to_local(nav_agent.get_next_path_position())
 			
-			if summoning == false:
+			if not summoning:
 				if nav_agent.distance_to_target() < stopping_distance-10:
 					if $SpeedChangeTimer.is_stopped():
-						$SpeedChangeTimer.wait_time = 0.1
-						$SpeedChangeTimer.start()
+						$SpeedChangeTimer.start(0.1)
 						speed = -100
+					else:
+						pass
 				elif nav_agent.distance_to_target() >= stopping_distance-10 and nav_agent.distance_to_target() <= stopping_distance+10:
 					if $SpeedChangeTimer.is_stopped():
-						$SpeedChangeTimer.wait_time = 0.1
-						$SpeedChangeTimer.start()
+						$SpeedChangeTimer.start(0.1)
 						speed = 0
+					else:
+						pass
 				elif nav_agent.distance_to_target() > stopping_distance+10:
-					$SpeedChangeTimer.wait_time = 0.1
-					$SpeedChangeTimer.start()
+					$SpeedChangeTimer.start(0.1)
 					speed = 100
+				else:
+					pass
+			else:
+				pass
 			
 			if out_of_bounds:
 				if main.levels[2]:
 					position = Vector2(3216,1624)
 				elif main.levels[3]:
 					position = Vector2(7128,1632)
+				else:
+					pass
 			else:
 				pass
 		else:
@@ -111,6 +117,8 @@ func _on_summon_check_timer_timeout():
 			summoning = true
 			$SummonTimer.start()
 			$SummonCheckTimer.stop()
+		else:
+			pass
 	else:
 		pass
 
@@ -131,6 +139,8 @@ func _on_summon_timer_timeout():
 			mafia_enforcer_minion.position = Vector2(position.x + randi_range(50, 100), position.y - randi_range(50, 100))
 		elif probability <= 0.25:
 			mafia_enforcer_minion.position = Vector2(position.x - randi_range(50, 100), position.y + randi_range(50, 100))
+		else:
+			pass
 		
 		main.add_child(mafia_enforcer_minion)
 		mafia_enforcer_minion.add_to_group("minions")
@@ -150,7 +160,6 @@ func die():
 	z_index = 1
 	collision_layer = 0
 	alive = false
-	marker_removed = true
 	$TrackTimer.stop()
 	$SummonCheckTimer.stop()
 	$SummonTimer.stop()

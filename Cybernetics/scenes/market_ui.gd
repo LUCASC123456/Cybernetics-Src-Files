@@ -2,8 +2,7 @@ extends CanvasLayer
 
 @onready var main_menu = get_node("/root/Main/MainMenu")
 @onready var not_enough_credits = get_node("/root/Main/NotEnoughCredits")
-@onready var market = get_node("/root/Main/MarketUI")
-@onready var buttons = market.get_node("Control")
+@onready var buttons = get_node("Control")
 
 var pistol_price = 0
 var smg_price = 400
@@ -49,7 +48,7 @@ func _buy(price, item_no):
 
 
 func _on_exit_button_pressed():
-	market.hide()
+	hide()
 	main_menu.show()
 
 func _on_button_1_pressed():
