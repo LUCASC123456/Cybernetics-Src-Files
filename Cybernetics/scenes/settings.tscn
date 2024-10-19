@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://dsol8hwihl6dx"]
+[gd_scene load_steps=14 format=3 uid="uid://dsol8hwihl6dx"]
 
 [ext_resource type="Script" path="res://scenes/settings.gd" id="1_wjbxv"]
 [ext_resource type="PackedScene" uid="uid://c2mm1ltqdcqrn" path="res://scenes/input_button.tscn" id="2_baodk"]
+[ext_resource type="Script" path="res://scenes/keybinds.gd" id="2_h352f"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rvsp6"]
 
@@ -78,53 +79,61 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_x5r34")
 text = "EXIT
 "
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_h352f")
+
+[node name="PanelContainer" type="PanelContainer" parent="Control"]
+layout_mode = 0
 offset_left = 15.0
 offset_top = 118.0
 offset_right = 753.0
 offset_bottom = 627.0
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ActionList" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="ActionList" type="VBoxContainer" parent="Control/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InputButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
+[node name="InputButton" parent="Control/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
 layout_mode = 2
 
-[node name="InputButton2" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
+[node name="InputButton2" parent="Control/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
 layout_mode = 2
 
-[node name="InputButton3" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
+[node name="InputButton3" parent="Control/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
 layout_mode = 2
 
-[node name="InputButton4" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
+[node name="InputButton4" parent="Control/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
 layout_mode = 2
 
-[node name="InputButton5" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
+[node name="InputButton5" parent="Control/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList" instance=ExtResource("2_baodk")]
 layout_mode = 2
 
-[node name="ResetButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ResetButton" type="Button" parent="Control/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_pqu7c")
 theme_override_styles/hover = SubResource("StyleBoxFlat_w8kj6")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_c403f")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_cy8tr")
-text = "RESEET TO DEFAULT"
+text = "RESET TO DEFAULT"
 
 [connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="Control/PanelContainer/MarginContainer/VBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]

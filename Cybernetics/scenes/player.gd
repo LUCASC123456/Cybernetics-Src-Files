@@ -7,6 +7,7 @@ extends CharacterBody2D
 @onready var main_menu = get_node("/root/Main/MainMenu")
 @onready var market = get_node("/root/Main/MarketUI")
 @onready var world = get_node("/root/Main/World")
+@onready var sword = $Sword
 
 signal shoot
 
@@ -90,7 +91,8 @@ func get_input():
 			else:
 				pass
 		else:
-			pass		
+			pass
+			
 	elif selected_gun == "SMG":
 		if Input.is_action_pressed("shoot") and can_shoot:
 			if not UI.ui_mouse_entered:
@@ -116,7 +118,8 @@ func get_input():
 			else:
 				pass
 		else:
-			pass		
+			pass
+			
 	elif selected_gun == "LMG":
 		if Input.is_action_pressed("shoot") and can_shoot:
 			if not UI.ui_mouse_entered:
@@ -142,7 +145,8 @@ func get_input():
 			else:
 				pass
 		else:
-			pass		
+			pass
+			
 	elif selected_gun == "AR":
 		if Input.is_action_pressed("shoot") and can_shoot:
 			if not UI.ui_mouse_entered:
@@ -169,7 +173,26 @@ func get_input():
 				pass
 		else:
 			pass
+	
+	if Input.is_action_just_pressed("melee"):
+		if $SwordTimer.is_stopped():
+			if get_local_mouse_position().angle() >= -PI/2 and get_local_mouse_position().angle() <= PI/2:
+				sword.rotation = (get_local_mouse_position().angle()) - PI/2
+				sword.swing_clockwise = true
+			else:
+				sword.rotation = (get_local_mouse_position().angle()) + PI/2
+				sword.swing_clockwise = false
 			
+			sword.monitoring = true
+			sword.visible = true
+			sword.swinging = true
+			
+			$SwordTimer.start()
+		else:
+			pass
+	else:
+		pass
+
 func _process(_delta):
 	if selected_gun == "PISTOL":
 		if mags != 0:
@@ -208,7 +231,7 @@ func _process(_delta):
 			mag_collection[mags] = 0
 			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
 	
-func _physics_process(_delta):
+func _physics_process(delta):
 	get_input()
 	move_and_slide()
 	
@@ -406,6 +429,11 @@ func _on_shot_timer_lmg_timeout():
 func _on_shot_timer_ar_timeout():
 	can_shoot = true
 
+
+func _on_sword_timer_timeout():
+	sword.swinging = false
+	sword.visible = false
+	sword.monitoring = false
 
 func _on_boost_timer_timeout():
 	boost_activated = false

@@ -2,9 +2,10 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
-@onready var nav_agent := $NavigationAgent2D as NavigationAgent2D
+@onready var nav_agent = $NavigationAgent2D
+@onready var health_bar = $EnemyHealthBar
 
-@export var target: Node2D = null
+@export var target : CharacterBody2D
 @export var start_dir : String
 
 var item_scene := preload("res://scenes/item.tscn")
@@ -43,6 +44,9 @@ func _ready() -> void:
 
 func _on_entrance_timer_timeout():
 	entered = true
+
+func _process(_delta):
+	health_bar.value = health
 
 func _physics_process(_delta: float) -> void:
 	if alive:

@@ -11,6 +11,7 @@ func _ready():
 		config.set_value("keybinding", "move_down", "S")
 		config.set_value("keybinding", "move_right", "D")
 		config.set_value("keybinding", "shoot", "mouse_1")
+		config.set_value("keybinding", "melee", "F")
 		
 		config.save(settings_file_path)
 	else:

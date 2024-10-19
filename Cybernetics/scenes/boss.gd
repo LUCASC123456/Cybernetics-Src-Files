@@ -3,14 +3,15 @@ extends CharacterBody2D
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
 @onready var nav_agent := $NavigationAgent2D as NavigationAgent2D
+@onready var health_bar = $EnemyHealthBar
 @onready var lof = $RotatingSection/LineOfFire
 @onready var lof_2 = $RotatingSection/LineOfFire2
 @onready var lof_3 = $RotatingSection/LineOfFire3
 @onready var lof_4 = $RotatingSection/LineOfFire4
 
-@export var enemy_bullet: PackedScene = null
-@export var enemy_missile : PackedScene = null
-@export var target: Node2D = null
+@export var enemy_bullet : PackedScene
+@export var enemy_missile : PackedScene
+@export var target : CharacterBody2D
 
 var item_scene := preload("res://scenes/item.tscn")
 
@@ -48,6 +49,9 @@ func _ready():
 
 func _on_entrance_timer_timeout():
 	entered = true
+
+func _process(_delta):
+	health_bar.value = health
 
 func _physics_process(delta):
 	if alive:

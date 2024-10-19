@@ -2,16 +2,16 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
-@onready var nav_agent := $NavigationAgent2D as NavigationAgent2D
+@onready var nav_agent = $NavigationAgent2D
+@onready var health_bar = $EnemyHealthBar
 @onready var reload_timer = $ReloadTimer
 @onready var shot_timer = $ShotTimer
 
-@export var enemy_bullet: PackedScene = null
-@export var target: Node2D = null
+@export var target : CharacterBody2D
+@export var enemy_bullet : PackedScene
 @export var start_dir : String
 
 var item_scene := preload("res://scenes/item.tscn")
-var can_see_player := false
 
 var health : int
 var speed : int
@@ -23,6 +23,7 @@ var entered : bool
 var damage_resistant : bool
 var out_of_bounds : bool
 var player_colliding : bool
+var can_see_player : bool 
 var direction : Vector2
 var vision_point : Vector2
 
@@ -53,6 +54,9 @@ func _ready() -> void:
 
 func _on_entrance_timer_timeout():
 	entered = true
+
+func _process(_delta):
+	health_bar.value = health
 
 func _physics_process(_delta: float) -> void:
 	if alive:

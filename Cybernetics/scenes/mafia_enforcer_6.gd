@@ -2,12 +2,12 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
+@onready var health_bar = $EnemyHealthBar
 
-@export var target: Node2D = null
+@export var target : CharacterBody2D
 @export var start_dir : String
 
 var item_scene := preload("res://scenes/item.tscn")
-var can_see_player := false
 
 var health : int
 var speed : int
@@ -15,6 +15,7 @@ var alive : bool
 var entered : bool
 var damage_resistant : bool
 var player_colliding : bool
+var can_see_player : bool
 var phantom_sight_reach : bool
 var phantom_attack : bool
 var phantom_collide : bool
@@ -45,6 +46,9 @@ func _ready() -> void:
 
 func _on_entrance_timer_timeout():
 	entered = true
+
+func _process(_delta):
+	health_bar.value = health
 
 func _physics_process(_delta: float) -> void:
 	if alive:

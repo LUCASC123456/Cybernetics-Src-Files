@@ -2,9 +2,10 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
-@onready var nav_agent := $NavigationAgent2D as NavigationAgent2D
+@onready var nav_agent = $NavigationAgent2D
+@onready var health_bar = $EnemyHealthBar
 
-@export var target: Node2D = null
+@export var target : CharacterBody2D
 
 var item_scene := preload("res://scenes/item.tscn")
 
@@ -39,6 +40,8 @@ func _on_entrance_timer_timeout():
 	entered = true
 
 func _process(_delta):
+	health_bar.value = health
+	
 	if alive:
 		if out_of_bounds:
 			var probability = randf()

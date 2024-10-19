@@ -14,7 +14,7 @@ var target_area_nodes : Array
 var mafia_enforcer_5s : Array
 var boss : CharacterBody2D
 
-var enemy_level_count = [20, 30, 40, 50, 1]
+var enemy_level_count = [1, 30, 40, 50, 1]
 var levels = [true, false, false, false, false]
 
 var player_door_coordinates = {
