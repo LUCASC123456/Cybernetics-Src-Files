@@ -2,10 +2,12 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
+@onready var game_over = get_node("/root/Main/GameOver")
 @onready var nav_agent = $NavigationAgent2D
 @onready var health_bar = $EnemyHealthBar
 
 @export var target : CharacterBody2D
+@export var creator : CharacterBody2D
 
 var item_scene := preload("res://scenes/item.tscn")
 
@@ -32,7 +34,7 @@ func _ready() -> void:
 	entered = false
 	out_of_bounds = true
 	visible = false
-	health = 150
+	health = 100
 	speed = 0
 	main.enemies_left += 1
 
@@ -42,26 +44,23 @@ func _on_entrance_timer_timeout():
 func _process(_delta):
 	health_bar.value = health
 	
-	if alive:
+	if not entered:
 		if out_of_bounds:
 			var probability = randf()
 			
 			if probability > 0.75:
-				position = Vector2(central_spawn_point.x + randi_range(50, 100),central_spawn_point.y + randi_range(50, 100))
+				global_position = Vector2(central_spawn_point.x + randi_range(50, 100), central_spawn_point.y + randi_range(50, 100))
 			elif probability <= 0.75 and probability > 0.5:
-				position = Vector2(central_spawn_point.x - randi_range(50, 100), central_spawn_point.y - randi_range(50, 100))
+				global_position = Vector2(central_spawn_point.x - randi_range(50, 100), central_spawn_point.y - randi_range(50, 100))
 			elif probability <= 0.5 and probability > 0.25:
-				position = Vector2(central_spawn_point.x + randi_range(50, 100), central_spawn_point.y - randi_range(50, 100))
+				global_position = Vector2(central_spawn_point.x + randi_range(50, 100), central_spawn_point.y - randi_range(50, 100))
 			elif probability <= 0.25:
-				position = Vector2(central_spawn_point.x - randi_range(50, 100), central_spawn_point.y + randi_range(50, 100))
+				global_position = Vector2(central_spawn_point.x - randi_range(50, 100), central_spawn_point.y + randi_range(50, 100))
 			else:
 				pass
 		else:
-			if not entered:
-				if $EntranceTimer.is_stopped():
-					$EntranceTimer.start()
-				else:
-					pass
+			if $EntranceTimer.is_stopped():
+				$EntranceTimer.start()
 			else:
 				pass
 	else:
@@ -86,9 +85,9 @@ func _physics_process(_delta: float) -> void:
 			else:
 				pass
 		else:
-			speed = 0
-			visible = false
 			damage_resistant = true
+			visible = true
+			speed = 0
 		
 		direction = direction.normalized()
 		velocity = direction * speed 
@@ -105,16 +104,59 @@ func make_path() -> void:
 func _on_track_timer_timeout():
 	make_path()
 
+func hit_player_7():
+	var damage : int
+	
+	if target.force_field_activated:
+		damage = 0
+	else:
+		if main.levels[2]:
+			damage = randi_range(5, 10)
+		elif main.levels[3]:
+			damage = randi_range(10, 15)
+		else:
+			pass
+	
+	creator.health += damage
+	
+	if target.sheild > 0:
+		target.sheild -= damage
+		
+		if target.sheild < 0:
+			target.health += target.sheild
+			target.sheild = 0
+		else:
+			pass
+	else:
+		target.health -= damage
+	
+	main.damage_taken += damage
+	if main.credits_earned > 0:
+		main.credits_earned -= damage
+		if main.credits_earned <= 0:
+			main.credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+	
+	if target.health <= 0:
+		get_tree().paused = true
+		game_over.show()
+		game_over.display_stats()
+	else:
+		pass
+	
 func _on_area_2d_body_entered(_body):
 	player_colliding = true
 	if alive and entered:
-		main.hit_player_7()
+		hit_player_7()
 		$HitTimer.start()
 	else:
 		pass
 		
 func _on_hit_timer_timeout():
-	main.hit_player_7()
+	hit_player_7()
 
 func _on_area_2d_body_exited(_body):
 	player_colliding = false

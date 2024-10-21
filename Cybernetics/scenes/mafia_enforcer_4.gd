@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
+@onready var game_over = get_node("/root/Main/GameOver")
 @onready var nav_agent = $NavigationAgent2D
 @onready var health_bar = $EnemyHealthBar
 
@@ -12,12 +13,10 @@ var item_scene := preload("res://scenes/item.tscn")
 
 var health : int
 var speed : int
-var time : float
 var alive : bool
 var entered : bool
 var damage_resistant : bool
 var out_of_bounds : bool
-var dashing : bool
 var player_colliding : bool
 var can_see_player : bool
 var direction : Vector2
@@ -37,7 +36,6 @@ func _ready() -> void:
 	out_of_bounds = true
 	health = 100
 	speed = 150
-	time = 1
 	
 	var dist = target.position - position
 	if start_dir == "horizontal":
@@ -86,32 +84,20 @@ func _physics_process(delta):
 					can_see_player = false
 				
 				vision_point = result.position
-				
-			if dashing:
-				if time < 1:
-					time += delta
-					speed = -3000 * (time) * (time-1)
-				else:
-					time = 1
-					dashing = false
-			else:
-				pass
 			
 			if can_see_player:
-				if time == 1:
-					time = 0
-					if $WaitTimer.is_stopped():
-						$WaitTimer.start()
-				elif time == 0:
-					if $WaitTimer.is_stopped():
-						dashing = true
+				if $DashTimer.is_stopped():
+					direction = target.global_position - position
+					$DashTimer.start()
+				else:
+					speed = -3000 * ($DashTimer.wait_time - $DashTimer.time_left) * ($DashTimer.wait_time - $DashTimer.time_left-1)
 			else:
-				if time == 1 or time == 0:
-					$WaitTimer.stop()
+				if $DashTimer.is_stopped():
 					direction = to_local(nav_agent.get_next_path_position())
-					time = 1
 					speed = 150
-				
+				else:
+					speed = -3000 * ($DashTimer.wait_time - $DashTimer.time_left) * ($DashTimer.wait_time - $DashTimer.time_left-1)
+					
 			if out_of_bounds:
 				if main.levels[0]:
 					position = Vector2(384,384)
@@ -143,19 +129,61 @@ func make_path() -> void:
 func _on_track_timer_timeout():
 	make_path()
 
-func _on_wait_timer_timeout():
-	direction = target.global_position - position
+func hit_player_4():
+	var damage : int
+	
+	if target.force_field_activated:
+		damage = 0
+	else:
+		if main.levels[0]:
+			damage = randi_range(15, 20)
+		elif main.levels[1]:
+			damage = randi_range(20, 25)
+		elif main.levels[2]:
+			damage = randi_range(25, 30)
+		elif main.levels[3]:
+			damage = randi_range(30, 35) 
+		else:
+			pass
+	
+	if target.sheild > 0:
+		target.sheild -= damage
+		
+		if target.sheild < 0:
+			target.health += target.sheild
+			target.sheild = 0
+		else:
+			pass
+	else:
+		target.health -= damage
+	
+	main.damage_taken += damage
+	if main.credits_earned > 0:
+		main.credits_earned -= damage
+		if main.credits_earned <= 0:
+			main.credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+		
+	if target.health <= 0:
+		get_tree().paused = true
+		game_over.show()
+		game_over.display_stats()
+	else:
+		pass
 
 func _on_area_2d_body_entered(_body):
 	player_colliding = true
 	if alive and entered:
-		main.hit_player_4()
+		hit_player_4()
 		$HitTimer.start()
 	else:
 		pass
 
 func _on_hit_timer_timeout():
-	main.hit_player_4()
+	hit_player_4()
 
 func _on_area_2d_body_exited(_body):
 	player_colliding = false
@@ -167,7 +195,7 @@ func die():
 	alive = false
 	$HitTimer.stop()
 	$TrackTimer.stop()
-	$WaitTimer.stop()
+	$DashTimer.stop()
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"
 	$EnemyHealthBar.hide()

@@ -12,25 +12,31 @@ extends CharacterBody2D
 signal shoot
 
 var speed : int
-var mags : int
+var primary_mags : int
+var secondary_mags : int
 var health : int
 var sheild : int
 var can_shoot : bool
 var out_of_bounds : bool
+var primary_equipped : bool
 var boost_activated : bool
 var force_field_activated : bool
 var double_damage_activated : bool
-var selected_gun : String
+var primary_selected_gun : String
+var secondary_selected_gun : String
 
-var guns = ["PISTOL", "SMG", "LMG", "AR"]
-var mag_collection = [0,0,0]
+var primary_guns = ["PISTOL", "SMG", "LMG", "AR"]
+var secondary_guns = ["PISTOL", "MP"]
+var primary_mag_collection = [0,0,0]
+var secondary_mag_collection = [0,0,0]
 
 func _ready():
 	speed = 250
 	position = Vector2(384, 384)
 	
 	main_menu.load_data()
-	selected_gun = guns[main_menu.store.selected]
+	primary_selected_gun = primary_guns[main_menu.primary_store.selected]
+	secondary_selected_gun = secondary_guns[main_menu.secondary_store.selected]
 	can_shoot = true
 	
 	boost_activated = false
@@ -47,133 +53,251 @@ func _ready():
 func reset():
 	health = 200
 	sheild = 200
-	mags = 3
+	primary_mags = 3
+	secondary_mags = 3
+	primary_equipped = true
 	
-	if selected_gun == "PISTOL":
-		for i in range(0, len(mag_collection)):
-			mag_collection[i] = 15
-	elif selected_gun == "SMG":
-		for i in range(0, len(mag_collection)):
-			mag_collection[i] = 18
-	elif selected_gun == "LMG":
-		for i in range(0, len(mag_collection)):
-			mag_collection[i] = 50
-	elif selected_gun == "AR":
-		for i in range(0, len(mag_collection)):
-			mag_collection[i] = 30
+	if primary_selected_gun == "PISTOL":
+		for i in range(0, len(primary_mag_collection)):
+			primary_mag_collection[i] = 15
+	elif primary_selected_gun == "SMG":
+		for i in range(0, len(primary_mag_collection)):
+			primary_mag_collection[i] = 20
+	elif primary_selected_gun == "LMG":
+		for i in range(0, len(primary_mag_collection)):
+			primary_mag_collection[i] = 50
+	elif primary_selected_gun == "AR":
+		for i in range(0, len(primary_mag_collection)):
+			primary_mag_collection[i] = 30
+	else:
+		pass
+	
+	if secondary_selected_gun == "PISTOL":
+		for i in range(0, len(secondary_mag_collection)):
+			secondary_mag_collection[i] = 15
+	elif secondary_selected_gun == "MP":
+		for i in range(0, len(secondary_mag_collection)):
+			secondary_mag_collection[i] = 20
+	else:
+		pass
 
 func get_input():
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = input_dir.normalized() * speed
 	
-	if selected_gun == "PISTOL":
-		if Input.is_action_just_pressed("shoot") and can_shoot:
-			if not UI.ui_mouse_entered:
-				main.bullets_fired += 1
-				mag_collection[mags-1] -= 1
-				if main.credits_earned > 0:
-					main.credits_earned -= 2
-					if main.credits_earned < 0:
-						main.credits_earned = 0
-					else:
-						pass
-				else:
-					pass
-					
-				var dir = get_global_mouse_position() - position
-				shoot.emit(position, dir)
-				can_shoot = false
-				
-				if mag_collection[mags-1] > 0:
-					$ShotTimerPistol.start()
-				else:
-					$ReloadTimer.start()
+	if Input.is_action_pressed("primary_weapon"):
+		if not primary_equipped:
+			primary_equipped = true
+			can_shoot = true
+			
+			if not $ReloadTimerSecondary.is_stopped():
+				$ReloadTimerSecondary.stop()
+				can_shoot = true
 			else:
 				pass
 		else:
 			pass
+	elif Input.is_action_just_pressed("secondary_weapon"):
+		if primary_equipped:
+			primary_equipped = false
 			
-	elif selected_gun == "SMG":
-		if Input.is_action_pressed("shoot") and can_shoot:
-			if not UI.ui_mouse_entered:
-				main.bullets_fired += 1
-				mag_collection[mags-1] -= 1
-				if main.credits_earned > 0:
-					main.credits_earned -= 2
-					if main.credits_earned < 0:
-						main.credits_earned = 0
-					else:
-						pass
-				else:
-					pass
-			
-				var dir = get_global_mouse_position() - position
-				shoot.emit(position, dir)
-				can_shoot = false
-				
-				if mag_collection[mags-1] > 0:
-					$ShotTimerSMG.start()
-				else:
-					$ReloadTimer.start()
+			if not $ReloadTimerPrimary.is_stopped():
+				$ReloadTimerPrimary.stop()
+				can_shoot = true
 			else:
 				pass
 		else:
 			pass
-			
-	elif selected_gun == "LMG":
-		if Input.is_action_pressed("shoot") and can_shoot:
-			if not UI.ui_mouse_entered:
-				main.bullets_fired += 1
-				mag_collection[mags-1] -= 1
-				if main.credits_earned > 0:
-					main.credits_earned -= 2
-					if main.credits_earned < 0:
-						main.credits_earned = 0
-					else:
-						pass
-				else:
-					pass
-			
-				var dir = get_global_mouse_position() - position
-				shoot.emit(position, dir)
-				can_shoot = false
-				
-				if mag_collection[mags-1] > 0:
-					$ShotTimerLMG.start()
-				else:
-					$ReloadTimer.start()
-			else:
-				pass
-		else:
-			pass
-			
-	elif selected_gun == "AR":
-		if Input.is_action_pressed("shoot") and can_shoot:
-			if not UI.ui_mouse_entered:
-				main.bullets_fired += 1
-				mag_collection[mags-1] -= 1
-				if main.credits_earned > 0:
-					main.credits_earned -= 2
-					if main.credits_earned < 0:
-						main.credits_earned = 0
-					else:
-						pass
-				else:
-					pass
-				
-				var dir = get_global_mouse_position() - position
-				shoot.emit(position, dir)
-				can_shoot = false
-				
-				if mag_collection[mags-1] > 0:
-					$ShotTimerAR.start()
-				else:
-					$ReloadTimer.start()
-			else:
-				pass
-		else:
-			pass
+	else:
+		pass
 	
+	if primary_equipped:
+		if primary_selected_gun == "PISTOL":
+			if Input.is_action_just_pressed("shoot") and can_shoot:
+				if not UI.ui_mouse_entered:
+					if primary_mag_collection[primary_mags-1] > 0:
+						main.bullets_fired += 1
+						primary_mag_collection[primary_mags-1] -= 1
+						
+						if main.credits_earned > 0:
+							main.credits_earned -= 2
+							if main.credits_earned < 0:
+								main.credits_earned = 0
+							else:
+								pass
+						else:
+							pass
+							
+						var dir = get_global_mouse_position() - position
+						shoot.emit(position, dir)
+						can_shoot = false
+						
+						$ShotTimerPistol.start()
+					else:
+						if $ReloadTimerPrimary.is_stopped():
+							$ReloadTimerPrimary.start()
+						else:
+							pass
+				else:
+					pass
+			else:
+				pass
+				
+		elif primary_selected_gun == "SMG":
+			if Input.is_action_pressed("shoot") and can_shoot:
+				if not UI.ui_mouse_entered:
+					if primary_mag_collection[primary_mags-1] > 0:
+						main.bullets_fired += 1
+						primary_mag_collection[primary_mags-1] -= 1
+						
+						if main.credits_earned > 0:
+							main.credits_earned -= 2
+							if main.credits_earned < 0:
+								main.credits_earned = 0
+							else:
+								pass
+						else:
+							pass
+						
+						var dir = get_global_mouse_position() - position
+						shoot.emit(position, dir)
+						can_shoot = false
+						
+						$ShotTimerSMG.start()
+					else:
+						if $ReloadTimerPrimary.is_stopped():
+							$ReloadTimerPrimary.start()
+						else:
+							pass
+				else:
+					pass
+			else:
+				pass
+				
+		elif primary_selected_gun == "LMG":
+			if Input.is_action_pressed("shoot") and can_shoot:
+				if not UI.ui_mouse_entered:
+					if primary_mag_collection[primary_mags-1] > 0:
+						main.bullets_fired += 1
+						primary_mag_collection[primary_mags-1] -= 1
+						
+						if main.credits_earned > 0:
+							main.credits_earned -= 2
+							if main.credits_earned < 0:
+								main.credits_earned = 0
+							else:
+								pass
+						else:
+							pass
+						
+						var dir = get_global_mouse_position() - position
+						shoot.emit(position, dir)
+						can_shoot = false
+						
+						$ShotTimerLMG.start()
+					else:
+						if $ReloadTimerPrimary.is_stopped():
+							$ReloadTimerPrimary.start()
+						else:
+							pass
+				else:
+					pass
+			else:
+				pass
+				
+		elif primary_selected_gun == "AR":
+			if Input.is_action_pressed("shoot") and can_shoot:
+				if not UI.ui_mouse_entered:
+					if primary_mag_collection[primary_mags-1] > 0:
+						main.bullets_fired += 1
+						primary_mag_collection[primary_mags-1] -= 1
+						
+						if main.credits_earned > 0:
+							main.credits_earned -= 2
+							if main.credits_earned < 0:
+								main.credits_earned = 0
+							else:
+								pass
+						else:
+							pass
+						
+						var dir = get_global_mouse_position() - position
+						shoot.emit(position, dir)
+						can_shoot = false
+						
+						$ShotTimerAR.start()
+					else:
+						if $ReloadTimerPrimary.is_stopped():
+							$ReloadTimerPrimary.start()
+						else:
+							pass
+				else:
+					pass
+			else:
+				pass
+	else:
+		if secondary_selected_gun == "PISTOL":
+			if Input.is_action_just_pressed("shoot") and can_shoot:
+				if not UI.ui_mouse_entered:
+					if secondary_mag_collection[secondary_mags-1] > 0:
+						main.bullets_fired += 1
+						secondary_mag_collection[secondary_mags-1] -= 1
+						
+						if main.credits_earned > 0:
+							main.credits_earned -= 2
+							if main.credits_earned < 0:
+								main.credits_earned = 0
+							else:
+								pass
+						else:
+							pass
+							
+						var dir = get_global_mouse_position() - position
+						shoot.emit(position, dir)
+						can_shoot = false
+						
+						$ShotTimerPistol.start()
+					else:
+						if $ReloadTimerSecondary.is_stopped():
+							$ReloadTimerSecondary.start()
+						else:
+							pass
+				else:
+					pass
+			else:
+				pass
+				
+		elif secondary_selected_gun == "MP":
+			if Input.is_action_pressed("shoot") and can_shoot:
+				if not UI.ui_mouse_entered:
+					if secondary_mag_collection[secondary_mags-1] > 0:
+						main.bullets_fired += 1
+						secondary_mag_collection[secondary_mags-1] -= 1
+						
+						if main.credits_earned > 0:
+							main.credits_earned -= 2
+							if main.credits_earned < 0:
+								main.credits_earned = 0
+							else:
+								pass
+						else:
+							pass
+							
+						var dir = get_global_mouse_position() - position
+						shoot.emit(position, dir)
+						can_shoot = false
+					
+						$ShotTimerMP.start()
+					else:
+						if $ReloadTimerSecondary.is_stopped():
+							$ReloadTimerSecondary.start()
+						else:
+							pass
+				else:
+					pass
+			else:
+				pass
+		
 	if Input.is_action_just_pressed("melee"):
 		if $SwordTimer.is_stopped():
 			if get_local_mouse_position().angle() >= -PI/2 and get_local_mouse_position().angle() <= PI/2:
@@ -183,8 +307,6 @@ func get_input():
 				sword.rotation = (get_local_mouse_position().angle()) + PI/2
 				sword.swing_clockwise = false
 			
-			sword.monitoring = true
-			sword.visible = true
 			sword.swinging = true
 			
 			$SwordTimer.start()
@@ -194,43 +316,65 @@ func get_input():
 		pass
 
 func _process(_delta):
-	if selected_gun == "PISTOL":
-		if mags != 0:
-			if $ReloadTimer.is_stopped():
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
+	if primary_equipped:
+		if primary_selected_gun == "PISTOL":
+			if primary_mags != 0:
+				if $ReloadTimerPrimary.is_stopped():
+					ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/15 \nMAGS: " + str(primary_mags) + "/3"
+				else:
+					ammo_counter.text = "RELOADING"
 			else:
-				ammo_counter.text = "RELOADING"
-		else:
-			mag_collection[mags] = 0
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/15 \nMAGS: " + str(mags) + "/3"
-	elif selected_gun == "SMG":
-		if mags != 0:
-			if $ReloadTimer.is_stopped():
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
+				primary_mag_collection[primary_mags] = 0
+				ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/15 \nMAGS: " + str(primary_mags) + "/3"
+		elif primary_selected_gun == "SMG":
+			if primary_mags != 0:
+				if $ReloadTimerPrimary.is_stopped():
+					ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/20 \nMAGS: " + str(primary_mags) + "/3"
+				else:
+					ammo_counter.text = "RELOADING"
 			else:
-				ammo_counter.text = "RELOADING"
-		else:
-			mag_collection[mags] = 0
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/18 \nMAGS: " + str(mags) + "/3"
-	elif selected_gun == "LMG":
-		if mags != 0:
-			if $ReloadTimer.is_stopped():
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
+				primary_mag_collection[primary_mags] = 0
+				ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/20 \nMAGS: " + str(primary_mags) + "/3"
+		elif primary_selected_gun == "LMG":
+			if primary_mags != 0:
+				if $ReloadTimerPrimary.is_stopped():
+					ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/50 \nMAGS: " + str(primary_mags) + "/3"
+				else:
+					ammo_counter.text = "RELOADING"
 			else:
-				ammo_counter.text = "RELOADING"
-		else:
-			mag_collection[mags] = 0
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/50 \nMAGS: " + str(mags) + "/3"
-	elif selected_gun == "AR":
-		if mags != 0:
-			if $ReloadTimer.is_stopped():
-				ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
+				primary_mag_collection[primary_mags] = 0
+				ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/50 \nMAGS: " + str(primary_mags) + "/3"
+		elif primary_selected_gun == "AR":
+			if primary_mags != 0:
+				if $ReloadTimerPrimaryr.is_stopped():
+					ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/30 \nMAGS: " + str(primary_mags) + "/3"
+				else:
+					ammo_counter.text = "RELOADING"
 			else:
-				ammo_counter.text = "RELOADING"
+				primary_mag_collection[primary_mags] = 0
+				ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/30 \nMAGS: " + str(primary_mags) + "/3"
 		else:
-			mag_collection[mags] = 0
-			ammo_counter.text = "AMMO: " + str(mag_collection[mags-1]) + "/30 \nMAGS: " + str(mags) + "/3"
-	
+			pass
+	else:
+		if secondary_selected_gun == "PISTOL":
+			if secondary_mags != 0:
+				if $ReloadTimerSecondary.is_stopped():
+					ammo_counter.text = "AMMO: " + str(secondary_mag_collection[secondary_mags-1]) + "/15 \nMAGS: " + str(secondary_mags) + "/3"
+				else:
+					ammo_counter.text = "RELOADING"
+			else:
+				secondary_mag_collection[secondary_mags] = 0
+				ammo_counter.text = "AMMO: " + str(secondary_mag_collection[secondary_mags-1]) + "/15 \nMAGS: " + str(secondary_mags) + "/3"
+		elif secondary_selected_gun == "MP":
+			if secondary_mags != 0:
+				if $ReloadTimerSecondary.is_stopped():
+					ammo_counter.text = "AMMO: " + str(secondary_mag_collection[secondary_mags-1]) + "/20 \nMAGS: " + str(secondary_mags) + "/3"
+				else:
+					ammo_counter.text = "RELOADING"
+			else:
+				secondary_mag_collection[secondary_mags] = 0
+				ammo_counter.text = "AMMO: " + str(secondary_mag_collection[secondary_mags-1]) + "/20 \nMAGS: " + str(secondary_mags) + "/3"
+		
 func _physics_process(delta):
 	get_input()
 	move_and_slide()
@@ -293,136 +437,207 @@ func _physics_process(delta):
 		$AnimatedSprite2D.frame = 1
 	
 func ammo_gained():
-	if $ReloadTimer.is_stopped():
-		if selected_gun == "PISTOL":
-			if $ShotTimerPistol.is_stopped():
-				if mags == 3:
-					if mag_collection[mags-1] == 15:
-						pass
-					else:
-						mag_collection[mags-1] += randi_range(1, 15-mag_collection[mags-1])
-				elif mags > 0 and mags < 3:
-					mag_collection[mags-1] += randi_range(1,15)
-					if mag_collection[mags-1] > 15:
-						mags += 1
-						mag_collection[mags-1] = mag_collection[mags-2] - 15
-						mag_collection[mags-2] = 15
-					else:
-						pass
-				elif mags == 0:
-					mags += 1
-					mag_collection[mags-1] += randi_range(1, 15)
-					can_shoot = true
+	if primary_equipped:
+		if $ReloadTimerPrimary.is_stopped():
+			if primary_selected_gun == "PISTOL":
+				if $ShotTimerPistol.is_stopped():
+					if primary_mags == 3:
+						if primary_mag_collection[primary_mags-1] == 15:
+							pass
+						else:
+							primary_mag_collection[primary_mags-1] += randi_range(1, 15-primary_mag_collection[primary_mags-1])
+					elif primary_mags > 0 and primary_mags < 3:
+						primary_mag_collection[primary_mags-1] += randi_range(1,15)
+						if primary_mag_collection[primary_mags-1] > 15:
+							primary_mags += 1
+							primary_mag_collection[primary_mags-1] = primary_mag_collection[primary_mags-2] - 15
+							primary_mag_collection[primary_mags-2] = 15
+						else:
+							pass
+					elif primary_mags == 0:
+						primary_mags += 1
+						primary_mag_collection[primary_mags-1] += randi_range(1, 15)
+						can_shoot = true
+				else:
+					pass
+			
+			elif primary_selected_gun == "SMG":
+				if $ShotTimerSMG.is_stopped():
+					if primary_mags == 3:
+						if primary_mag_collection[primary_mags-1] == 20:
+							pass
+						else:
+							primary_mag_collection[primary_mags-1] += randi_range(1, 20-primary_mag_collection[primary_mags-1])
+					elif primary_mags > 0 and primary_mags < 3:
+						primary_mag_collection[primary_mags-1] += randi_range(1,20)
+						if primary_mag_collection[primary_mags-1] > 20:
+							primary_mags += 1
+							primary_mag_collection[primary_mags-1] = primary_mag_collection[primary_mags-2] - 20
+							primary_mag_collection[primary_mags-2] = 20
+						else:
+							pass
+					elif primary_mags == 0:
+						primary_mags += 1
+						primary_mag_collection[primary_mags-1] += randi_range(1, 20)
+						can_shoot = true
+				else:
+					pass
+			
+			elif primary_selected_gun == "LMG":
+				if $ShotTimerLMG.is_stopped():
+					if primary_mags == 3:
+						if primary_mag_collection[primary_mags-1] == 50:
+							pass
+						else:
+							primary_mag_collection[primary_mags-1] += randi_range(1, 50-primary_mag_collection[primary_mags-1])
+					elif primary_mags > 0 and primary_mags < 3:
+						primary_mag_collection[primary_mags-1] += randi_range(1,50)
+						if primary_mag_collection[primary_mags-1] > 50:
+							primary_mags += 1
+							primary_mag_collection[primary_mags-1] = primary_mag_collection[primary_mags-2] - 50
+							primary_mag_collection[primary_mags-2] = 50
+						else:
+							pass
+					elif primary_mags == 0:
+						primary_mags += 1
+						primary_mag_collection[primary_mags-1] += randi_range(1, 50)
+						can_shoot = true
+				else:
+					pass
+					
+			elif primary_selected_gun == "AR":
+				if $ShotTimerAR.is_stopped():
+					if primary_mags == 3:
+						if primary_mag_collection[primary_mags-1] == 30:
+							pass
+						else:
+							primary_mag_collection[primary_mags-1] += randi_range(1, 30-primary_mag_collection[primary_mags-1])
+					elif primary_mags > 0 and primary_mags < 3:
+						primary_mag_collection[primary_mags-1] += randi_range(1,30)
+						if primary_mag_collection[primary_mags-1] > 30:
+							primary_mags += 1
+							primary_mag_collection[primary_mags-1] = primary_mag_collection[primary_mags-2] - 30
+							primary_mag_collection[primary_mags-2] = 30
+						else:
+							pass
+					elif primary_mags == 0:
+						primary_mags += 1
+						primary_mag_collection[primary_mags-1] += randi_range(1, 30)
+						can_shoot = true
+				else:
+					pass
 			else:
 				pass
-
-		elif selected_gun == "SMG":
-			if $ShotTimerSMG.is_stopped():
-				if mags == 3:
-					if mag_collection[mags-1] == 18:
-						pass
-					else:
-						mag_collection[mags-1] += randi_range(1, 18-mag_collection[mags-1])
-				elif mags > 0 and mags < 3:
-					mag_collection[mags-1] += randi_range(1,18)
-					if mag_collection[mags-1] > 18:
-						mags += 1
-						mag_collection[mags-1] = mag_collection[mags-2] - 18
-						mag_collection[mags-2] = 18
-					else:
-						pass
-				elif mags == 0:
-					mags += 1
-					mag_collection[mags-1] += randi_range(1, 18)
-					can_shoot = true
-			else:
-				pass
-		
-		elif selected_gun == "LMG":
-			if $ShotTimerLMG.is_stopped():
-				if mags == 3:
-					if mag_collection[mags-1] == 50:
-						pass
-					else:
-						mag_collection[mags-1] += randi_range(1, 50-mag_collection[mags-1])
-				elif mags > 0 and mags < 3:
-					mag_collection[mags-1] += randi_range(1,50)
-					if mag_collection[mags-1] > 50:
-						mags += 1
-						mag_collection[mags-1] = mag_collection[mags-2] - 50
-						mag_collection[mags-2] = 50
-					else:
-						pass
-				elif mags == 0:
-					mags += 1
-					mag_collection[mags-1] += randi_range(1, 50)
-					can_shoot = true
-			else:
-				pass
-				
-		elif selected_gun == "AR":
-			if $ShotTimerAR.is_stopped():
-				if mags == 3:
-					if mag_collection[mags-1] == 30:
-						pass
-					else:
-						mag_collection[mags-1] += randi_range(1, 30-mag_collection[mags-1])
-				elif mags > 0 and mags < 3:
-					mag_collection[mags-1] += randi_range(1,30)
-					if mag_collection[mags-1] > 30:
-						mags += 1
-						mag_collection[mags-1] = mag_collection[mags-2] - 30
-						mag_collection[mags-2] = 30
-					else:
-						pass
-				elif mags == 0:
-					mags += 1
-					mag_collection[mags-1] += randi_range(1, 30)
-					can_shoot = true
-			else:
-				pass
+		else:
+			pass
 	else:
-		pass
+		if $ReloadTimerSecondary.is_stopped():
+			if secondary_selected_gun == "PISTOL":
+				if $ShotTimerPistol.is_stopped():
+					if secondary_mags == 3:
+						if secondary_mag_collection[secondary_mags-1] == 15:
+							pass
+						else:
+							secondary_mag_collection[secondary_mags-1] += randi_range(1, 15-secondary_mag_collection[secondary_mags-1])
+					elif secondary_mags > 0 and secondary_mags < 3:
+						secondary_mag_collection[secondary_mags-1] += randi_range(1,15)
+						if secondary_mag_collection[secondary_mags-1] > 15:
+							secondary_mags += 1
+							secondary_mag_collection[secondary_mags-1] = secondary_mag_collection[secondary_mags-2] - 15
+							secondary_mag_collection[secondary_mags-2] = 15
+						else:
+							pass
+					elif secondary_mags == 0:
+						secondary_mags += 1
+						secondary_mag_collection[secondary_mags-1] += randi_range(1, 15)
+						can_shoot = true
+				else:
+					pass
+			elif secondary_selected_gun == "MP":
+				if $ShotTimerPistol.is_stopped():
+					if secondary_mags == 3:
+						if secondary_mag_collection[secondary_mags-1] == 20:
+							pass
+						else:
+							secondary_mag_collection[secondary_mags-1] += randi_range(1, 20-secondary_mag_collection[secondary_mags-1])
+					elif secondary_mags > 0 and secondary_mags < 3:
+						secondary_mag_collection[secondary_mags-1] += randi_range(1,20)
+						if secondary_mag_collection[secondary_mags-1] > 20:
+							secondary_mags += 1
+							secondary_mag_collection[secondary_mags-1] = secondary_mag_collection[secondary_mags-2] - 20
+							secondary_mag_collection[secondary_mags-2] = 20
+						else:
+							pass
+					elif secondary_mags == 0:
+						secondary_mags += 1
+						secondary_mag_collection[secondary_mags-1] += randi_range(1, 20)
+						can_shoot = true
+				else:
+					pass
+			else:
+				pass
+		else:
+			pass
+		
+func _on_reload_timer_primary_timeout():
+	if primary_selected_gun == "PISTOL":
+		primary_mags -= 1
+		if primary_mags > 0:
+			primary_mag_collection[primary_mags-1] = 15
+			can_shoot = true
+		else:
+			can_shoot = false
+			
+	elif primary_selected_gun == "SMG":
+		primary_mags -= 1
+		if primary_mags > 0:
+			primary_mag_collection[primary_mags-1] = 20
+			can_shoot = true
+		else:
+			can_shoot = false
+			
+	elif primary_selected_gun == "LMG":
+		primary_mags -= 1
+		if primary_mags > 0:
+			primary_mag_collection[primary_mags-1] = 50
+			can_shoot = true
+		else:
+			can_shoot = false
+			
+	elif primary_selected_gun == "AR":
+		primary_mags -= 1
+		if primary_mags > 0:
+			primary_mag_collection[primary_mags-1] = 30
+			can_shoot = true
+		else:
+			can_shoot = false
 
-func _on_reload_timer_timeout():
-	if selected_gun == "PISTOL":
-		mags -= 1
-		if mags > 0:
-			mag_collection[mags-1] = 15
+func _on_reload_timer_secondary_timeout():
+	if secondary_selected_gun == "PISTOL":
+		secondary_mags -= 1
+		if secondary_mags > 0:
+			secondary_mag_collection[secondary_mags-1] = 15
 			can_shoot = true
 		else:
 			can_shoot = false
-			
-	elif selected_gun == "SMG":
-		mags -= 1
-		if mags > 0:
-			mag_collection[mags-1] = 18
+	elif secondary_selected_gun == "MP":
+		secondary_mags -= 1
+		if secondary_mags > 0:
+			secondary_mag_collection[secondary_mags-1] = 20
 			can_shoot = true
 		else:
 			can_shoot = false
-			
-	elif selected_gun == "LMG":
-		mags -= 1
-		if mags > 0:
-			mag_collection[mags-1] = 50
-			can_shoot = true
-		else:
-			can_shoot = false
-			
-	elif selected_gun == "AR":
-		mags -= 1
-		if mags > 0:
-			mag_collection[mags-1] = 30
-			can_shoot = true
-		else:
-			can_shoot = false
-	
+
+
 func _on_shot_timer_pistol_timeout():
+	can_shoot = true
+
+func _on_shot_timer_mp_timeout():
 	can_shoot = true
 
 func _on_shot_timer_smg_timeout():
 	can_shoot = true
-	
+
 func _on_shot_timer_lmg_timeout():
 	can_shoot = true
 
@@ -432,8 +647,7 @@ func _on_shot_timer_ar_timeout():
 
 func _on_sword_timer_timeout():
 	sword.swinging = false
-	sword.visible = false
-	sword.monitoring = false
+
 
 func _on_boost_timer_timeout():
 	boost_activated = false

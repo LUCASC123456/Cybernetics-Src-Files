@@ -30,9 +30,9 @@ process_mode = 3
 script = ExtResource("1_jivp1")
 
 [node name="AmmoCounter" type="Panel" parent="."]
-offset_left = 144.0
+offset_left = 104.0
 offset_top = 633.0
-offset_right = 214.0
+offset_right = 174.0
 offset_bottom = 673.0
 
 [node name="AmmoLabel" type="Label" parent="AmmoCounter"]
@@ -60,9 +60,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="PowerupTeller" type="Panel" parent="."]
-offset_left = 413.0
+offset_left = 479.0
 offset_top = 633.0
-offset_right = 503.0
+offset_right = 569.0
 offset_bottom = 673.0
 
 [node name="PowerupLabel" type="Label" parent="PowerupTeller"]
@@ -76,7 +76,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HealthBar" type="ProgressBar" parent="."]
-offset_left = 553.0
+offset_left = 603.0
 offset_top = 673.0
 offset_right = 703.0
 offset_bottom = 693.0
@@ -88,7 +88,7 @@ value = 200.0
 show_percentage = false
 
 [node name="SheildBar" type="ProgressBar" parent="."]
-offset_left = 528.0
+offset_left = 578.0
 offset_top = 673.0
 offset_right = 678.0
 offset_bottom = 693.0
@@ -102,7 +102,7 @@ show_percentage = false
 [node name="AdrenalineBar" type="ProgressBar" parent="."]
 offset_left = 733.0
 offset_top = 673.0
-offset_right = 883.0
+offset_right = 833.0
 offset_bottom = 693.0
 rotation = -1.5708
 theme_override_styles/background = SubResource("StyleBoxFlat_ccrrq")
@@ -111,16 +111,16 @@ max_value = 1.0
 show_percentage = false
 
 [node name="PauseButton" type="Button" parent="."]
-offset_left = 50.0
-offset_top = 611.0
-offset_right = 114.0
-offset_bottom = 673.0
+offset_left = 15.0
+offset_top = 610.0
+offset_right = 79.0
+offset_bottom = 672.0
 text = "PAUSE"
 
 [node name="PrimaryWeaponSelection" type="Button" parent="."]
-offset_left = 220.5
+offset_left = 179.0
 offset_top = 633.0
-offset_right = 405.5
+offset_right = 316.0
 offset_bottom = 673.0
 theme_override_font_sizes/font_size = 15
 disabled = true
@@ -134,6 +134,24 @@ offset_right = 21.0
 offset_bottom = 17.0
 theme_override_font_sizes/font_size = 15
 text = "(1)"
+
+[node name="SecondaryWeaponSelection" type="Button" parent="."]
+offset_left = 318.0
+offset_top = 633.0
+offset_right = 474.0
+offset_bottom = 673.0
+theme_override_font_sizes/font_size = 15
+disabled = true
+text = "SECONDARY: PISTOL"
+
+[node name="KeyboardNumberedIndex" type="Label" parent="SecondaryWeaponSelection"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -5.0
+offset_right = 21.0
+offset_bottom = 17.0
+theme_override_font_sizes/font_size = 15
+text = "(2)"
 
 [node name="RoomCounter" type="Panel" parent="."]
 offset_left = 580.0
@@ -151,14 +169,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Minimap" type="SubViewportContainer" parent="."]
-offset_left = 578.0
-offset_top = 523.0
+offset_left = 628.0
+offset_top = 573.0
 offset_right = 728.0
 offset_bottom = 673.0
 
 [node name="SubViewport" type="SubViewport" parent="Minimap"]
 handle_input_locally = false
-size = Vector2i(150, 150)
+size = Vector2i(100, 100)
 render_target_update_mode = 4
 script = ExtResource("3_wrbff")
 
@@ -171,15 +189,15 @@ texture = ExtResource("4_edwwg")
 centered = false
 
 [node name="Camera2D" type="Camera2D" parent="Minimap/SubViewport"]
-zoom = Vector2(0.2, 0.2)
+zoom = Vector2(0.13, 0.13)
 
 [node name="EnemyMarker" type="Sprite2D" parent="Minimap/SubViewport"]
 visible = false
 texture = ExtResource("4_2qoty")
 
 [node name="PlayerMarker" type="Sprite2D" parent="Minimap"]
-position = Vector2(75, 75)
-scale = Vector2(0.2, 0.2)
+position = Vector2(50, 50)
+scale = Vector2(0.13, 0.13)
 texture = ExtResource("4_axa78")
 
 [connection signal="mouse_entered" from="PauseButton" to="." method="_on_pause_button_mouse_entered"]
@@ -187,3 +205,7 @@ texture = ExtResource("4_axa78")
 [connection signal="pressed" from="PauseButton" to="." method="_on_pause_button_pressed"]
 [connection signal="mouse_entered" from="PrimaryWeaponSelection" to="." method="_on_primary_weapon_selection_mouse_entered"]
 [connection signal="mouse_exited" from="PrimaryWeaponSelection" to="." method="_on_primary_weapon_selection_mouse_exited"]
+[connection signal="pressed" from="PrimaryWeaponSelection" to="." method="_on_primary_weapon_selection_pressed"]
+[connection signal="mouse_entered" from="SecondaryWeaponSelection" to="." method="_on_primary_weapon_selection_mouse_entered"]
+[connection signal="mouse_exited" from="SecondaryWeaponSelection" to="." method="_on_primary_weapon_selection_mouse_exited"]
+[connection signal="pressed" from="SecondaryWeaponSelection" to="." method="_on_secondary_weapon_selection_pressed"]

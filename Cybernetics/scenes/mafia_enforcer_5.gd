@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
+@onready var game_over = get_node("/root/Main/GameOver")
 @onready var nav_agent = $NavigationAgent2D
 @onready var health_bar = $EnemyHealthBar
 @onready var los = $LineOfSight
@@ -21,13 +22,12 @@ var player_colliding : bool
 var damage_resistant : bool
 var teleport_activated : bool
 var lazer_activated : bool
-var teleported : bool
-var lazer_reach : bool
+var can_see_player : bool
 var direction : Vector2
 var angle_to_target: float
+
 const teleport_chance : float = 0.25
 const lazerbeam_chance : float = 0.25
-
 const basic_drop_chance : float = 0.75
 const complex_drop_chance : float = 0.5
 
@@ -65,7 +65,7 @@ func _physics_process(delta):
 			los.enabled = true
 			direction = to_local(nav_agent.get_next_path_position())
 			
-			if angle_to_target == global_position.direction_to(target.global_position).angle():
+			if angle_to_target >= global_position.direction_to(target.global_position).angle()-delta and angle_to_target <= global_position.direction_to(target.global_position).angle()+delta:
 				pass
 			else:
 				if global_position.direction_to(target.global_position).angle() >= 0 and global_position.direction_to(target.global_position).angle() < PI/2:
@@ -141,20 +141,26 @@ func _physics_process(delta):
 			
 			if teleport_activated:
 				damage_resistant = true
-				if teleported:
+				visible = false
+				speed = 0
+				
+				if $TeleportTimer.is_stopped():
 					if out_of_bounds:
 						teleport()
 					else:
-						speed = 100
-						visible = true
-						teleported = false
 						teleport_activated = false
-						$LazerBeamChanceTimer.start()
-						$TeleportChanceTimer.start()
+						$LazerBeamCoolDownTimer.start()
+						$TeleportCoolDownTimer.start()
 				else:
 					pass
+			elif lazer_activated:
+				damage_resistant = false
+				visible = true
+				speed = 0
 			else:
 				damage_resistant = false
+				visible = true
+				speed = 100
 				
 				if out_of_bounds:
 					position = Vector2(7128,1632)
@@ -178,17 +184,16 @@ func make_path() -> void:
 func _on_track_timer_timeout():
 	make_path()
 
-func _on_teleport_chance_timer_timeout():
+func _on_teleport_cool_down_timer_timeout():
 	if alive and entered:
 		var probability = randf()
 		if probability <= teleport_chance:
 			if not lazer_activated:
-				speed = 0
-				visible = false
 				teleport_activated = true
+				
 				$TeleportTimer.start()
-				$TeleportChanceTimer.stop()
-				$LazerBeamChanceTimer.stop()
+				$TeleportCoolDownTimer.stop()
+				$LazerBeamCoolDownTimer.stop()
 			else:
 				pass
 		else:
@@ -196,17 +201,17 @@ func _on_teleport_chance_timer_timeout():
 	else:
 		pass
 
-func _on_lazer_beam_chance_timer_timeout():
+func _on_lazer_beam_cool_down_timer_timeout():
 	if alive and entered:
-		if lazer_reach:
+		if can_see_player:
 			var probability = randf()
 			if probability <= lazerbeam_chance:
 				if not teleport_activated:
-					speed = 0
 					lazer_activated = true
-					$LazerBeamTimer.start()
-					$LazerBeamChanceTimer.stop()
-					$TeleportChanceTimer.stop()
+					
+					$LazerBeamTimer.start(randi_range(5, 10))
+					$LazerBeamCoolDownTimer.stop()
+					$TeleportCoolDownTimer.stop()
 				else:
 					pass
 			else:
@@ -218,43 +223,78 @@ func _on_lazer_beam_chance_timer_timeout():
 
 func teleport():
 	var probability = randf()
+	
 	if probability > 0.75:
-		position = Vector2(target.global_position.x + randi_range(100, 300), target.global_position.y + randi_range(100, 300))
+		global_position = Vector2(target.global_position.x + randi_range(100, 300), target.global_position.y + randi_range(100, 300))
 	elif probability <= 0.75 and probability > 0.5:
-		position = Vector2(target.global_position.x - randi_range(100, 300), target.global_position.y - randi_range(100, 300))
+		global_position = Vector2(target.global_position.x - randi_range(100, 300), target.global_position.y - randi_range(100, 300))
 	elif probability <= 0.5 and probability > 0.25:
-		position = Vector2(target.global_position.x + randi_range(100, 300), target.global_position.y - randi_range(100, 300))
+		global_position = Vector2(target.global_position.x + randi_range(100, 300), target.global_position.y - randi_range(100, 300))
 	elif probability <= 0.25:
-		position = Vector2(target.global_position.x - randi_range(100, 300), target.global_position.y + randi_range(100, 300))
+		global_position = Vector2(target.global_position.x - randi_range(100, 300), target.global_position.y + randi_range(100, 300))
 	else:
 		pass
 
 func _on_teleport_timer_timeout():
 	teleport()
-	teleported = true
 
 func _on_lazer_beam_timer_timeout():
-	speed = 100
 	lazer_activated = false
-	$LazerBeamChanceTimer.start()
-	$TeleportChanceTimer.start()
+	$LazerBeamCoolDownTimer.start()
+	$TeleportCoolDownTimer.start()
+
+func hit_player_5():
+	var damage : int
+	
+	if target.force_field_activated:
+		damage = 0
+	else:
+		damage = randi_range(10, 15)
+		
+	if target.sheild > 0:
+		target.sheild -= damage
+		
+		if target.sheild < 0:
+			target.health += target.sheild
+			target.sheild = 0
+		else:
+			pass
+	else:
+		target.health -= damage
+	
+	main.damage_taken += damage
+	if main.credits_earned > 0:
+		main.credits_earned -= damage
+		if main.credits_earned <= 0:
+			main.credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+		
+	if target.health <= 0:
+		get_tree().paused = true
+		game_over.show()
+		game_over.display_stats()
+	else:
+		pass
 
 func _on_area_2d_body_entered(_body):
 	player_colliding = true
 	if alive and entered:
-		if speed == 100:
-			main.hit_player_5()
+		if not teleport_activated and not lazer_activated:
+			hit_player_5()
 		$HitTimer.start()
 	else:
 		pass
 
 func _on_area_2d_body_exited(_body):
-	player_colliding = true
+	player_colliding = false
 	$HitTimer.stop()
 
 func _on_hit_timer_timeout():
-	if speed == 100:
-		main.hit_player_5()
+	if not teleport_activated and not lazer_activated:
+		hit_player_5()
 	else:
 		pass
 
@@ -263,14 +303,13 @@ func die():
 	collision_layer = 0
 	alive = false
 	los.enabled = false
-	lazer_reach = false
 	lazer_activated = false
 	teleport_activated = false
 	$HitTimer.stop()
 	$TrackTimer.stop()
-	$TeleportChanceTimer.stop()
+	$TeleportCoolDownTimer.stop()
 	$TeleportTimer.stop()
-	$LazerBeamChanceTimer.stop()
+	$LazerBeamCoolDownTimer.stop()
 	$LazerBeamTimer.stop()
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"

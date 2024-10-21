@@ -48,39 +48,66 @@ func _on_body_entered(_body):
 		else:
 			pass
 	elif item_type == 2:
-		if player.get_node("ReloadTimer").is_stopped():
-			if player.selected_gun == "PISTOL":
-				if player.mag_collection[2] < 15:
-					if player.get_node("ShotTimerPistol").is_stopped():
-						player.ammo_gained()
-						queue_free()
+		if player.primary_equipped:
+			if player.get_node("ReloadTimerPrimary").is_stopped():
+				if player.primary_selected_gun == "PISTOL":
+					if player.primary_mag_collection[2] < 15:
+						if player.get_node("ShotTimerPistol").is_stopped():
+							player.ammo_gained()
+							queue_free()
+						else:
+							pass
+					else:
+						pass
+				elif player.primary_selected_gun == "SMG":
+					if player.primary_mag_collection[2] < 18:
+						if player.get_node("ShotTimerSMG").is_stopped():
+							player.ammo_gained()
+							queue_free()
+						else:
+							pass
+					else:
+						pass
+				elif player.primary_selected_gun == "LMG":
+					if player.primary_mag_collection[2] < 50:
+						if player.get_node("ShotTimerLMG").is_stopped():
+							player.ammo_gained()
+							queue_free()
+						else:
+							pass
+					else:
+						pass
+				elif player.primary_selected_gun == "AR":
+					if player.primary_mag_collection[2] < 30:
+						if player.get_node("ShotTimerAR").is_stopped():
+							player.ammo_gained()
+							queue_free()
+						else:
+							pass
 					else:
 						pass
 				else:
 					pass
-			elif player.selected_gun == "SMG":
-				if player.mag_collection[2] < 18:
-					if player.get_node("ShotTimerSMG").is_stopped():
-						player.ammo_gained()
-						queue_free()
+			else:
+				pass
+		else:
+			if player.get_node("ReloadTimerSecondary").is_stopped():
+				if player.secondary_selected_gun == "PISTOL":
+					if player.secondary_mag_collection[2] < 15:
+						if player.get_node("ShotTimerPistol").is_stopped():
+							player.ammo_gained()
+							queue_free()
+						else:
+							pass
 					else:
 						pass
-				else:
-					pass
-			elif player.selected_gun == "LMG":
-				if player.mag_collection[2] < 50:
-					if player.get_node("ShotTimerLMG").is_stopped():
-						player.ammo_gained()
-						queue_free()
-					else:
-						pass
-				else:
-					pass
-			elif player.selected_gun == "AR":
-				if player.mag_collection[2] < 30:
-					if player.get_node("ShotTimerAR").is_stopped():
-						player.ammo_gained()
-						queue_free()
+				elif player.secondary_selected_gun == "MP":
+					if player.secondary_mag_collection[2] < 15:
+						if player.get_node("ShotTimerMP").is_stopped():
+							player.ammo_gained()
+							queue_free()
+						else:
+							pass
 					else:
 						pass
 				else:

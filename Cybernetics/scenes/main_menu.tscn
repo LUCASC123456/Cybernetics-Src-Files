@@ -57,9 +57,10 @@ offset_left = 43.0
 offset_top = 28.0
 offset_right = 370.0
 offset_bottom = 122.0
-text = "CONTROLS:
+text = "CONTROLS (DEFAULT):
 WASD: UP, LEFT, DOWN RIGHT
-HOLD DOWN LEFT CLICK: SHOOT WEAPON
+LEFT CLICK: SHOOT WEAPON
+F: USE MELEE
 "
 
 [node name="PlayButton" type="Button" parent="."]

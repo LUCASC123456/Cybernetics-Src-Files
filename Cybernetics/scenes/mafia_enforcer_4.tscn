@@ -107,8 +107,7 @@ wait_time = 2.0
 wait_time = 0.1
 autostart = true
 
-[node name="WaitTimer" type="Timer" parent="."]
-wait_time = 0.25
+[node name="DashTimer" type="Timer" parent="."]
 one_shot = true
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
@@ -116,4 +115,3 @@ one_shot = true
 [connection signal="timeout" from="EntranceTimer" to="." method="_on_entrance_timer_timeout"]
 [connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
 [connection signal="timeout" from="TrackTimer" to="." method="_on_track_timer_timeout"]
-[connection signal="timeout" from="WaitTimer" to="." method="_on_wait_timer_timeout"]

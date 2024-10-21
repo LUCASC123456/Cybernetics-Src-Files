@@ -8,12 +8,14 @@ var action_to_remap = null
 var remapping_button = null
 
 var input_actions = {
-	"move_up": "MOVE UP",
-	"move_down": "MOVE DOWN",
-	"move_left": "MOVE LEFT",
-	"move_right": "MOVE RIGHT",
-	"shoot": "SHOOT",
-	"melee": "MELEE"
+	"move_up" : "MOVE UP",
+	"move_down" : "MOVE DOWN",
+	"move_left" : "MOVE LEFT",
+	"move_right" : "MOVE RIGHT",
+	"shoot" : "SHOOT",
+	"melee" : "MELEE",
+	"primary_weapon" : "PRIMARY WEAPON",
+	"secondary_weapon" : "SECONDARY WEAPON"
 }
 
 func _ready():

@@ -2,7 +2,8 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
-@onready var nav_agent := $NavigationAgent2D as NavigationAgent2D
+@onready var game_over = get_node("/root/Main/GameOver")
+@onready var nav_agent := $NavigationAgent2D
 @onready var health_bar = $EnemyHealthBar
 @onready var lof = $RotatingSection/LineOfFire
 @onready var lof_2 = $RotatingSection/LineOfFire2
@@ -30,6 +31,7 @@ var flame_thrower_activated : bool
 var flying_activated : bool
 var rotate_clockwise : bool
 var direction : Vector2
+
 const acceleration := 100
 const deceleration := 100
 
@@ -41,11 +43,8 @@ func _ready():
 	make_path()
 	alive = true
 	entered = false
-	health = 1000
+	health = 500
 	speed = 0
-	
-	$AbilityCoolDownTimer.wait_time = randi_range(5, 10)
-	$MissileTimer.wait_time = randi_range(5, 10)
 
 func _on_entrance_timer_timeout():
 	entered = true
@@ -124,8 +123,7 @@ func _physics_process(delta):
 						speed = 75
 						
 					if $AbilityCoolDownTimer.is_stopped():
-						$AbilityCoolDownTimer.wait_time = randi_range(5, 10)
-						$AbilityCoolDownTimer.start()
+						$AbilityCoolDownTimer.start(randi_range(5, 10))
 					
 				if can_see_player:
 					if angle_to_target >= global_position.direction_to(target.global_position).angle()-delta and angle_to_target <= global_position.direction_to(target.global_position).angle()+delta:
@@ -350,6 +348,8 @@ func _on_ability_timer_timeout():
 		flame_thrower_activated = false
 	elif flying_activated:
 		flying_activated = false
+	else:
+		pass
 
 func shoot():
 	if enemy_bullet:
@@ -397,16 +397,52 @@ func _on_missile_timer_timeout():
 	
 	$MissileTimer.wait_time = randi_range(5, 10)
 
+func hit_player_10():
+	var damage : int
+	
+	if target.force_field_activated:
+		damage = 0
+	else:
+		damage = randi_range(20, 25)
+	
+	if target.sheild > 0:
+		target.sheild -= damage
+		
+		if target.sheild < 0:
+			target.health += target.sheild
+			target.sheild = 0
+		else:
+			pass
+	else:
+		target.health -= damage
+	
+	main.damage_taken += damage
+	if main.credits_earned > 0:
+		main.credits_earned -= damage
+		if main.credits_earned <= 0:
+			main.credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+		
+	if target.health <= 0:
+		get_tree().paused = true
+		game_over.show()
+		game_over.display_stats()
+	else:
+		pass
+
 func _on_area_2d_body_entered(_body):
 	player_colliding = true
 	if alive and entered:
-		main.hit_player_10()
+		hit_player_10()
 		$HitTimer.start()
 	else:
 		pass
 
 func _on_hit_timer_timeout():
-	main.hit_player_10()
+	hit_player_10()
 
 func _on_area_2d_body_exited(_body):
 	player_colliding = true

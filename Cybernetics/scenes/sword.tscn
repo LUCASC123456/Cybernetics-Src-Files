@@ -9,7 +9,7 @@ size = Vector2(100, 10)
 [node name="Sword" type="Area2D"]
 visible = false
 collision_layer = 32
-collision_mask = 4
+collision_mask = 12
 monitoring = false
 script = ExtResource("1_en8j2")
 

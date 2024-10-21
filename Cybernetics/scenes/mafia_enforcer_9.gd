@@ -15,7 +15,7 @@ var item_scene := preload("res://scenes/item.tscn")
 
 var health : int
 var speed : int
-var shot_count : int
+var shots : int
 var stopping_distance : int
 var body_collider_count : int 
 var alive : bool
@@ -27,6 +27,7 @@ var can_see_player : bool
 var direction : Vector2
 var vision_point : Vector2
 
+const mag_rounds : int = 30
 const basic_drop_chance : float = 0.75
 const complex_drop_chance : float = 0.5
 
@@ -41,7 +42,7 @@ func _ready() -> void:
 	out_of_bounds = true
 	health = 100
 	speed = 100
-	shot_count = 0
+	shots = 0
 	stopping_distance = randi_range(200, 300)
 	
 	var dist = target.position - position
@@ -96,11 +97,11 @@ func _physics_process(_delta: float) -> void:
 		
 			if can_see_player:
 				if shot_timer.is_stopped() and reload_timer.is_stopped():
-					if shot_count < 30:
+					if shots < mag_rounds:
 						shoot()
-						shot_count += 1
+						shots += 1
 					else:
-						shot_count = 0
+						shots = 0
 						reload_timer.start()
 				else:
 					pass
@@ -132,7 +133,7 @@ func _physics_process(_delta: float) -> void:
 					$SpeedChangeTimer.start(randf_range(0.5, 1))
 				
 				speed = 100
-					
+				
 			if out_of_bounds:
 				if main.levels[1]:
 					position = Vector2(1920,384)
@@ -177,8 +178,9 @@ func _on_area_2d_body_entered(body):
 		if body != self:
 			if body.is_in_group("mafia_enforcer_7") or body.is_in_group("mafia_enforcer_8") or body.is_in_group("mafia_enforcer_9"):
 				body_collider_count += 1
+				
 				if stopping_distance > body.stopping_distance+50:
-					stopping_distance = randi_range(200, body.stopping_distance+40)
+					stopping_distance = randi_range(200, body.stopping_distance+25)
 				else:
 					pass
 			else:

@@ -101,13 +101,14 @@ autostart = true
 wait_time = 0.1
 autostart = true
 
-[node name="TeleportChanceTimer" type="Timer" parent="."]
+[node name="TeleportCoolDownTimer" type="Timer" parent="."]
 autostart = true
 
 [node name="TeleportTimer" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
 
-[node name="LazerBeamChanceTimer" type="Timer" parent="."]
+[node name="LazerBeamCoolDownTimer" type="Timer" parent="."]
 autostart = true
 
 [node name="LazerBeamTimer" type="Timer" parent="."]
@@ -128,6 +129,8 @@ points = PackedVector2Array(0, 0, 89, 0)
 width = 0.0
 default_color = Color(0, 1, 1, 1)
 
+[node name="HitTimer2" type="Timer" parent="LineOfSight"]
+
 [node name="OutOfBoundsChecker" type="Area2D" parent="." groups=["out_of_bounds_checker"]]
 collision_layer = 4
 
@@ -139,7 +142,8 @@ shape = SubResource("CircleShape2D_r2jbm")
 [connection signal="timeout" from="EntranceTimer" to="." method="_on_entrance_timer_timeout"]
 [connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
 [connection signal="timeout" from="TrackTimer" to="." method="_on_track_timer_timeout"]
-[connection signal="timeout" from="TeleportChanceTimer" to="." method="_on_teleport_chance_timer_timeout"]
+[connection signal="timeout" from="TeleportCoolDownTimer" to="." method="_on_teleport_cool_down_timer_timeout"]
 [connection signal="timeout" from="TeleportTimer" to="." method="_on_teleport_timer_timeout"]
-[connection signal="timeout" from="LazerBeamChanceTimer" to="." method="_on_lazer_beam_chance_timer_timeout"]
+[connection signal="timeout" from="LazerBeamCoolDownTimer" to="." method="_on_lazer_beam_cool_down_timer_timeout"]
 [connection signal="timeout" from="LazerBeamTimer" to="." method="_on_lazer_beam_timer_timeout"]
+[connection signal="timeout" from="LineOfSight/HitTimer2" to="." method="_on_hit_timer_2_timeout"]

@@ -2,7 +2,6 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
-@onready var enemy_spawner = get_node("/root/Main/EnemySpawner")
 @onready var nav_agent = $NavigationAgent2D
 @onready var health_bar = $EnemyHealthBar
 
@@ -14,18 +13,18 @@ var mafia_enforcer_minion_scene := preload("res://scenes/mafia_enforcer_minion.t
 
 var health : int
 var speed : int
-var minion_count : int
 var stopping_distance : int
-var minion_total : int
+var total_minions : int
+var minions : int
 var alive : bool
 var entered : bool
-var summoning : bool 
 var damage_resistant : bool
 var out_of_bounds : bool
 var player_colliding : bool
+var summoning : bool 
 var direction : Vector2
-const summon_chance : float = 0.25
 
+const summon_chance : float = 0.25
 const basic_drop_chance : float = 0.75
 const complex_drop_chance : float = 0.5
 
@@ -40,7 +39,6 @@ func _ready() -> void:
 	out_of_bounds = true
 	health = 100
 	speed = 100
-	minion_count = 0
 	stopping_distance = randi_range(200, 300)
 	
 	var dist = target.position - position
@@ -56,6 +54,12 @@ func _on_entrance_timer_timeout():
 
 func _process(_delta):
 	health_bar.value = health
+	
+	if health_bar.value < health:
+		health_bar.max_value = health
+		health_bar.value = health
+	else:
+		pass
 
 func _physics_process(_delta: float) -> void:
 	if alive:
@@ -83,7 +87,7 @@ func _physics_process(_delta: float) -> void:
 				else:
 					pass
 			else:
-				pass
+				speed = 0
 			
 			if out_of_bounds:
 				if main.levels[2]:
@@ -116,43 +120,47 @@ func _on_summon_check_timer_timeout():
 	if alive and entered:
 		var probability = randf()
 		if probability < summon_chance:
-			speed = 0
-			minion_total = randi_range(5, 10)
 			summoning = true
+			total_minions = randi_range(5, 10)
+			minions = 0
+			
 			$SummonTimer.start()
-			$SummonCheckTimer.stop()
+			$SummonCoolDownTimer.stop()
 		else:
 			pass
 	else:
 		pass
 
 func _on_summon_timer_timeout(): 
-	minion_count += 1
+	minions += 1
 	
-	if minion_count != minion_total:
+	if minions <= total_minions:
 		var mafia_enforcer_minion = mafia_enforcer_minion_scene.instantiate()
 		mafia_enforcer_minion.central_spawn_point = global_position
 		
 		var probability = randf()
 		
 		if probability > 0.75:
-			mafia_enforcer_minion.position = Vector2(position.x + randi_range(50, 100), position.y + randi_range(50, 100))
+			mafia_enforcer_minion.global_position = Vector2(position.x + randi_range(50, 100), position.y + randi_range(50, 100))
 		elif probability <= 0.75 and probability > 0.5:
-			mafia_enforcer_minion.position = Vector2(position.x - randi_range(50, 100), position.y - randi_range(50, 100))
+			mafia_enforcer_minion.global_position = Vector2(position.x - randi_range(50, 100), position.y - randi_range(50, 100))
 		elif probability <= 0.5 and probability > 0.25:
-			mafia_enforcer_minion.position = Vector2(position.x + randi_range(50, 100), position.y - randi_range(50, 100))
+			mafia_enforcer_minion.global_position = Vector2(position.x + randi_range(50, 100), position.y - randi_range(50, 100))
 		elif probability <= 0.25:
-			mafia_enforcer_minion.position = Vector2(position.x - randi_range(50, 100), position.y + randi_range(50, 100))
+			mafia_enforcer_minion.global_position = Vector2(position.x - randi_range(50, 100), position.y + randi_range(50, 100))
 		else:
 			pass
 		
 		main.add_child(mafia_enforcer_minion)
 		mafia_enforcer_minion.add_to_group("minions")
+		mafia_enforcer_minion.creator = self
 	else:
-		minion_count = 0
 		summoning = false
+		total_minions = 0
+		minions = 0
+		
 		$SummonTimer.stop()
-		$SummonCheckTimer.start()
+		$SummonCoolDownTimer.start()
 
 func _on_area_2d_body_entered(_body):
 	player_colliding = true
@@ -165,7 +173,7 @@ func die():
 	collision_layer = 0
 	alive = false
 	$TrackTimer.stop()
-	$SummonCheckTimer.stop()
+	$SummonCoolDownTimer.stop()
 	$SummonTimer.stop()
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"

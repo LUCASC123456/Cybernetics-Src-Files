@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://re6s5jcw6eiw"]
+[gd_scene load_steps=16 format=3 uid="uid://re6s5jcw6eiw"]
 
 [ext_resource type="Script" path="res://scenes/market_ui.gd" id="1_c85yt"]
 
@@ -13,6 +13,34 @@ bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pw0sc"]
 bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v4ol4"]
+bg_color = Color(0, 0, 0, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uq15m"]
+bg_color = Color(1, 1, 1, 0.392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eycks"]
+bg_color = Color(1, 1, 1, 0.392157)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e7mjs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_88884"]
+bg_color = Color(0, 0, 0, 0.392157)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ppof0"]
+bg_color = Color(1, 1, 1, 0.392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ltv7"]
+bg_color = Color(1, 1, 1, 0.392157)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toyey"]
 bg_color = Color(1, 1, 1, 1)
@@ -63,6 +91,28 @@ text = "MARKET"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="PrimaryWeaponsButton" type="Button" parent="."]
+offset_left = 2.0
+offset_top = 103.0
+offset_right = 384.0
+offset_bottom = 138.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_v4ol4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_uq15m")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_eycks")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e7mjs")
+text = "PRIMARY WEAPONS"
+
+[node name="SecondaryWeaponsButton" type="Button" parent="."]
+offset_left = 384.0
+offset_top = 103.0
+offset_right = 766.0
+offset_bottom = 138.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_88884")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ppof0")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0ltv7")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e7mjs")
+text = "SECONDARY WEAPONS"
+
 [node name="ExitButton" type="Button" parent="."]
 anchors_preset = 7
 anchor_left = 0.5
@@ -99,124 +149,278 @@ theme_override_font_sizes/font_size = 25
 text = "CREDITS AVAILABLE: 0"
 horizontal_alignment = 1
 
-[node name="Control" type="Control" parent="."]
+[node name="PrimaryWeapons" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_top = 103.0
-offset_right = 768.0
-offset_bottom = 642.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -384.0
+offset_top = -246.0
+offset_right = 384.0
+offset_bottom = 258.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Button1" type="Button" parent="Control"]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 30.0
-offset_right = 378.0
-offset_bottom = 264.0
-text = "EQUIPPED"
+[node name="PanelContainer" type="PanelContainer" parent="PrimaryWeapons"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0390625
+anchor_top = 0.0556586
+anchor_right = 0.960938
+anchor_bottom = 0.944341
+offset_top = 1.94805
+offset_right = 2.0
+offset_bottom = 4.05194
+metadata/_edit_use_anchors_ = true
 
-[node name="Label1" type="Label" parent="Control/Button1"]
-layout_mode = 0
-offset_right = 346.0
+[node name="MarginContainer" type="MarginContainer" parent="PrimaryWeapons/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PrimaryWeapons/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionList" type="VBoxContainer" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Row1" type="Control" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList"]
+custom_minimum_size = Vector2(0, 230)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer"]
+layout_mode = 2
+
+[node name="PWButton1" type="Button" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer" groups=["PWButtons"]]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+text = "SELECTED"
+
+[node name="Label1" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton1"]
+offset_right = 340.0
 offset_bottom = 23.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
 text = "PISTOL"
 horizontal_alignment = 1
 
-[node name="StatsLabel1" type="Label" parent="Control/Button1"]
-layout_mode = 0
+[node name="StatsLabel1" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton1"]
+offset_left = 1.0
 offset_top = 23.0
-offset_right = 111.0
-offset_bottom = 88.0
+offset_right = 114.0
+offset_bottom = 73.0
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 300 RPM
 BULLET SPEED: 750 FPS
-ROUNDS PER MAG: 15
-DAMAGE: 30-50"
+ROUNDS PER MAG: 15"
 
-[node name="Button2" type="Button" parent="Control"]
-layout_mode = 0
-offset_left = 390.0
-offset_top = 30.0
-offset_right = 736.0
-offset_bottom = 264.0
-text = "COST: 400 CREDITS"
+[node name="Spacer" type="Control" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer"]
+layout_mode = 2
 
-[node name="LabeL2" type="Label" parent="Control/Button2"]
-layout_mode = 0
-offset_right = 346.0
+[node name="PWButton2" type="Button" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer" groups=["PWButtons"]]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+text = "COST: 500 CREDITS"
+
+[node name="LabeL2" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton2"]
+offset_right = 340.0
 offset_bottom = 23.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
 text = "SMG"
 horizontal_alignment = 1
 
-[node name="StatsLabel2" type="Label" parent="Control/Button2"]
-layout_mode = 0
+[node name="StatsLabel2" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton2"]
 offset_top = 23.0
 offset_right = 111.0
-offset_bottom = 88.0
+offset_bottom = 73.0
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 800 RPM
 BULLET SPEED: 850 FPS
-ROUNDS PER MAG: 18
-DAMAGE: 40-60"
+ROUNDS PER MAG: 18"
 
-[node name="Button3" type="Button" parent="Control"]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 275.0
-offset_right = 378.0
-offset_bottom = 509.0
-text = "COST: 1000 CREDITS"
+[node name="Row2" type="Control" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList"]
+custom_minimum_size = Vector2(0, 230)
+layout_mode = 2
 
-[node name="Label3" type="Label" parent="Control/Button3"]
-layout_mode = 0
-offset_right = 346.0
+[node name="MarginContainer" type="MarginContainer" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer"]
+layout_mode = 2
+
+[node name="PWButton3" type="Button" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer" groups=["PWButtons"]]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+text = "COST: 1500 CREDITS"
+
+[node name="Label3" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton3"]
+offset_right = 340.0
 offset_bottom = 23.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
 text = "LMG"
 horizontal_alignment = 1
 
-[node name="StatsLabel3" type="Label" parent="Control/Button3"]
-layout_mode = 0
-offset_top = 23.0
-offset_right = 111.0
-offset_bottom = 88.0
+[node name="StatsLabel3" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton3"]
+offset_left = 2.0
+offset_top = 24.0
+offset_right = 119.0
+offset_bottom = 74.0
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 1000 RPM
 BULLET SPEED: 1050 FPS
-ROUNDS PER MAG: 50
-DAMAGE: 50-70"
+ROUNDS PER MAG: 50"
 
-[node name="Button4" type="Button" parent="Control"]
-layout_mode = 0
-offset_left = 390.0
-offset_top = 275.0
-offset_right = 736.0
-offset_bottom = 509.0
-text = "COST: 600 CREDITS"
+[node name="Spacer" type="Control" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer"]
+layout_mode = 2
 
-[node name="Label4" type="Label" parent="Control/Button4"]
-layout_mode = 0
-offset_right = 346.0
+[node name="PWButton4" type="Button" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer" groups=["PWButtons"]]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+text = "COST: 1000 CREDITS"
+
+[node name="Label4" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton4"]
+offset_right = 340.0
 offset_bottom = 23.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
 text = "AR
 "
 horizontal_alignment = 1
 
-[node name="StatsLabel4" type="Label" parent="Control/Button4"]
-layout_mode = 0
+[node name="StatsLabel4" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton4"]
 offset_top = 23.0
 offset_right = 111.0
-offset_bottom = 88.0
+offset_bottom = 73.0
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 800 RPM
 BULLET SPEED: 950 FPS
-ROUNDS PER MAG: 30
-DAMAGE: 60-80"
+ROUNDS PER MAG: 30"
 
+[node name="SecondaryWeapons" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -384.0
+offset_top = -246.0
+offset_right = 384.0
+offset_bottom = 258.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="SecondaryWeapons"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0390625
+anchor_top = 0.0556586
+anchor_right = 0.960938
+anchor_bottom = 0.944341
+offset_top = 1.94805
+offset_right = 2.0
+offset_bottom = 4.05194
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="SecondaryWeapons/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SecondaryWeapons/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionList" type="VBoxContainer" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Row1" type="Control" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList"]
+custom_minimum_size = Vector2(0, 230)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer"]
+layout_mode = 2
+
+[node name="SWButton1" type="Button" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer" groups=["SWButtons"]]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+text = "EQUIPPED"
+
+[node name="Label1" type="Label" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton1"]
+offset_right = 340.0
+offset_bottom = 23.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
+text = "PISTOL"
+horizontal_alignment = 1
+
+[node name="StatsLabel1" type="Label" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton1"]
+offset_top = 23.0
+offset_right = 111.0
+offset_bottom = 73.0
+theme_override_font_sizes/font_size = 10
+text = "FIRERATE: 300 RPM
+BULLET SPEED: 750 FPS
+ROUNDS PER MAG: 15"
+
+[node name="Spacer" type="Control" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="SWButton2" type="Button" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer" groups=["SWButtons"]]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+text = "COST: 500 CREDITS"
+
+[node name="LabeL2" type="Label" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton2"]
+offset_right = 340.0
+offset_bottom = 23.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
+text = "MACHINE PISTOL"
+horizontal_alignment = 1
+
+[node name="StatsLabel2" type="Label" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton2"]
+offset_top = 23.0
+offset_right = 111.0
+offset_bottom = 73.0
+theme_override_font_sizes/font_size = 10
+text = "FIRERATE: 800 RPM
+BULLET SPEED: 850 FPS
+ROUNDS PER MAG: 18"
+
+[connection signal="pressed" from="PrimaryWeaponsButton" to="." method="_on_primary_weapons_button_pressed"]
+[connection signal="pressed" from="SecondaryWeaponsButton" to="." method="_on_secondary_weapons_button_pressed"]
 [connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]
-[connection signal="pressed" from="Control/Button1" to="." method="_on_button_1_pressed"]
-[connection signal="pressed" from="Control/Button2" to="." method="_on_button_2_pressed"]
-[connection signal="pressed" from="Control/Button3" to="." method="_on_button_3_pressed"]
-[connection signal="pressed" from="Control/Button4" to="." method="_on_button_4_pressed"]
+[connection signal="pressed" from="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton1" to="." method="_on_pw_button_1_pressed"]
+[connection signal="pressed" from="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton2" to="." method="_on_pw_button_2_pressed"]
+[connection signal="pressed" from="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton3" to="." method="_on_pw_button_3_pressed"]
+[connection signal="pressed" from="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton4" to="." method="_on_pw_button_4_pressed"]
+[connection signal="pressed" from="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton1" to="." method="_on_sw_button_1_pressed"]
+[connection signal="pressed" from="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton2" to="." method="_on_sw_button_2_pressed"]

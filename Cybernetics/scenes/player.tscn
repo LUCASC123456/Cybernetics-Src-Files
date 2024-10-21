@@ -116,6 +116,10 @@ shape = SubResource("RectangleShape2D_ck7nk")
 wait_time = 0.2
 one_shot = true
 
+[node name="ShotTimerMP" type="Timer" parent="."]
+wait_time = 0.075
+one_shot = true
+
 [node name="ShotTimerSMG" type="Timer" parent="."]
 wait_time = 0.075
 one_shot = true
@@ -128,7 +132,11 @@ one_shot = true
 wait_time = 0.075
 one_shot = true
 
-[node name="ReloadTimer" type="Timer" parent="."]
+[node name="ReloadTimerPrimary" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="ReloadTimerSecondary" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
 
@@ -148,10 +156,12 @@ one_shot = true
 [node name="Sword" parent="." instance=ExtResource("11_gil0n")]
 
 [connection signal="timeout" from="ShotTimerPistol" to="." method="_on_shot_timer_pistol_timeout"]
+[connection signal="timeout" from="ShotTimerMP" to="." method="_on_shot_timer_mp_timeout"]
 [connection signal="timeout" from="ShotTimerSMG" to="." method="_on_shot_timer_smg_timeout"]
 [connection signal="timeout" from="ShotTimerLMG" to="." method="_on_shot_timer_lmg_timeout"]
 [connection signal="timeout" from="ShotTimerAR" to="." method="_on_shot_timer_ar_timeout"]
-[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]
+[connection signal="timeout" from="ReloadTimerPrimary" to="." method="_on_reload_timer_primary_timeout"]
+[connection signal="timeout" from="ReloadTimerSecondary" to="." method="_on_reload_timer_secondary_timeout"]
 [connection signal="timeout" from="SwordTimer" to="." method="_on_sword_timer_timeout"]
 [connection signal="timeout" from="BoostTimer" to="." method="_on_boost_timer_timeout"]
 [connection signal="timeout" from="ForceFieldTimer" to="." method="_on_force_field_timer_timeout"]

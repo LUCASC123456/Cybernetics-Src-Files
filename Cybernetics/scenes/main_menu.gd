@@ -6,9 +6,14 @@ extends CanvasLayer
 
 var save_path = "user://save"
 
-var store = {
+var primary_store = {
 	"bought" : [true, false, false, false],
-	"selected" : 0,
+	"selected" : 0
+}
+
+var secondary_store = {
+	"bought" : [true, false],
+	"selected" : 0
 }
 
 var credits = 0
@@ -27,12 +32,14 @@ func _on_settings_button_pressed():
 func save_data():
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
 	file.store_var(credits)
-	file.store_var(store)
+	file.store_var(primary_store)
+	file.store_var(secondary_store)
 
 func load_data():
 	if FileAccess.file_exists(save_path):
 		var file = FileAccess.open(save_path, FileAccess.READ)
 		credits = file.get_var(credits)
-		store = file.get_var()
+		primary_store = file.get_var()
+		secondary_store = file.get_var()
 	else:
 		credits = 0

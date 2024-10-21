@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
+@onready var game_over = get_node("/root/Main/GameOver")
 @onready var nav_agent = $NavigationAgent2D
 @onready var health_bar = $EnemyHealthBar
 
@@ -84,16 +85,61 @@ func make_path() -> void:
 func _on_track_timer_timeout():
 	make_path()
 
+func hit_player_2():
+	var damage : int
+	
+	if target.force_field_activated:
+		damage = 0
+	else:
+		if main.levels[0]:
+			damage = randi_range(5, 10)
+		elif main.levels[1]:
+			damage = randi_range(10, 15)
+		elif main.levels[2]:
+			damage = randi_range(15, 20)
+		elif main.levels[3]:
+			damage = randi_range(20, 25)
+		else:
+			pass
+	
+	if target.sheild > 0:
+		target.sheild -= damage
+		
+		if target.sheild < 0:
+			target.health += target.sheild
+			target.sheild = 0
+		else:
+			pass
+	else:
+		target.health -= damage
+	
+	main.damage_taken += damage
+	if main.credits_earned > 0:
+		main.credits_earned -= damage
+		if main.credits_earned <= 0:
+			main.credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+		
+	if target.health <= 0:
+		get_tree().paused = true
+		game_over.show()
+		game_over.display_stats()
+	else:
+		pass
+
 func _on_area_2d_body_entered(_body):
 	player_colliding = true
 	if alive and entered:
-		main.hit_player_2()
+		hit_player_2()
 		$HitTimer.start()
 	else:
 		pass
 
 func _on_hit_timer_timeout():
-	main.hit_player_2()
+	hit_player_2()
 
 func _on_area_2d_body_exited(_body):
 	player_colliding = false

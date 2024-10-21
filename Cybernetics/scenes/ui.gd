@@ -29,7 +29,9 @@ func _process(_delta):
 		$AdrenalineBar.max_value = 1
 		$AdrenalineBar.value = 0
 	
-	$PrimaryWeaponSelection.text = "PRIMARY: " + str(player.selected_gun)
+	$PrimaryWeaponSelection.text = "PRIMARY: " + str(player.primary_selected_gun)
+	$SecondaryWeaponSelection.text = "SECONADRY: " + str(player.secondary_selected_gun)
+	
 	$EnemyCounter/EnemiesLabel.text = "ENEMIES LEFT: " + str(main.enemies_left)
 	
 	if main.levels[0]:
@@ -57,3 +59,16 @@ func _on_primary_weapon_selection_mouse_exited():
 
 func _on_pause_button_pressed():
 	main.pause()
+
+
+func _on_primary_weapon_selection_pressed():
+	if not player.primary_equipped:
+		player.primary_equipped = true
+	else:
+		pass
+
+func _on_secondary_weapon_selection_pressed():
+	if player.primary_equipped:
+		player.primary_equipped = false
+	else:
+		pass

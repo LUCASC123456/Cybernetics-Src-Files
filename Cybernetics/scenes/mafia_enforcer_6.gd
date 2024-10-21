@@ -2,6 +2,8 @@ extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
 @onready var player = get_node("/root/Main/Player")
+@onready var game_over = get_node("/root/Main/GameOver")
+@onready var world = get_node("/root/Main/World")
 @onready var health_bar = $EnemyHealthBar
 
 @export var target : CharacterBody2D
@@ -15,10 +17,9 @@ var alive : bool
 var entered : bool
 var damage_resistant : bool
 var player_colliding : bool
+var world_colliding : bool
 var can_see_player : bool
-var phantom_sight_reach : bool
-var phantom_attack : bool
-var phantom_collide : bool
+var phantom : bool
 var direction : Vector2
 var vision_point : Vector2
 const phantom_chance : float = 0.66
@@ -57,10 +58,10 @@ func _physics_process(_delta: float) -> void:
 			var exclusion_list := []
 			
 			for i in $Area2D.get_overlapping_bodies():
-				if i is TileMap:
-					pass
-				else:
+				if i != TileMap:
 					exclusion_list.append(i.get_rid())
+				else:
+					pass
 			
 			for i in main.get_children():
 				if i is CharacterBody2D:
@@ -86,20 +87,13 @@ func _physics_process(_delta: float) -> void:
 					can_see_player = false
 				
 				vision_point = result.position
-			
-			if can_see_player:
-				phantom_sight_reach = true
-			else:
-				phantom_sight_reach = false
 				
-			if phantom_collide or phantom_attack:
+			if phantom:
 				$AnimatedSprite2D.modulate.a = 0.5
 				damage_resistant = true
-			elif not phantom_collide and not phantom_attack:
+			else:
 				$AnimatedSprite2D.modulate.a = 1
 				damage_resistant = false
-			else:
-				pass
 		else:
 			damage_resistant = true
 	
@@ -112,48 +106,101 @@ func _physics_process(_delta: float) -> void:
 	else:
 		pass
 
-func _on_phantom_check_timer_timeout():
+func _on_phantom_cool_down_timer_timeout():
 	if alive and entered:
-		if phantom_sight_reach:
+		if can_see_player:
 			var probability = randf()
-			if probability < phantom_chance:
-				phantom_attack = true
+			
+			if probability <= phantom_chance:
+				phantom = true
 				$PhantomTimer.start()
-				$PhantomCheckTimer.stop()
+				$PhantomCoolDownTimer.stop()
+			else:
+				pass
 		else:
 			pass
 	else:
 		pass
 
 func _on_phantom_timer_timeout():
-	phantom_attack = false
-	$PhantomCheckTimer.start()
+	if not world_colliding:
+		phantom = false
+	else:
+		pass
+	
+	$PhantomCoolDownTimer.start()
+
+func hit_player_6():
+	var damage : int
+	
+	if target.force_field_activated:
+		damage = 0
+	else:
+		if main.levels[2]:
+			damage = randi_range(10, 15)
+		elif main.levels[3]:
+			damage = randi_range(15, 20)
+		else:
+			pass
+	
+	if target.sheild > 0:
+		target.sheild -= damage
+		
+		if target.sheild < 0:
+			target.health += target.sheild
+			target.sheild = 0
+		else:
+			pass
+	else:
+		target.health -= damage
+	
+	main.damage_taken += damage
+	if main.credits_earned > 0:
+		main.credits_earned -= damage
+		if main.credits_earned <= 0:
+			main.credits_earned = 0
+		else:
+			pass
+	else:
+		pass
+		
+	if target.health <= 0:
+		get_tree().paused = true
+		game_over.show()
+		game_over.display_stats()
+	else:
+		pass
 
 func _on_area_2d_body_entered(body):
 	if body.name == "Player":
 		player_colliding = true
 		if alive and entered:
-			main.hit_player_6()
+			hit_player_6()
 			$HitTimer.start()
 		else:
 			pass
 	elif body.name == "World":
+		world_colliding = true
 		if alive and entered:
-			z_index = 6
-			phantom_collide = true
+			phantom = true
 		else:
-			z_index = 3
+			pass
+	else:
+		pass
 
 func _on_hit_timer_timeout():
-	main.hit_player_6()
+	hit_player_6()
 
 func _on_area_2d_body_exited(body):
 	if body.name == "Player":
 		player_colliding = false
 		$HitTimer.stop()
 	elif body.name == "World":
-		z_index = 3
-		phantom_collide = false
+		world_colliding = true
+		if $PhantomTimer.is_stopped():
+			phantom = false
+		else:
+			pass
 	else:
 		pass
 
@@ -161,10 +208,9 @@ func die():
 	z_index = 1
 	collision_layer = 0
 	alive = false
-	phantom_attack = false
-	phantom_collide = false
+	phantom = false
 	$HitTimer.stop()
-	$PhantomCheckTimer.stop()
+	$PhantomCoolDownTimer.stop()
 	$PhantomTimer.stop()
 	$AnimatedSprite2D.stop()
 	$AnimatedSprite2D.animation = "dead"
