@@ -13,7 +13,7 @@ func _ready():
 		config.set_value("keybinding", "shoot", "mouse_1")
 		config.set_value("keybinding", "melee", "F")
 		config.set_value("keybinding", "primary_weapon", "1")
-		config.set_value("keybinding", "seconrdary_weapon", "2")
+		config.set_value("keybinding", "secondary_weapon", "2")
 		
 		config.save(settings_file_path)
 	else:

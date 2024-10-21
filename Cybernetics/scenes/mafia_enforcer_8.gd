@@ -126,10 +126,13 @@ func _physics_process(_delta: float) -> void:
 				else:
 					pass
 			else:
-				if result.collider.is_in_group("enemies"):
-					$SpeedChangeTimer.start(0.1)
+				if result:
+					if result.collider.is_in_group("enemies"):
+						$SpeedChangeTimer.start(0.1)
+					else:
+						$SpeedChangeTimer.start(randf_range(0.5, 1))
 				else:
-					$SpeedChangeTimer.start(randf_range(0.5, 1))
+					$SpeedChangeTimer.start(0.1)
 				
 				speed = 100
 					
