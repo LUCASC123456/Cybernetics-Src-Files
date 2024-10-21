@@ -88,13 +88,13 @@ func get_input():
 	if Input.is_action_pressed("primary_weapon"):
 		if not primary_equipped:
 			primary_equipped = true
-			can_shoot = true
 			
 			if not $ReloadTimerSecondary.is_stopped():
 				$ReloadTimerSecondary.stop()
-				can_shoot = true
 			else:
 				pass
+			
+			can_shoot = true
 		else:
 			pass
 	elif Input.is_action_just_pressed("secondary_weapon"):
@@ -103,9 +103,10 @@ func get_input():
 			
 			if not $ReloadTimerPrimary.is_stopped():
 				$ReloadTimerPrimary.stop()
-				can_shoot = true
 			else:
 				pass
+			
+			can_shoot = true
 		else:
 			pass
 	else:

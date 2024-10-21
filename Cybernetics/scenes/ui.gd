@@ -64,13 +64,13 @@ func _on_pause_button_pressed():
 func _on_primary_weapon_selection_pressed():
 	if not player.primary_equipped:
 		player.primary_equipped = true
-		player.can_shoot = true
 		
 		if not player.get_node("ReloadTimerSecondary").is_stopped():
 			player.get_node("ReloadTimerSecondary").stop()
-			player.can_shoot = true
 		else:
 			pass
+		
+		player.can_shoot = true
 	else:
 		pass
 
@@ -78,10 +78,11 @@ func _on_secondary_weapon_selection_pressed():
 	if player.primary_equipped:
 		player.primary_equipped = false
 			
-		if not player.get_node("ReloadTimerSecondary").is_stopped():
-			player.get_node("ReloadTimerSecondary").stop()
-			player.can_shoot = true
+		if not player.get_node("ReloadTimerPrimary").is_stopped():
+			player.get_node("ReloadTimerPrimary").stop()
 		else:
 			pass
+			
+		player.can_shoot = true
 	else:
 		pass
