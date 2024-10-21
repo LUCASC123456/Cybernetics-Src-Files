@@ -147,7 +147,7 @@ func _on_body_entered(body):
 					body.health -= damage
 				
 				main.damage_inflicted += damage
-				main.credits_earned += damage
+				main.credits_earned += floor(damage/3)
 				
 				if body.health <= 0 :
 					body.die()
