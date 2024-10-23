@@ -25,6 +25,9 @@ func _on_shop_button_pressed():
 	hide()
 	market.show()
 
+func _on_exit_button_pressed():
+	get_tree().quit()
+
 func _on_settings_button_pressed():
 	hide()
 	settings.show()
@@ -42,4 +45,4 @@ func load_data():
 		primary_store = file.get_var()
 		secondary_store = file.get_var()
 	else:
-		credits = 0
+		credits = 0.

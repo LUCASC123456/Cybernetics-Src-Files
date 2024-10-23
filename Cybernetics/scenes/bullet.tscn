@@ -1,10 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://d27us872t4jwm"]
 
 [ext_resource type="Script" path="res://scenes/bullet.gd" id="1_70bqv"]
-[ext_resource type="Texture2D" uid="uid://cqmiet745wavf" path="res://assets/SimpleBullet.png" id="1_apblm"]
+[ext_resource type="Texture2D" uid="uid://gubkgdosdodv" path="res://assets/GreenLaser.png" id="2_nw5hg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sl135"]
-size = Vector2(10, 10)
+size = Vector2(38, 4)
 
 [node name="Bullet" type="Area2D" groups=["bullets"]]
 process_mode = 1
@@ -14,7 +14,9 @@ collision_mask = 5
 script = ExtResource("1_70bqv")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_apblm")
+texture_filter = 5
+scale = Vector2(0.075, 0.075)
+texture = ExtResource("2_nw5hg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_sl135")

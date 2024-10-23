@@ -14,6 +14,7 @@ extends CanvasLayer
 @onready var PWButtons = [PWButton1, PWButton2, PWButton3, PWButton4]
 @onready var SWButtons = [SWButton1, SWButton2]
 
+
 var pistol_price = 0
 var mp_price = 500
 var smg_price = 500
@@ -124,13 +125,16 @@ func _on_sw_button_1_pressed():
 	_buy_secondary(pistol_price, 0)
 
 func _on_sw_button_2_pressed():
-	_buy_secondary(mp_price, 0)
+	_buy_secondary(mp_price, 1)
 
 
 func _on_primary_weapons_button_pressed():
 	if not $PrimaryWeapons.visible:
 		$SecondaryWeapons.hide()
 		$PrimaryWeapons.show()
+		
+		$PrimaryWeaponsButton.texture_normal = ResourceLoader.load("res://assets/MarketUI/WeaponsButtonPressed.png")
+		$SecondaryWeaponsButton.texture_normal = ResourceLoader.load("res://assets/MarketUI/WeaponsButton.png")
 	else:
 		pass
 
@@ -138,5 +142,8 @@ func _on_secondary_weapons_button_pressed():
 	if not $SecondaryWeapons.visible:
 		$PrimaryWeapons.hide()
 		$SecondaryWeapons.show()
+		
+		$SecondaryWeaponsButton.texture_normal = ResourceLoader.load("res://assets/MarketUI/WeaponsButtonPressed.png")
+		$PrimaryWeaponsButton.texture_normal = ResourceLoader.load("res://assets/MarketUI/WeaponsButton.png")
 	else:
 		pass

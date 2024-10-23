@@ -18,18 +18,18 @@ var enemy_level_count = [20, 30, 40, 50, 1]
 var levels = [true, false, false, false, false]
 
 var player_door_coordinates = {
-	"Level1" : [Vector2i(15,6), Vector2i(15,7), Vector2i(15,8), Vector2i(15,9)],
-	"Level2" : [[Vector2i(24,6), Vector2i(24,7), Vector2i(24,8), Vector2i(24,9)], [Vector2i(55,6), Vector2i(55,7), Vector2i(55,8), Vector2i(55,9)]],
+	"Level1" : [Vector2i(15,5), Vector2i(15,6), Vector2i(15,7), Vector2i(15,8), Vector2i(15,9)],
+	"Level2" : [[Vector2i(24,5), Vector2i(24,6), Vector2i(24,7), Vector2i(24,8), Vector2i(24,9)], [Vector2i(55,5), Vector2i(55,6), Vector2i(55,7), Vector2i(55,8), Vector2i(55,9)]],
 	"Level3" : [[Vector2i(65,19), Vector2i(66,19), Vector2i(67,19), Vector2i(68,19)], [Vector2i(65,48), Vector2i(66,48), Vector2i(67,48), Vector2i(68,48)]],
 	"Level4" : [[Vector2i(127,48), Vector2i(128,48), Vector2i(129,48), Vector2i(130,48)], [Vector2i(167,48), Vector2i(168,48), Vector2i(169,48), Vector2i(170,48)]],
 	"Level5" : [Vector2i(167, 63), Vector2i(168, 63), Vector2i(169, 63), Vector2i(170, 63)]
 }
 
 var enemy_door_coordinates = {
-	"Level1" : [Vector2i(6,0), Vector2i(7,0), Vector2i(8,0), Vector2i(9,0), Vector2i(6,15), Vector2i(7,15), Vector2i(8,15), Vector2i(9,15)],
-	"Level2" : [Vector2i(32,0), Vector2i(33,0), Vector2i(34,0), Vector2i(35,0), Vector2i(44,0), Vector2i(45,0), Vector2i(46,0), Vector2i(47,0), Vector2i(32,15), Vector2i(33,15), Vector2i(34,15), Vector2i(35,15), Vector2i(44,15), Vector2i(45,15), Vector2i(46,15), Vector2i(47,15)],
-	"Level3" : [Vector2i(35,32), Vector2i(35,33), Vector2i(35,34), Vector2i(35,35), Vector2i(98,32), Vector2i(98,33), Vector2i(98,34), Vector2i(98,35)],
-	"Level4" : [Vector2i(122,30), Vector2i(122,31), Vector2i(122,32), Vector2i(122,33), Vector2i(122,34), Vector2i(122,35), Vector2i(122,36), Vector2i(122,37), Vector2i(144,19), Vector2i(145,19), Vector2i(146,19), Vector2i(147,19), Vector2i(148,19), Vector2i(149,19), Vector2i(150,19), Vector2i(151,19), Vector2i(152,19), Vector2i(174,30), Vector2i(174,31), Vector2i(174,32), Vector2i(174,33), Vector2i(174,34), Vector2i(174,35), Vector2i(174,36), Vector2i(174,37)],
+	"Level1" : [[Vector2i(6,0), Vector2i(7,0), Vector2i(8,0), Vector2i(9,0)], [Vector2i(6,15), Vector2i(7,15), Vector2i(8,15), Vector2i(9,15)]],
+	"Level2" : [[Vector2i(32,0), Vector2i(33,0), Vector2i(34,0), Vector2i(35,0)], [Vector2i(44,0), Vector2i(45,0), Vector2i(46,0), Vector2i(47,0)], [Vector2i(32,15), Vector2i(33,15), Vector2i(34,15), Vector2i(35,15)], [Vector2i(44,15), Vector2i(45,15), Vector2i(46,15), Vector2i(47,15)]],
+	"Level3" : [[Vector2i(35,31), Vector2i(35,32), Vector2i(35,33), Vector2i(35,34), Vector2i(35,35)], [Vector2i(98,31), Vector2i(98,32), Vector2i(98,33), Vector2i(98,34), Vector2i(98,35)]],
+	"Level4" : [[Vector2i(122,29), Vector2i(122,30), Vector2i(122,31), Vector2i(122,32), Vector2i(122,33), Vector2i(122,34), Vector2i(122,35), Vector2i(122,36), Vector2i(122,37)], [Vector2i(144,19), Vector2i(145,19), Vector2i(146,19), Vector2i(147,19), Vector2i(148,19), Vector2i(149,19), Vector2i(150,19), Vector2i(151,19), Vector2i(152,19)], [Vector2i(174,29), Vector2i(174,30), Vector2i(174,31), Vector2i(174,32), Vector2i(174,33), Vector2i(174,34), Vector2i(174,35), Vector2i(174,36), Vector2i(174,37)]],
 	"Level5" : []
 }
 
@@ -73,29 +73,88 @@ func _ready():
 		else:
 			levels[i] = false
 	
-	for i in player_door_coordinates["Level1"]:
-		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+	for tile_coord in player_door_coordinates["Level1"]:
+		if tile_coord == Vector2i(15,5):
+			$World.set_cell(1, tile_coord, 7, Vector2i(0, 10), 0)
+		else:
+			$World.set_cell(1, tile_coord, 7, Vector2i(0,16), 0)
 	
-	for i in enemy_door_coordinates["Level1"]:
-		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
+	for tile_coord_array in enemy_door_coordinates["Level1"]:
+		for tile_coord in tile_coord_array:
+			if tile_coord == Vector2i(6,0) or tile_coord == Vector2i(6,15):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+			elif tile_coord == Vector2i(9,0) or tile_coord == Vector2i(9,15):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+			else:
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
+	
+	for tile_coord_array in player_door_coordinates["Level2"]:
+		for tile_coord in tile_coord_array:
+			if tile_coord == Vector2i(24,5):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,11), 0)
+			elif tile_coord == Vector2i(55,5):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,10), 0)
+			else:
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,16), 0)
+	
+	for tile_coord_array in enemy_door_coordinates["Level2"]:
+		for tile_coord in tile_coord_array:
+			if tile_coord == Vector2i(32,0) or tile_coord == Vector2i(44,0) or tile_coord == Vector2i(32,15) or tile_coord == Vector2i(44,15):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+			elif tile_coord == Vector2i(35,0) or tile_coord == Vector2i(47,0) or tile_coord == Vector2i(35,15) or tile_coord == Vector2i(47,15):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+			else:
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
+	
+	for tile_coord_array in player_door_coordinates["Level3"]:
+		for tile_coord in tile_coord_array:
+			if tile_coord == Vector2i(65,19) or tile_coord == Vector2i(65,48):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+			elif tile_coord == Vector2i(68,19) or tile_coord == Vector2i(68,48):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+			else:
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
+		
+	for tile_coord_array in enemy_door_coordinates["Level3"]:
+		for tile_coord in tile_coord_array:
+			if tile_coord == Vector2i(35,31) or tile_coord == Vector2i(98,31):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,9), 0)
+			else:
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,16), 0)
+		
+	for tile_coord_array in player_door_coordinates["Level4"]:
+		for tile_coord in tile_coord_array:
+			if tile_coord == Vector2i(127,48) or tile_coord == Vector2i(167,48):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+			elif tile_coord == Vector2i(130,48) or tile_coord == Vector2i(170,48):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+			else:
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
 			
-	for i in enemy_door_coordinates["Level2"]:
-		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
+	for tile_coord_array in enemy_door_coordinates["Level4"]:
+		for tile_coord in tile_coord_array:
+			if tile_coord_array == enemy_door_coordinates["Level4"][1]:
+				if tile_coord == Vector2i(144, 19):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+				elif tile_coord == Vector2i(152, 29):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
+			else:
+				if tile_coord == Vector2i(122, 29):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,11), 0)
+				elif tile_coord == Vector2i(174, 29):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,10), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,16), 0)
 		
-	for i in player_door_coordinates["Level2"][1]:
-		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
-		
-	for i in enemy_door_coordinates["Level3"]:
-		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
-		
-	for i in player_door_coordinates["Level3"][1]:
-		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
-		
-	for i in enemy_door_coordinates["Level4"]:
-		$World.set_cell(1, i, 0, Vector2i(1,1), 0)
-			
-	for i in player_door_coordinates["Level4"][1]:
-		$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+	for tile_coord in player_door_coordinates["Level5"]:
+		if tile_coord == Vector2i(167,63):
+			$World.set_cell(1, tile_coord, 7, Vector2i(0, 17), 0)
+		elif tile_coord == Vector2i(170,63):
+			$World.set_cell(1, tile_coord, 7, Vector2i(0, 18), 0)
+		else:
+			$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
 		
 	for i in get_children():
 		if i is CanvasLayer:
@@ -155,26 +214,83 @@ func _on_restart_timer_timeout():
 	if levels[0]:
 		get_tree().paused = false
 		$UI.show()
-		for i in enemy_door_coordinates["Level1"]:
-			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
+		
+		for tile_coord_array in enemy_door_coordinates["Level1"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord == Vector2i(6,0) or tile_coord == Vector2i(6,15):
+					$World.set_cell(1, tile_coord, 7, Vector2i(3,7), 0)
+				elif tile_coord == Vector2i(9,0) or tile_coord == Vector2i(9,15):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,20), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), -1)
 	elif levels[1]:
-		for i in enemy_door_coordinates["Level2"]:
-			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
-		for i in player_door_coordinates["Level2"][0]:
-			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+		for tile_coord_array in player_door_coordinates["Level2"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord == Vector2i(24,5):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,11), 0)
+				elif tile_coord == Vector2i(55,5):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,10), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,16), 0)
+			
+		for tile_coord_array in enemy_door_coordinates["Level2"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord == Vector2i(32,0) or tile_coord == Vector2i(44,0) or tile_coord == Vector2i(32,15) or tile_coord == Vector2i(44,15):
+					$World.set_cell(1, tile_coord, 7, Vector2i(3,7), 0)
+				elif tile_coord == Vector2i(35,0) or tile_coord == Vector2i(47,0) or tile_coord == Vector2i(35,15) or tile_coord == Vector2i(47,15):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,20), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), -1)
 	elif levels[2]:
-		for i in enemy_door_coordinates["Level3"]:
-			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
-		for i in player_door_coordinates["Level3"][0]:
-			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+		for tile_coord_array in player_door_coordinates["Level3"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord == Vector2i(65,19) or tile_coord == Vector2i(65,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+				elif tile_coord == Vector2i(68,19) or tile_coord == Vector2i(68,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
+		
+		for tile_coord_array in enemy_door_coordinates["Level3"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord == Vector2i(35,31) or tile_coord == Vector2i(98,31):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,6), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,16), -1)
 	elif levels[3]:
-		for i in enemy_door_coordinates["Level4"]:
-			$World.set_cell(1, i, 0, Vector2i(1,1), -1)
-		for i in player_door_coordinates["Level4"][0]:
-			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+		for tile_coord_array in player_door_coordinates["Level4"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord == Vector2i(127,48) or tile_coord == Vector2i(167,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+				elif tile_coord == Vector2i(130,48) or tile_coord == Vector2i(170,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
+		
+		for tile_coord_array in enemy_door_coordinates["Level4"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord_array == enemy_door_coordinates["Level4"][1]:
+					if tile_coord == Vector2i(144, 19):
+						$World.set_cell(1, tile_coord, 7, Vector2i(3,7), 0)
+					elif tile_coord == Vector2i(152, 29):
+						$World.set_cell(1, tile_coord, 7, Vector2i(0,20), 0)
+					else:
+						$World.set_cell(1, tile_coord, 7, Vector2i(0,19), -1)
+				else:
+					if tile_coord == Vector2i(122, 29):
+						$World.set_cell(1, tile_coord, 7, Vector2i(2,6), 0)
+					elif tile_coord == Vector2i(174, 29):
+						$World.set_cell(1, tile_coord, 7, Vector2i(1,6), 0)
+					else:
+						$World.set_cell(1, tile_coord, 7, Vector2i(0,16), -1)
 	elif levels[4]:
-		for i in player_door_coordinates["Level5"]:
-			$World.set_cell(1, i, 0, Vector2i(0,0), 0)
+		for tile_coord in player_door_coordinates["Level5"]:
+			if tile_coord == Vector2i(167,63):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0, 17), 0)
+			elif tile_coord == Vector2i(170,63):
+				$World.set_cell(1, tile_coord, 7, Vector2i(0, 18), 0)
+			else:
+				$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
 	else:
 		pass
 	
@@ -216,25 +332,63 @@ func _on_enemy_killed():
 		$CreditTimer.stop()
 		
 		if levels[0]:
-			for i in player_door_coordinates["Level1"]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
-			for i in player_door_coordinates["Level2"][0]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+			for tile_coord in player_door_coordinates["Level1"]:
+				if tile_coord == Vector2i(15,5):
+					$World.set_cell(1, tile_coord, 7, Vector2i(1,6), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,16), -1)
+			
+			for tile_coord in player_door_coordinates["Level2"][0]:
+				if tile_coord == Vector2i(24,5):
+					$World.set_cell(1, tile_coord, 7, Vector2i(2,6), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,16), -1)
 		elif levels[1]:
-			for i in player_door_coordinates["Level2"][1]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
-			for i in player_door_coordinates["Level3"][0]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+			for tile_coord in player_door_coordinates["Level2"][1]:
+				if tile_coord == Vector2i(55,5):
+					$World.set_cell(1, tile_coord, 7, Vector2i(1,6), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,16), -1)
+				
+			for tile_coord in player_door_coordinates["Level3"][0]:
+				if tile_coord == Vector2i(65,19):
+					$World.set_cell(1, tile_coord, 7, Vector2i(3,7), 0)
+				elif tile_coord == Vector2i(68,19):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,20), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), -1)
 		elif levels[2]: 
-			for i in player_door_coordinates["Level3"][1]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
-			for i in player_door_coordinates["Level4"][0]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+			for tile_coord in player_door_coordinates["Level3"][1]:
+				if tile_coord == Vector2i(65,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(3,7), 0)
+				elif tile_coord == Vector2i(68,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,20), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), -1)
+				
+			for tile_coord in player_door_coordinates["Level4"][0]:
+				if tile_coord == Vector2i(127,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(3,7), 0)
+				elif tile_coord == Vector2i(130,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,20), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), -1)
 		elif levels[3]: 
-			for i in player_door_coordinates["Level4"][1]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
-			for i in player_door_coordinates["Level5"]:
-				$World.set_cell(1, i, 0, Vector2i(0,0), -1)
+			for tile_coord in player_door_coordinates["Level4"][1]:
+				if tile_coord == Vector2i(167,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(3,7), 0)
+				elif tile_coord == Vector2i(170,48):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,20), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), -1)
+				
+			for tile_coord in player_door_coordinates["Level5"]:
+				if tile_coord == Vector2i(167,63):
+					$World.set_cell(1, tile_coord, 7, Vector2i(3, 7), 0)
+				elif tile_coord == Vector2i(170,63):
+					$World.set_cell(1, tile_coord, 7, Vector2i(0, 20), 0)
+				else:
+					$World.set_cell(1, tile_coord, 7, Vector2i(0,19), -1)
 		else:
 			get_tree().paused = true
 			$GameWon.show()

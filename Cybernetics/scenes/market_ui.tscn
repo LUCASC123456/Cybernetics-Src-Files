@@ -1,67 +1,62 @@
-[gd_scene load_steps=16 format=3 uid="uid://re6s5jcw6eiw"]
+[gd_scene load_steps=21 format=3 uid="uid://re6s5jcw6eiw"]
 
 [ext_resource type="Script" path="res://scenes/market_ui.gd" id="1_c85yt"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eaugh"]
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+[ext_resource type="Texture2D" uid="uid://6dhaiqp4503h" path="res://assets/MainMenuUI/ExitButton.png" id="2_eqe76"]
+[ext_resource type="Texture2D" uid="uid://bwy6njhmg1hyr" path="res://assets/MainMenuUI/MMBackground.png" id="2_upqao"]
+[ext_resource type="Texture2D" uid="uid://4vjgp2kpdk45" path="res://assets/MarketUI/WeaponsButtonPressed.png" id="3_2r615"]
+[ext_resource type="Texture2D" uid="uid://4j8pwm1u7q64" path="res://assets/MainMenuUI/ExitButtonPressed.png" id="3_ft2jy"]
+[ext_resource type="Texture2D" uid="uid://ct1e1qvciut3p" path="res://assets/MainMenuUI/ExitButtonHover.png" id="4_ghoaa"]
+[ext_resource type="Texture2D" uid="uid://dj2i8f2m65e3c" path="res://assets/MarketUI/WeaponsButton.png" id="4_vp5ft"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wiysv"]
-bg_color = Color(0, 0, 0, 1)
+bg_color = Color(0.898039, 0.960784, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pw0sc"]
-bg_color = Color(0, 0, 0, 1)
+bg_color = Color(0.898039, 0.960784, 1, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v4ol4"]
-bg_color = Color(0, 0, 0, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q3ets"]
+bg_color = Color(0.345098, 0.717647, 0.776471, 0.501961)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uq15m"]
-bg_color = Color(1, 1, 1, 0.392157)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nw3dd"]
+bg_color = Color(0.560784, 1, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eycks"]
-bg_color = Color(1, 1, 1, 0.392157)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pwquq"]
+bg_color = Color(0.560784, 1, 0, 0.501961)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e7mjs"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_88884"]
-bg_color = Color(0, 0, 0, 0.392157)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ppof0"]
-bg_color = Color(1, 1, 1, 0.392157)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ltv7"]
-bg_color = Color(1, 1, 1, 0.392157)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toyey"]
-bg_color = Color(1, 1, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0bcyo"]
-bg_color = Color(0.217101, 0.217101, 0.217101, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ttu2p"]
-bg_color = Color(0.374139, 0.374139, 0.374139, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3i4cr"]
+bg_color = Color(0, 0.443137, 0.741176, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iim4a"]
-bg_color = Color(0, 0, 0, 1)
+bg_color = Color(0, 0.443137, 0.741176, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6casn"]
+bg_color = Color(0.560784, 1, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptq3v"]
+bg_color = Color(0.560784, 1, 0, 0.501961)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vwqcf"]
+bg_color = Color(0, 0.443137, 0.741176, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k5gur"]
+bg_color = Color(0.345098, 0.717647, 0.776471, 0.501961)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n1ljw"]
+bg_color = Color(0.560784, 1, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b24l7"]
+bg_color = Color(0.560784, 1, 0, 1)
 
 [node name="MarketUI" type="CanvasLayer"]
 process_mode = 2
 script = ExtResource("1_c85yt")
 
-[node name="Background5" type="Panel" parent="."]
+[node name="Background" type="TextureRect" parent="."]
+texture_filter = 6
 offset_right = 768.0
 offset_bottom = 768.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_eaugh")
+texture = ExtResource("2_upqao")
+expand_mode = 5
 
 [node name="SubBackground1" type="Panel" parent="."]
 offset_right = 768.0
@@ -86,51 +81,67 @@ offset_right = 384.0
 offset_bottom = -281.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0.443137, 0.741176, 1)
 theme_override_font_sizes/font_size = 75
 text = "MARKET"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PrimaryWeaponsButton" type="Button" parent="."]
-offset_left = 2.0
+[node name="PrimaryWeaponsButton" type="TextureButton" parent="."]
 offset_top = 103.0
 offset_right = 384.0
 offset_bottom = 138.0
-theme_override_styles/normal = SubResource("StyleBoxFlat_v4ol4")
-theme_override_styles/hover = SubResource("StyleBoxFlat_uq15m")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_eycks")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_e7mjs")
-text = "PRIMARY WEAPONS"
+texture_normal = ExtResource("3_2r615")
+stretch_mode = 0
 
-[node name="SecondaryWeaponsButton" type="Button" parent="."]
+[node name="Label" type="Label" parent="PrimaryWeaponsButton"]
+layout_mode = 0
+offset_right = 384.0
+offset_bottom = 35.0
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+text = "PRIMARY WEAPONS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SecondaryWeaponsButton" type="TextureButton" parent="."]
 offset_left = 384.0
 offset_top = 103.0
-offset_right = 766.0
+offset_right = 768.0
 offset_bottom = 138.0
-theme_override_styles/normal = SubResource("StyleBoxFlat_88884")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ppof0")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_0ltv7")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_e7mjs")
-text = "SECONDARY WEAPONS"
+texture_normal = ExtResource("4_vp5ft")
+stretch_mode = 0
 
-[node name="ExitButton" type="Button" parent="."]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -369.0
-offset_top = -98.0
-offset_right = -160.0
-offset_bottom = -38.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_styles/normal = SubResource("StyleBoxFlat_toyey")
-theme_override_styles/hover = SubResource("StyleBoxFlat_0bcyo")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_ttu2p")
-text = "EXIT
-"
+[node name="Label" type="Label" parent="SecondaryWeaponsButton"]
+layout_mode = 0
+offset_right = 384.0
+offset_bottom = 35.0
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+text = "SECONDARY WEAPONS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ExitButton" type="TextureButton" parent="."]
+texture_filter = 6
+offset_left = 49.0
+offset_top = 672.0
+offset_right = 284.0
+offset_bottom = 764.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("2_eqe76")
+texture_pressed = ExtResource("3_ft2jy")
+texture_hover = ExtResource("4_ghoaa")
+
+[node name="ExitLabel" type="Label" parent="ExitButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 12.0
+offset_right = 223.0
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+theme_override_font_sizes/font_size = 40
+text = "EXIT"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CreditsAvailable" type="Label" parent="." groups=["Persist"]]
 anchors_preset = 8
@@ -144,7 +155,7 @@ offset_right = 367.0
 offset_bottom = 346.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0, 0.443137, 0.741176, 1)
 theme_override_font_sizes/font_size = 25
 text = "CREDITS AVAILABLE: 0"
 horizontal_alignment = 1
@@ -173,6 +184,7 @@ anchor_bottom = 0.944341
 offset_top = 1.94805
 offset_right = 2.0
 offset_bottom = 4.05194
+theme_override_styles/panel = SubResource("StyleBoxFlat_q3ets")
 metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="PrimaryWeapons/PanelContainer"]
@@ -208,20 +220,28 @@ layout_mode = 2
 [node name="PWButton1" type="Button" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer" groups=["PWButtons"]]
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_nw3dd")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pwquq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_3i4cr")
 text = "SELECTED"
 
 [node name="Label1" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton1"]
+layout_mode = 0
 offset_right = 340.0
 offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
 text = "PISTOL"
 horizontal_alignment = 1
 
 [node name="StatsLabel1" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton1"]
+layout_mode = 0
 offset_left = 1.0
 offset_top = 23.0
 offset_right = 114.0
 offset_bottom = 73.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 300 RPM
 BULLET SPEED: 750 FPS
@@ -233,19 +253,27 @@ layout_mode = 2
 [node name="PWButton2" type="Button" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer" groups=["PWButtons"]]
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_6casn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ptq3v")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vwqcf")
 text = "COST: 500 CREDITS"
 
 [node name="LabeL2" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton2"]
+layout_mode = 0
 offset_right = 340.0
 offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
 text = "SMG"
 horizontal_alignment = 1
 
 [node name="StatsLabel2" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/PWButton2"]
+layout_mode = 0
 offset_top = 23.0
 offset_right = 111.0
 offset_bottom = 73.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 800 RPM
 BULLET SPEED: 850 FPS
@@ -269,20 +297,28 @@ layout_mode = 2
 [node name="PWButton3" type="Button" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer" groups=["PWButtons"]]
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_6casn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ptq3v")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vwqcf")
 text = "COST: 1500 CREDITS"
 
 [node name="Label3" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton3"]
+layout_mode = 0
 offset_right = 340.0
 offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
 text = "LMG"
 horizontal_alignment = 1
 
 [node name="StatsLabel3" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton3"]
+layout_mode = 0
 offset_left = 2.0
 offset_top = 24.0
 offset_right = 119.0
 offset_bottom = 74.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 1000 RPM
 BULLET SPEED: 1050 FPS
@@ -294,20 +330,28 @@ layout_mode = 2
 [node name="PWButton4" type="Button" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer" groups=["PWButtons"]]
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_6casn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ptq3v")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vwqcf")
 text = "COST: 1000 CREDITS"
 
 [node name="Label4" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton4"]
+layout_mode = 0
 offset_right = 340.0
 offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
 text = "AR
 "
 horizontal_alignment = 1
 
 [node name="StatsLabel4" type="Label" parent="PrimaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row2/MarginContainer/HBoxContainer/PWButton4"]
+layout_mode = 0
 offset_top = 23.0
 offset_right = 111.0
 offset_bottom = 73.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 800 RPM
 BULLET SPEED: 950 FPS
@@ -338,6 +382,7 @@ anchor_bottom = 0.944341
 offset_top = 1.94805
 offset_right = 2.0
 offset_bottom = 4.05194
+theme_override_styles/panel = SubResource("StyleBoxFlat_k5gur")
 metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="SecondaryWeapons/PanelContainer"]
@@ -373,9 +418,14 @@ layout_mode = 2
 [node name="SWButton1" type="Button" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer" groups=["SWButtons"]]
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_n1ljw")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ptq3v")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vwqcf")
 text = "EQUIPPED"
 
 [node name="Label1" type="Label" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton1"]
+layout_mode = 0
 offset_right = 340.0
 offset_bottom = 23.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
@@ -383,9 +433,11 @@ text = "PISTOL"
 horizontal_alignment = 1
 
 [node name="StatsLabel1" type="Label" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton1"]
+layout_mode = 0
 offset_top = 23.0
 offset_right = 111.0
 offset_bottom = 73.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 300 RPM
 BULLET SPEED: 750 FPS
@@ -397,9 +449,14 @@ layout_mode = 2
 [node name="SWButton2" type="Button" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer" groups=["SWButtons"]]
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_b24l7")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ptq3v")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vwqcf")
 text = "COST: 500 CREDITS"
 
 [node name="LabeL2" type="Label" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton2"]
+layout_mode = 0
 offset_right = 340.0
 offset_bottom = 23.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_iim4a")
@@ -407,9 +464,11 @@ text = "MACHINE PISTOL"
 horizontal_alignment = 1
 
 [node name="StatsLabel2" type="Label" parent="SecondaryWeapons/PanelContainer/MarginContainer/ScrollContainer/ActionList/Row1/MarginContainer/HBoxContainer/SWButton2"]
+layout_mode = 0
 offset_top = 23.0
 offset_right = 111.0
 offset_bottom = 73.0
+theme_override_colors/font_color = Color(0.898039, 0.960784, 1, 1)
 theme_override_font_sizes/font_size = 10
 text = "FIRERATE: 800 RPM
 BULLET SPEED: 850 FPS

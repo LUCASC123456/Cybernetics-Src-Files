@@ -8,6 +8,9 @@ var swing_clockwise : bool
 
 const swing_increment := ((3*PI)/4)/0.25
 
+func _ready():
+	visible = false
+
 func _process(delta):
 	if swinging:
 		if swing_clockwise:

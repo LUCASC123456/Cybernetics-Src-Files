@@ -49,6 +49,12 @@ func _create_action_list():
 		button.pressed.connect(_on_input_button_pressed.bind(button, action))
 
 func _on_input_button_pressed(button, action):
+	for i in $PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/ActionList.get_children():
+		if i == button:
+			i.texture_normal = ResourceLoader.load("res://assets/SettingsUI/KeybindsButtonPressed.png")
+		else:
+			i.texture_normal = ResourceLoader.load("res://assets/SettingsUI/KeybindsButton.png")
+	
 	if not is_remapping:
 		is_remapping = true
 		action_to_remap = action

@@ -357,26 +357,26 @@ func shoot():
 		bullet.add_to_group("bullets")
 		get_tree().current_scene.add_child(bullet)
 		bullet.global_position = lof.global_position
-		bullet.global_rotation = lof.global_rotation
+		bullet.global_rotation = randf_range(lof.global_rotation+PI/60, lof.global_rotation-PI/60)
 		
 		var bullet_2 : Node2D = enemy_bullet.instantiate()
 		bullet_2.add_to_group("bullets")
 		get_tree().current_scene.add_child(bullet_2)
 		bullet_2.global_position = lof_2.global_position
-		bullet_2.global_rotation = lof_2.global_rotation
+		bullet_2.global_rotation = randf_range(lof_2.global_rotation+PI/60, lof_2.global_rotation-PI/60)
 		bullet_2.speed = -bullet_2.speed
 		
 		var bullet_3 : Node2D = enemy_bullet.instantiate()
 		bullet_3.add_to_group("bullets")
 		get_tree().current_scene.add_child(bullet_3)
 		bullet_3.global_position = lof_3.global_position
-		bullet_3.global_rotation = lof_3.global_rotation
+		bullet_3.global_rotation = randf_range(lof_3.global_rotation+PI/60, lof_3.global_rotation-PI/60)
 		
 		var bullet_4 : Node2D = enemy_bullet.instantiate()
 		bullet_4.add_to_group("bullets")
 		get_tree().current_scene.add_child(bullet_4)
 		bullet_4.global_position = lof_4.global_position
-		bullet_4.global_rotation = lof_4.global_rotation
+		bullet_4.global_rotation = randf_range(lof_4.global_rotation+PI/60, lof_4.global_rotation-PI/60)
 		bullet_4.speed = -bullet_4.speed
 
 func _on_shot_timer_timeout():

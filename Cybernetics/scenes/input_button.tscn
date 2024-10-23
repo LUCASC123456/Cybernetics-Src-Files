@@ -1,23 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://c2mm1ltqdcqrn"]
+[gd_scene load_steps=2 format=3 uid="uid://c2mm1ltqdcqrn"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cb40q"]
-bg_color = Color(0, 0, 0, 0.392157)
+[ext_resource type="Texture2D" uid="uid://cn00nb0nk7a3i" path="res://assets/SettingsUI/KeybindsButton.png" id="1_woo3v"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f32hp"]
-bg_color = Color(1, 1, 1, 0.392157)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0xrfm"]
-
-[node name="InputButton" type="Button"]
+[node name="InputButton" type="TextureButton"]
 custom_minimum_size = Vector2(0, 40)
 anchors_preset = 10
 anchor_right = 1.0
+offset_bottom = 40.0
 grow_horizontal = 2
 focus_mode = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_cb40q")
-theme_override_styles/hover = SubResource("StyleBoxFlat_f32hp")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_f32hp")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_0xrfm")
+texture_normal = ExtResource("1_woo3v")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -37,7 +29,8 @@ layout_mode = 2
 [node name="LabelAction" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 mouse_filter = 1
-text = "Action name"
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+text = "ACTION NAME"
 vertical_alignment = 1
 
 [node name="Spacer" type="Control" parent="MarginContainer/HBoxContainer"]
@@ -48,5 +41,6 @@ mouse_filter = 1
 [node name="LabelInput" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 mouse_filter = 1
-text = "Action name"
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+text = "ACTION NAME"
 vertical_alignment = 1

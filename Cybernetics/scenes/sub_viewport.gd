@@ -13,6 +13,8 @@ extends SubViewport
 var markers = {}
 var null_obj := "null_obj"
 
+const radius := 250
+
 func _process(_delta):
 	camera.position = player.position
 	
@@ -33,9 +35,13 @@ func _process(_delta):
 			object.marker_added = true
 		
 		var obj_pos = object.position
-		obj_pos.x = clamp(obj_pos.x, player.position.x-360, player.position.x+360)
-		obj_pos.y = clamp(obj_pos.y, player.position.y-360, player.position.y+360)
-		markers[object].position = obj_pos
+		var player_pos = player.global_transform.origin
+		var distance = player_pos.distance_to(obj_pos)
+		var obj_dir = (obj_pos-player_pos).normalized()
+		if distance > radius:
+			obj_pos = player_pos + (obj_dir * radius)
+		
+		markers[object].global_transform.origin = obj_pos
 	
 	for key in markers:
 		if key == null:

@@ -1,30 +1,21 @@
 [gd_scene load_steps=6 format=3 uid="uid://c8fcto6d2woq"]
 
 [ext_resource type="Script" path="res://scenes/pause_screen.gd" id="1_ui1xq"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ga2v7"]
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hinwx"]
-bg_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2x0aa"]
-bg_color = Color(0.217101, 0.217101, 0.217101, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5b4rg"]
-bg_color = Color(0.374139, 0.374139, 0.374139, 1)
+[ext_resource type="Texture2D" uid="uid://bwy6njhmg1hyr" path="res://assets/MainMenuUI/MMBackground.png" id="2_rxlxj"]
+[ext_resource type="Texture2D" uid="uid://6dhaiqp4503h" path="res://assets/MainMenuUI/ExitButton.png" id="3_msusi"]
+[ext_resource type="Texture2D" uid="uid://4j8pwm1u7q64" path="res://assets/MainMenuUI/ExitButtonPressed.png" id="4_3mhcr"]
+[ext_resource type="Texture2D" uid="uid://ct1e1qvciut3p" path="res://assets/MainMenuUI/ExitButtonHover.png" id="5_dxed8"]
 
 [node name="PauseScreen" type="CanvasLayer"]
 process_mode = 2
 script = ExtResource("1_ui1xq")
 
-[node name="Background3" type="Panel" parent="."]
+[node name="Background" type="TextureRect" parent="."]
+texture_filter = 6
 offset_right = 768.0
 offset_bottom = 768.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_ga2v7")
+texture = ExtResource("2_rxlxj")
+expand_mode = 5
 
 [node name="GameOver" type="Label" parent="."]
 anchors_preset = 8
@@ -38,46 +29,57 @@ offset_right = 215.0
 offset_bottom = -75.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0.443137, 0.741176, 1)
 theme_override_font_sizes/font_size = 75
 text = "GAME PAUSED"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ResumeButton" type="Button" parent="."]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -104.5
-offset_top = -318.0
-offset_right = 104.5
-offset_bottom = -258.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_hinwx")
-theme_override_styles/hover = SubResource("StyleBoxFlat_2x0aa")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_5b4rg")
-text = "RESUME GAME
-"
+[node name="ResumeButton" type="TextureButton" parent="."]
+texture_filter = 6
+offset_left = 314.0
+offset_top = 450.0
+offset_right = 549.0
+offset_bottom = 542.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("3_msusi")
+texture_pressed = ExtResource("4_3mhcr")
+texture_hover = ExtResource("5_dxed8")
 
-[node name="ExitButton" type="Button" parent="."]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -104.0
-offset_top = -237.0
-offset_right = 105.0
-offset_bottom = -177.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_hinwx")
-theme_override_styles/hover = SubResource("StyleBoxFlat_2x0aa")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_5b4rg")
-text = "EXIT GAME
-"
+[node name="ExitLabel" type="Label" parent="ResumeButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 12.0
+offset_right = 223.0
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+theme_override_font_sizes/font_size = 40
+text = "EXIT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ExitButton" type="TextureButton" parent="."]
+texture_filter = 6
+offset_left = 314.0
+offset_top = 525.0
+offset_right = 549.0
+offset_bottom = 617.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("3_msusi")
+texture_pressed = ExtResource("4_3mhcr")
+texture_hover = ExtResource("5_dxed8")
+
+[node name="ExitLabel" type="Label" parent="ExitButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 12.0
+offset_right = 223.0
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+theme_override_font_sizes/font_size = 40
+text = "EXIT"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]

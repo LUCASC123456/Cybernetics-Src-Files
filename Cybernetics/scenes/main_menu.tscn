@@ -1,121 +1,143 @@
-[gd_scene load_steps=9 format=3 uid="uid://c3vfi2w4cr36"]
+[gd_scene load_steps=18 format=3 uid="uid://c3vfi2w4cr36"]
 
 [ext_resource type="Script" path="res://scenes/main_menu.gd" id="1_7stuu"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8wu3h"]
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mtgpl"]
-bg_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_endnl"]
-bg_color = Color(0.217101, 0.217101, 0.217101, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3f852"]
-bg_color = Color(0.374139, 0.374139, 0.374139, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6aywo"]
-bg_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cvo61"]
-bg_color = Color(0.215686, 0.215686, 0.215686, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_be1s4"]
-bg_color = Color(0.372549, 0.372549, 0.372549, 1)
+[ext_resource type="Texture2D" uid="uid://bwy6njhmg1hyr" path="res://assets/MainMenuUI/MMBackground.png" id="2_h0bxy"]
+[ext_resource type="Texture2D" uid="uid://ccmftjtm0f56" path="res://assets/MainMenuUI/logo.png" id="2_wg5l6"]
+[ext_resource type="Texture2D" uid="uid://bdemfdvn5ektb" path="res://assets/MainMenuUI/PlayButton.png" id="3_28ehy"]
+[ext_resource type="Texture2D" uid="uid://bopcnkl4iopy" path="res://assets/MainMenuUI/MarketButton.png" id="4_qpsc3"]
+[ext_resource type="Texture2D" uid="uid://c84oke3e74ima" path="res://assets/MainMenuUI/SettingsButton.png" id="5_i0v3p"]
+[ext_resource type="Texture2D" uid="uid://bcxcjcs2oel" path="res://assets/MainMenuUI/PlayButtonPressed.png" id="5_sx1uf"]
+[ext_resource type="Texture2D" uid="uid://6dhaiqp4503h" path="res://assets/MainMenuUI/ExitButton.png" id="6_squg1"]
+[ext_resource type="Texture2D" uid="uid://de48ej02diwb1" path="res://assets/MainMenuUI/PlayButtonHover.png" id="6_tpft0"]
+[ext_resource type="Texture2D" uid="uid://cvgt41j211wxs" path="res://assets/MainMenuUI/UpdateLog.png" id="7_qv5f1"]
+[ext_resource type="Texture2D" uid="uid://d4cmasrxowxr2" path="res://assets/MainMenuUI/MarketButtonPressed.png" id="8_aoa16"]
+[ext_resource type="Texture2D" uid="uid://bfq6o4pbtfb6i" path="res://assets/MainMenuUI/MarketButtonHover.png" id="9_gh4b5"]
+[ext_resource type="Texture2D" uid="uid://ch5x13fodpy1o" path="res://assets/MainMenuUI/SettingsButtonPressed.png" id="11_3vf3m"]
+[ext_resource type="Texture2D" uid="uid://72nwh3opf205" path="res://assets/MainMenuUI/SettingsButtonHover.png" id="12_pollv"]
+[ext_resource type="Texture2D" uid="uid://78g6bpascixp" path="res://assets/MainMenuUI/Settings.png" id="13_mhf08"]
+[ext_resource type="Texture2D" uid="uid://4j8pwm1u7q64" path="res://assets/MainMenuUI/ExitButtonPressed.png" id="15_ub5s1"]
+[ext_resource type="Texture2D" uid="uid://ct1e1qvciut3p" path="res://assets/MainMenuUI/ExitButtonHover.png" id="16_aosvn"]
 
 [node name="MainMenu" type="CanvasLayer"]
 process_mode = 2
 script = ExtResource("1_7stuu")
 
-[node name="Background" type="Panel" parent="."]
+[node name="Background" type="TextureRect" parent="."]
+texture_filter = 6
 offset_right = 768.0
 offset_bottom = 768.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_8wu3h")
+texture = ExtResource("2_h0bxy")
+expand_mode = 5
 
-[node name="Logo" type="Label" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -243.0
-offset_top = -248.0
-offset_right = 244.0
-offset_bottom = -145.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 75
-text = "CYBERNETICS"
+[node name="Logo" type="TextureRect" parent="."]
+texture_filter = 6
+offset_left = 185.0
+offset_top = 12.0
+offset_right = 1137.0
+offset_bottom = 396.0
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("2_wg5l6")
+
+[node name="PlayButton" type="TextureButton" parent="."]
+texture_filter = 6
+offset_left = 560.0
+offset_top = 363.0
+offset_right = 844.0
+offset_bottom = 511.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("3_28ehy")
+texture_pressed = ExtResource("5_sx1uf")
+texture_hover = ExtResource("6_tpft0")
+
+[node name="PlayLabel" type="Label" parent="PlayButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 43.0
+offset_right = 273.0
+offset_bottom = 148.0
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+theme_override_font_sizes/font_size = 50
+text = "PLAY"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="."]
-offset_left = 43.0
-offset_top = 28.0
-offset_right = 370.0
-offset_bottom = 122.0
-text = "CONTROLS (DEFAULT):
-WASD: UP, LEFT, DOWN RIGHT
-LEFT CLICK: SHOOT WEAPON
-F: USE MELEE
-"
+[node name="ShopButton" type="TextureButton" parent="."]
+texture_filter = 6
+offset_left = 585.0
+offset_top = 472.0
+offset_right = 821.0
+offset_bottom = 563.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("4_qpsc3")
+texture_pressed = ExtResource("8_aoa16")
+texture_hover = ExtResource("9_gh4b5")
 
-[node name="PlayButton" type="Button" parent="."]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -102.0
-offset_top = -378.0
-offset_right = 107.0
-offset_bottom = -318.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_mtgpl")
-theme_override_styles/hover = SubResource("StyleBoxFlat_endnl")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_3f852")
-text = "PLAY
-"
+[node name="MarketLabel" type="Label" parent="ShopButton"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 225.0
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+theme_override_font_sizes/font_size = 40
+text = "MARKET"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ShopButton" type="Button" parent="."]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -102.0
-offset_top = -303.0
-offset_right = 107.0
-offset_bottom = -243.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_mtgpl")
-theme_override_styles/hover = SubResource("StyleBoxFlat_endnl")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_3f852")
-text = "MARKET
-"
+[node name="SettingsButton" type="TextureButton" parent="."]
+texture_filter = 6
+offset_left = 639.0
+offset_top = 602.0
+offset_right = 766.0
+offset_bottom = 693.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("5_i0v3p")
+texture_pressed = ExtResource("11_3vf3m")
+texture_hover = ExtResource("12_pollv")
 
-[node name="SettingsButton" type="Button" parent="."]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -102.0
-offset_top = -228.0
-offset_right = 107.0
-offset_bottom = -168.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_6aywo")
-theme_override_styles/hover = SubResource("StyleBoxFlat_cvo61")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_be1s4")
-text = "SETTINGS"
+[node name="TextureRect" type="TextureRect" parent="SettingsButton"]
+texture_filter = 6
+layout_mode = 0
+offset_left = 38.3333
+offset_top = 20.0
+offset_right = 2002.33
+offset_bottom = 2068.0
+scale = Vector2(0.025, 0.025)
+texture = ExtResource("13_mhf08")
+
+[node name="ExitButton" type="TextureButton" parent="."]
+texture_filter = 6
+offset_left = 585.0
+offset_top = 537.0
+offset_right = 820.0
+offset_bottom = 629.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("6_squg1")
+texture_pressed = ExtResource("15_ub5s1")
+texture_hover = ExtResource("16_aosvn")
+
+[node name="ExitLabel" type="Label" parent="ExitButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 12.0
+offset_right = 223.0
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+theme_override_font_sizes/font_size = 40
+text = "EXIT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="."]
+texture_filter = 6
+offset_left = 40.0
+offset_top = 418.0
+offset_right = 615.0
+offset_bottom = 816.0
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("7_qv5f1")
 
 [connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="ShopButton" to="." method="_on_shop_button_pressed"]
 [connection signal="pressed" from="SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]

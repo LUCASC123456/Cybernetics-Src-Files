@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @onready var main = get_node("/root/Main")
-@onready var ammo_counter = get_node("/root/Main/UI/AmmoCounter/AmmoLabel")
+@onready var ammo_counter = get_node("/root/Main/UI/Hotbar/AmmoCounter/AmmoLabel")
 @onready var UI = get_node("/root/Main/UI")
 @onready var game_won = get_node("/root/Main/GameWon")
 @onready var main_menu = get_node("/root/Main/MainMenu")
@@ -89,6 +89,9 @@ func get_input():
 		if not primary_equipped:
 			primary_equipped = true
 			
+			UI.get_node("Hotbar/PrimaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/PrimaryWeaponSelectionSelected.png")
+			UI.get_node("Hotbar/SecondaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/SecondaryWeaponSelection.png")
+			
 			if not $ReloadTimerSecondary.is_stopped():
 				$ReloadTimerSecondary.stop()
 			else:
@@ -100,6 +103,9 @@ func get_input():
 	elif Input.is_action_just_pressed("secondary_weapon"):
 		if primary_equipped:
 			primary_equipped = false
+			
+			UI.get_node("Hotbar/SecondaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/SecondaryWeaponSelectionSelected.png")
+			UI.get_node("Hotbar/PrimaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/PrimaryWeaponSelection.png")
 			
 			if not $ReloadTimerPrimary.is_stopped():
 				$ReloadTimerPrimary.stop()
@@ -130,6 +136,9 @@ func get_input():
 							pass
 							
 						var dir = get_global_mouse_position() - position
+						var angle = randf_range(dir.angle()+PI/60, dir.angle()-PI/60)
+						
+						dir = Vector2(cos(angle), sin(angle))
 						shoot.emit(position, dir)
 						can_shoot = false
 						
@@ -161,6 +170,9 @@ func get_input():
 							pass
 						
 						var dir = get_global_mouse_position() - position
+						var angle = randf_range(dir.angle()+PI/60, dir.angle()-PI/60)
+						
+						dir = Vector2(cos(angle), sin(angle))
 						shoot.emit(position, dir)
 						can_shoot = false
 						
@@ -192,6 +204,9 @@ func get_input():
 							pass
 						
 						var dir = get_global_mouse_position() - position
+						var angle = randf_range(dir.angle()+PI/60, dir.angle()-PI/60)
+						
+						dir = Vector2(cos(angle), sin(angle))
 						shoot.emit(position, dir)
 						can_shoot = false
 						
@@ -223,6 +238,9 @@ func get_input():
 							pass
 						
 						var dir = get_global_mouse_position() - position
+						var angle = randf_range(dir.angle()+PI/60, dir.angle()-PI/60)
+						
+						dir = Vector2(cos(angle), sin(angle))
 						shoot.emit(position, dir)
 						can_shoot = false
 						
@@ -254,6 +272,9 @@ func get_input():
 							pass
 							
 						var dir = get_global_mouse_position() - position
+						var angle = randf_range(dir.angle()+PI/60, dir.angle()-PI/60)
+						
+						dir = Vector2(cos(angle), sin(angle))
 						shoot.emit(position, dir)
 						can_shoot = false
 						
@@ -285,6 +306,9 @@ func get_input():
 							pass
 							
 						var dir = get_global_mouse_position() - position
+						var angle = randf_range(dir.angle()+PI/60, dir.angle()-PI/60)
+						
+						dir = Vector2(cos(angle), sin(angle))
 						shoot.emit(position, dir)
 						can_shoot = false
 					

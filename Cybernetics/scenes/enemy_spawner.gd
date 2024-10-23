@@ -466,17 +466,46 @@ func _on_timer_timeout():
 
 func _on_timer_2_timeout():
 	if main.levels[0] or world.passage_way == "passage_way_1_entered" or world.passage_way == "passage_way_1_exited":
-		for i in main.enemy_door_coordinates["Level1"]:
-			main.get_node("World").set_cell(1, i, 0, Vector2i(1,1), 0)
-		
+		for tile_coord_array in main.enemy_door_coordinates["Level1"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord == Vector2i(6,0) or tile_coord == Vector2i(6,15):
+					world.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+				elif tile_coord == Vector2i(9,0) or tile_coord == Vector2i(9,15):
+					world.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+				else:
+					world.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
 	elif main.levels[1] or world.passage_way == "passage_way_2_entered" or world.passage_way == "passage_way_2_exited":
-		for i in main.enemy_door_coordinates["Level2"]:
-			main.get_node("World").set_cell(1, i, 0, Vector2i(1,1), 0)
+		for tile_coord_array in main.enemy_door_coordinates["Level2"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord == Vector2i(32,0) or tile_coord == Vector2i(44,0) or tile_coord == Vector2i(32,15) or tile_coord == Vector2i(44,15):
+					world.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+				elif tile_coord == Vector2i(35,0) or tile_coord == Vector2i(47,0) or tile_coord == Vector2i(35,15) or tile_coord == Vector2i(47,15):
+					world.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+				else:
+					world.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
 		
 	elif main.levels[2] or world.passage_way == "passage_way_3_entered" or world.passage_way == "passage_way_3_exited":
-		for i in main.enemy_door_coordinates["Level3"]:
-			main.get_node("World").set_cell(1, i, 0, Vector2i(1,1), 0)
-			
+		for tile_coord_array in main.enemy_door_coordinates["Level3"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord == Vector2i(35,31) or tile_coord == Vector2i(98,31):
+					world.set_cell(1, tile_coord, 7, Vector2i(0,9), 0)
+				else:
+					world.set_cell(1, tile_coord, 7, Vector2i(0,16), 0)
+				
 	elif main.levels[3] or world.passage_way == "passage_way_4_entered" or world.passage_way == "passage_way_4_exited":
-		for i in main.enemy_door_coordinates["Level4"]:
-			main.get_node("World").set_cell(1, i, 0, Vector2i(1,1), 0)
+		for tile_coord_array in main.enemy_door_coordinates["Level4"]:
+			for tile_coord in tile_coord_array:
+				if tile_coord_array == main.enemy_door_coordinates["Level4"][1]:
+					if tile_coord == Vector2i(144, 19):
+						world.set_cell(1, tile_coord, 7, Vector2i(0,17), 0)
+					elif tile_coord == Vector2i(152, 29):
+						world.set_cell(1, tile_coord, 7, Vector2i(0,18), 0)
+					else:
+						world.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
+				else:
+					if tile_coord == Vector2i(122, 29):
+						world.set_cell(1, tile_coord, 7, Vector2i(0,11), 0)
+					elif tile_coord == Vector2i(174, 29):
+						world.set_cell(1, tile_coord, 7, Vector2i(0,10), 0)
+					else:
+						world.set_cell(1, tile_coord, 7, Vector2i(0,16), 0)

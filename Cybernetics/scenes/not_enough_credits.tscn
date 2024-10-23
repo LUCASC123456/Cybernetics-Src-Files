@@ -1,30 +1,21 @@
 [gd_scene load_steps=6 format=3 uid="uid://3k3j8g2awwi1"]
 
 [ext_resource type="Script" path="res://scenes/not_enough_credits.gd" id="1_se0av"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fia0x"]
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rivux"]
-bg_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82677"]
-bg_color = Color(0.217101, 0.217101, 0.217101, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6i1oo"]
-bg_color = Color(0.374139, 0.374139, 0.374139, 1)
+[ext_resource type="Texture2D" uid="uid://bwy6njhmg1hyr" path="res://assets/MainMenuUI/MMBackground.png" id="2_np7a7"]
+[ext_resource type="Texture2D" uid="uid://6dhaiqp4503h" path="res://assets/MainMenuUI/ExitButton.png" id="3_o0bpu"]
+[ext_resource type="Texture2D" uid="uid://4j8pwm1u7q64" path="res://assets/MainMenuUI/ExitButtonPressed.png" id="4_jlr6h"]
+[ext_resource type="Texture2D" uid="uid://ct1e1qvciut3p" path="res://assets/MainMenuUI/ExitButtonHover.png" id="5_e7ces"]
 
 [node name="NotEnoughCredits" type="CanvasLayer"]
 process_mode = 2
 script = ExtResource("1_se0av")
 
-[node name="Background6" type="Panel" parent="."]
+[node name="Background" type="TextureRect" parent="."]
+texture_filter = 6
 offset_right = 768.0
 offset_bottom = 768.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_fia0x")
+texture = ExtResource("2_np7a7")
+expand_mode = 5
 
 [node name="NotEnoughCreditsLabel" type="Label" parent="."]
 anchors_preset = 8
@@ -38,28 +29,34 @@ offset_right = 215.0
 offset_bottom = -75.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0.443137, 0.741176, 1)
 theme_override_font_sizes/font_size = 50
 text = "YOU NEED 0 MORE CREDITS
 TO PURCHASE THIS ITEM"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="OkButton" type="Button" parent="."]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -104.5
-offset_top = -318.0
-offset_right = 104.5
-offset_bottom = -258.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_rivux")
-theme_override_styles/hover = SubResource("StyleBoxFlat_82677")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_6i1oo")
-text = "OK
-"
+[node name="OkButton" type="TextureButton" parent="."]
+texture_filter = 6
+offset_left = 314.0
+offset_top = 450.0
+offset_right = 549.0
+offset_bottom = 542.0
+scale = Vector2(0.6, 0.6)
+texture_normal = ExtResource("3_o0bpu")
+texture_pressed = ExtResource("4_jlr6h")
+texture_hover = ExtResource("5_e7ces")
+
+[node name="ExitLabel" type="Label" parent="OkButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 12.0
+offset_right = 223.0
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0.345098, 0.717647, 0.776471, 1)
+theme_override_font_sizes/font_size = 40
+text = "EXIT"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="OkButton" to="." method="_on_ok_button_pressed"]

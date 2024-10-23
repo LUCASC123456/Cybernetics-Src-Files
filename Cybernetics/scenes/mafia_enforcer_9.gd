@@ -172,7 +172,7 @@ func shoot():
 		bullet.add_to_group("bullets")
 		get_tree().current_scene.add_child(bullet)
 		bullet.global_position = global_position
-		bullet.global_rotation = (target.global_position - global_position).angle()
+		bullet.global_rotation = randf_range((target.global_position - global_position).angle()+PI/60,(target.global_position - global_position).angle()-PI/60)
 	
 	shot_timer.start()
 

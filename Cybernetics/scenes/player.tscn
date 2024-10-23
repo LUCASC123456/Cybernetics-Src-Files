@@ -154,6 +154,7 @@ one_shot = true
 one_shot = true
 
 [node name="Sword" parent="." instance=ExtResource("11_gil0n")]
+texture_filter = 6
 
 [connection signal="timeout" from="ShotTimerPistol" to="." method="_on_shot_timer_pistol_timeout"]
 [connection signal="timeout" from="ShotTimerMP" to="." method="_on_shot_timer_mp_timeout"]

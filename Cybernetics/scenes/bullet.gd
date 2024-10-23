@@ -30,8 +30,10 @@ func _ready():
 func _process(delta):
 	if player.primary_equipped:
 		position += primary_bullet_speed * direction * delta
+		rotation = direction.angle()
 	else:
 		position += secondary_bullet_speed * direction * delta
+		rotation = direction.angle()
 
 func _on_timer_timeout():
 	queue_free()
