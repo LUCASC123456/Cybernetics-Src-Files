@@ -30,6 +30,9 @@ var secondary_guns = ["PISTOL", "MP"]
 var primary_mag_collection = [0,0,0]
 var secondary_mag_collection = [0,0,0]
 
+#sets up the player for a new game, e.g. setting their speed, position, loading data, making sure
+#they can shoot, making sure powerups are disabled etc so the player is completely set up for a new
+#game
 func _ready():
 	speed = 250
 	position = Vector2(384, 384)
@@ -37,6 +40,7 @@ func _ready():
 	main_menu.load_data()
 	primary_selected_gun = primary_guns[main_menu.primary_store.selected]
 	secondary_selected_gun = secondary_guns[main_menu.secondary_store.selected]
+	primary_equipped = true
 	can_shoot = true
 	
 	boost_activated = false
@@ -50,12 +54,13 @@ func _ready():
 	
 	reset()
 
+#used for resetting the player for each level e.g their health, sheild, ammo so they player is better
+#prepared for the next level
 func reset():
 	health = 200
 	sheild = 200
 	primary_mags = 3
 	secondary_mags = 3
-	primary_equipped = true
 	
 	if primary_selected_gun == "PISTOL":
 		for i in range(0, len(primary_mag_collection)):
@@ -81,6 +86,15 @@ func reset():
 	else:
 		pass
 
+#runs every single frame through the _physics_process function and is used to constantly check for
+#end user input actions e.g. movement by getting the vector of the movement keys and multiplying this
+#by the player speed to allow the player to move, or to check for when the user swtiches to their primary
+#or secondary weapon which will equip whichever one they pressed the key for. another example is shooting
+#where if they player uses a shooting input key, instantiate a bullet scene and set its base position
+#and direction in order for it to move in a direction. one final example is swinging the sword where
+#the sword rotation will be pi radians greater or less than the mouse position angle relative to the
+#player and the script will increment the sword rotation by a certain amount every delta until the swing
+#timer is finished both to simulate realistic sword and gun behaviour
 func get_input():
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = input_dir.normalized() * speed
@@ -89,8 +103,8 @@ func get_input():
 		if not primary_equipped:
 			primary_equipped = true
 			
-			UI.get_node("Hotbar/PrimaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/PrimaryWeaponSelectionSelected.png")
-			UI.get_node("Hotbar/SecondaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/SecondaryWeaponSelection.png")
+			UI.get_node("Hotbar/PrimaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/WeaponSelectionSelected.png")
+			UI.get_node("Hotbar/SecondaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/WeaponSelection.png")
 			
 			if not $ReloadTimerSecondary.is_stopped():
 				$ReloadTimerSecondary.stop()
@@ -104,8 +118,8 @@ func get_input():
 		if primary_equipped:
 			primary_equipped = false
 			
-			UI.get_node("Hotbar/SecondaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/SecondaryWeaponSelectionSelected.png")
-			UI.get_node("Hotbar/PrimaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/PrimaryWeaponSelection.png")
+			UI.get_node("Hotbar/SecondaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/WeaponSelectionSelected.png")
+			UI.get_node("Hotbar/PrimaryWeaponSelection").texture_normal = ResourceLoader.load("res://assets/GamePlayUI/WeaponSelection.png")
 			
 			if not $ReloadTimerPrimary.is_stopped():
 				$ReloadTimerPrimary.stop()
@@ -340,6 +354,9 @@ func get_input():
 	else:
 		pass
 
+#used for constantly displaying the amount of ammo left for the primary and secondary weapon through
+#UI so the end user knows how much ammo they have left on each weapon while also telling the end user
+#if they're reloading or not providing further information to the end user
 func _process(_delta):
 	if primary_equipped:
 		if primary_selected_gun == "PISTOL":
@@ -399,7 +416,11 @@ func _process(_delta):
 			else:
 				secondary_mag_collection[secondary_mags] = 0
 				ammo_counter.text = "AMMO: " + str(secondary_mag_collection[secondary_mags-1]) + "/20 \nMAGS: " + str(secondary_mags) + "/3"
-		
+
+#used for constantly checking if the user is out of bounds so the player can be teleported back into
+#the map or in a passage way which allows for certain functionality across other scripts while constantly
+#updating the moust button, checking for powerups and playing animations based on player movement all
+#for better player functionality and connectivity between other scripts
 func _physics_process(delta):
 	get_input()
 	move_and_slide()
@@ -460,7 +481,10 @@ func _physics_process(delta):
 	else:
 		$AnimatedSprite2D.stop()
 		$AnimatedSprite2D.frame = 1
-	
+
+#increases the amount of ammo based on which gun the user is currently using if the the gun isn't
+#already full of ammo, reloading or firing by modifying the elements of the magazine arrays so the
+#user can gain ammo and fire more shots against enemies
 func ammo_gained():
 	if primary_equipped:
 		if $ReloadTimerPrimary.is_stopped():
@@ -603,7 +627,10 @@ func ammo_gained():
 				pass
 		else:
 			pass
-		
+
+#when the user is finished reloading a weapon, this function runs which changes which element of the
+#magazine array the weapon will be using while also enabling shooting only if there is still
+#ammo leftover after reloading for a realistic depiction of a gun and for balance
 func _on_reload_timer_primary_timeout():
 	if primary_selected_gun == "PISTOL":
 		primary_mags -= 1
@@ -637,6 +664,9 @@ func _on_reload_timer_primary_timeout():
 		else:
 			can_shoot = false
 
+#when the user is finished reloading a weapon, this function runs which changes which element of the
+#magazine array the weapon will be using while also enabling shooting only if there is still
+#ammo leftover after reloading for a realistic depiction of a gun and for balance
 func _on_reload_timer_secondary_timeout():
 	if secondary_selected_gun == "PISTOL":
 		secondary_mags -= 1
@@ -654,31 +684,46 @@ func _on_reload_timer_secondary_timeout():
 			can_shoot = false
 
 
+#used for letting the user shoot again after they previously shot a bullet so they user isn't able 
+#to fire a bullet every delta or 0.016s which is way to fast and would cause lag
 func _on_shot_timer_pistol_timeout():
 	can_shoot = true
 
+#used for letting the user shoot again after they previously shot a bullet so they user isn't able 
+#to fire a bullet every delta or 0.016s which is way to fast and would cause lag
 func _on_shot_timer_mp_timeout():
 	can_shoot = true
 
+#used for letting the user shoot again after they previously shot a bullet so they user isn't able 
+#to fire a bullet every delta or 0.016s which is way to fast and would cause lag
 func _on_shot_timer_smg_timeout():
 	can_shoot = true
 
+#used for letting the user shoot again after they previously shot a bullet so they user isn't able 
+#to fire a bullet every delta or 0.016s which is way to fast and would cause lag
 func _on_shot_timer_lmg_timeout():
 	can_shoot = true
 
+#used for letting the user shoot again after they previously shot a bullet so they user isn't able 
+#to fire a bullet every delta or 0.016s which is way to fast and would cause lag
 func _on_shot_timer_ar_timeout():
 	can_shoot = true
 
 
+#the sword is no longer swinging after the player has used it for realistic sword functionality and
+#so the player cannot spam the sword
 func _on_sword_timer_timeout():
 	sword.swinging = false
 
 
+#disabling the powerups after their respective timers are finished so they aren't endless
 func _on_boost_timer_timeout():
 	boost_activated = false
 
+#disabling the powerups after their respective timers are finished so they aren't endless
 func _on_force_field_timer_timeout():
 	force_field_activated = false
 
+#disabling the powerups after their respective timers are finished so they aren't endless
 func _on_double_damage_timer_timeout():
 	double_damage_activated = false

@@ -20,15 +20,18 @@ var out_of_bounds : bool
 var player_colliding : bool
 var direction : Vector2
 
-const basic_drop_chance : float = 0.75
-const complex_drop_chance : float = 0.5
+const BASIC_DROP_CHANCE : float = 0.75
+const COMPLEX_DROP_CHANCE : float = 0.5
 
 var minimap_icon = "enemy"
 var marker_added : bool
 
+#when the entity enters the tree, set up the fundamental core information of the entity such as setting
+#the target as the player as well as enabling the alive variable to initate vertical or horizontal movement
+#out of the spawn area and disabling the entered variable to prevent other functionality such as attacking
+#to give the player some prep time
 func _ready() -> void:
 	target = player
-	make_path()
 	alive = true
 	entered = false
 	out_of_bounds = true
@@ -43,19 +46,29 @@ func _ready() -> void:
 		direction.x = 0
 		direction.y = dist.y
 
+#when the entrance timer finishes, enable the entered varialbe to enable certain functionality in
+#_physics_process such as tracking the player
 func _on_entrance_timer_timeout():
 	entered = true
 
+#constantly update the health bar value to the healh value every frame to constantly keep the user up
+#to date about this information
 func _process(_delta):
 	health_bar.value = health
 
+#for every physics frame, this function runs
 func _physics_process(_delta: float) -> void:
+	#if alive, enable core physics features such as animation and simple movement
 	if alive:
 		$AnimatedSprite2D.animation = "run"
+		#if enetered, enable all physics features such changing direction to the target, otherwise 
+		#the entity cannot be damaged as it isn't fully entered yet
 		if entered:
 			damage_resistant = false
 			direction = to_local(nav_agent.get_next_path_position())
 			
+			#teleport the entity to the centre of the current level to prevent them from going out
+			#of bounds
 			if out_of_bounds:
 				if main.levels[0]:
 					position = Vector2(384,384)
@@ -70,24 +83,32 @@ func _physics_process(_delta: float) -> void:
 		else:
 			damage_resistant = true
 			
+		#vector movement so the entity moves with direction and magnitude
 		direction = direction.normalized()
 		velocity = direction * speed 
 		move_and_slide()
 		
+		#flip the animation if the enemy turns around for realistic movement
 		if velocity.x != 0:
 			$AnimatedSprite2D.flip_h = velocity.x < 0
 	else:
 		pass
 
+#generate the closest path towards the player using navigation agent 2d so the entity can get to the
+#player asap
 func make_path() -> void:
 	nav_agent.target_position = target.global_position
 
+#used to generate the path every time the track timer goes timeout which is about every 0.1 seconds
+#for quickly updating the shortest path
 func _on_track_timer_timeout():
 	make_path()
 
+#used for dealing damage to the player if the player collides with the entity
 func hit_player_3():
 	var damage : int
 	
+	#only deal damage when the player isn't using the force field ability to allow powerup functionality
 	if target.force_field_activated:
 		damage = 0
 	else:
@@ -102,6 +123,7 @@ func hit_player_3():
 		else:
 			pass 
 		
+	#take away sheild first before taking away health as that's the purpose of sheild
 	if target.sheild > 0:
 		target.sheild -= damage
 		
@@ -114,6 +136,9 @@ func hit_player_3():
 		target.health -= damage
 	
 	main.damage_taken += damage
+	
+	#minus the credits currently earned by the player during gameplay by minusing it by the damage
+	#to make credits more difficult to earn for balance
 	if main.credits_earned > 0:
 		main.credits_earned -= damage
 		if main.credits_earned <= 0:
@@ -122,7 +147,9 @@ func hit_player_3():
 			pass
 	else:
 		pass
-		
+	
+	#if the player health is 0 after the damage, pause the game and show the game overscreen displaying
+	#the stats
 	if target.health <= 0:
 		get_tree().paused = true
 		game_over.show()
@@ -130,6 +157,9 @@ func hit_player_3():
 	else:
 		pass
 
+#when the player enters the entities area2d region, firstly make sure the entity is alive and entered
+#and if this condition is met, deal damage to the player then start the hit timer in order to challenge
+#the player
 func _on_area_2d_body_entered(_body):
 	player_colliding = true
 	if alive and entered:
@@ -138,13 +168,20 @@ func _on_area_2d_body_entered(_body):
 	else:
 		pass
 
+#when the hit timer finishes, deal damage to the player through the hit function in order to simulate
+#realistic damage
 func _on_hit_timer_timeout():
 	hit_player_3()
 
+#stop the hit timer when the player leaves the entites area2d region so the player doesn't constant
+#lose health when they lead the entities area2d region
 func _on_area_2d_body_exited(_body):
 	player_colliding = false
 	$HitTimer.stop()
 
+#when the entity dies, alive is disabled to disable all physics processes, all animations and timers
+#are stopped, and an enemy killed signal is emitted to tell the game the entity is dead and to overall
+#stop the entity from doing or affecting anything as a whole
 func die():
 	z_index = 1
 	collision_layer = 0
@@ -158,15 +195,17 @@ func die():
 	
 	var probability : float
 	probability = randf()
-	if probability <= basic_drop_chance:
+	if probability <= BASIC_DROP_CHANCE:
 		drop_item_basic()
 	else:
 		probability = randf()
-		if probability <= complex_drop_chance:
+		if probability <= COMPLEX_DROP_CHANCE:
 			drop_item_complex()
 		else:
 			pass
-			
+
+#drops a basic item such as ammo or health by instantiating the item scene and randomly picking a
+#basic item so the player can gain benefits from killnig enemies
 func drop_item_basic():
 	var item = item_scene.instantiate()
 	item.position = position
@@ -174,6 +213,8 @@ func drop_item_basic():
 	main.call_deferred("add_child", item)
 	item.add_to_group("items")
 
+#drops a complex item such as a powerup by instantiating the item scene and randomly picking a
+#complex item so the player can gain benefits from killnig enemies
 func drop_item_complex():
 	var item = item_scene.instantiate()
 	item.position = position

@@ -6,17 +6,23 @@ extends Area2D
 var swinging : bool
 var swing_clockwise : bool
 
-const swing_increment := ((3*PI)/4)/0.25
+const SWING_INCREMENT := ((3*PI)/4)/0.25
 
+#sets visisblity to false when entering the tree a the end user is not using it yet
 func _ready():
 	visible = false
 
+#for every frame, if the sword is swingming meaning the player and pressed some input to activate the
+#swinging variable, if the sword was set to swing clockwise or anti-clockwise based on which quadrant
+#the mouse position was it, the sword rotation will either have radians minused or added every frame
+#while also detecting collisions with enemies to deal damage and being visisble, otherwise it won't
+#detect collisions and isn't visible all for realistic sword functionalty
 func _process(delta):
 	if swinging:
 		if swing_clockwise:
-			rotation += swing_increment * delta
+			rotation += SWING_INCREMENT * delta
 		else:
-			rotation -= swing_increment * delta
+			rotation -= SWING_INCREMENT * delta
 		
 		monitoring = true
 		visible = true
@@ -24,6 +30,10 @@ func _process(delta):
 		monitoring = false
 		visible = false
 
+#runs when the sword collides with something, if that something is an enemy, depending on the level
+#and type of enemy, pick a random amount of damage out of a range and deal it, if the enemy health is
+#below 0, run the die function while if the collider is bullet, delete the bullet, if the collider is
+#the world, stop the sword from swinging all to simulate realistic sword functionality
 func _on_body_entered(body):
 	if body.is_in_group("enemies"):
 		var damage : int
@@ -138,5 +148,8 @@ func _on_body_entered(body):
 					body.die()
 				else:
 					pass
+	elif body.is_in_group("bullets"):
+		body.queue_free()
 	else:
-		queue_free()
+		player.get_node("SwordTimer").stop()
+		swinging = false

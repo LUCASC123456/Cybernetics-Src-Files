@@ -7,17 +7,17 @@ process_mode = 1
 visible = false
 script = ExtResource("1_p436f")
 
-[node name="LazerReachArea" type="Area2D" parent="."]
+[node name="VisionArea" type="Area2D" parent="."]
 z_index = 2
 collision_layer = 4
 collision_mask = 2
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LazerReachArea"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="VisionArea"]
 z_index = 2
 
-[node name="TargetArea" type="Polygon2D" parent="LazerReachArea"]
+[node name="TargetArea" type="Polygon2D" parent="VisionArea"]
 z_index = 2
 color = Color(0.24797, 3.63868e-05, 0.931896, 0.313726)
 
-[connection signal="body_entered" from="LazerReachArea" to="." method="_on_lazer_reach_area_body_entered"]
-[connection signal="body_exited" from="LazerReachArea" to="." method="_on_lazer_reach_area_body_exited"]
+[connection signal="body_entered" from="VisionArea" to="." method="_on_lazer_reach_area_body_entered"]
+[connection signal="body_exited" from="VisionArea" to="." method="_on_lazer_reach_area_body_exited"]

@@ -21,6 +21,10 @@ var smg_price = 500
 var lmg_price = 1500
 var ar_price = 1000
 
+#when the market scene first enters the tree, load the user data and iterate through each array storing
+#the primary and secondary buttons by making their text say "SELECt", then find the selected primary
+#and secondary weapon and based on its index in the selected array, use this index to change the index
+#of PWButtons and SWButtons to "SELECTED" so the end user knows which weapon they have selected
 func _ready():
 	main_menu.load_data()
 	
@@ -42,9 +46,16 @@ func _ready():
 	SWButtons[main_menu.secondary_store.selected].text = "SELECTED"
 	PWButtons[main_menu.secondary_store.selected].add_to_group("secondary_selected")
 	
+#constantly update the credits available text in case something happens to the amount of credits the
+#end user has
 func _process(_delta):
 	$CreditsAvailable.text = "CREDITS AVAILABLE: " + str(main_menu.credits)
 
+#firstly load the data so the script knows which weapon is currently selected then
+#changes the text of the button which the user has already selected to "SELECT", 
+#then based on the parameters change the text of the button the user pressed to
+#"SELECTED", then save this data so the selected weapon saves and the end user can
+#select weapons
 func _select_primary(node, no):
 	main_menu.load_data()
 	
@@ -57,6 +68,11 @@ func _select_primary(node, no):
 	main_menu.primary_store.selected = no
 	main_menu.save_data()
 
+#firstly load the data so the script knows which weapon is currently selected then
+#changes the text of the button which the user has already selected to "SELECT", 
+#then based on the parameters change the text of the button the user pressed to
+#"SELECTED", then save this data so the selected weapon saves and the end user can
+#select weapons
 func _select_secondary(node, no):
 	main_menu.load_data()
 	
@@ -69,7 +85,12 @@ func _select_secondary(node, no):
 	main_menu.secondary_store.selected = no
 	main_menu.save_data()
 
-
+#loads the data firstly so the amount of credits are available and if the weapon the end user is trying
+#to buy is already bought based on the loaded data, simple select that weapon, otherwise if the user
+#has enought credits, minus the price of the weapon from the credits, add change it to true in the bought
+#array and change its text to "SELECT" to allow the end user to select it, otherwise show the not enought
+#credits screen all so the end user can buy new weapons, select them and be notified that they need
+#more credits to purchase the weapon
 func _buy_primary(price, item_no):
 	main_menu.load_data()
 	
@@ -86,6 +107,12 @@ func _buy_primary(price, item_no):
 	else:
 		_select_primary(PWButtons[item_no], item_no)
 
+#loads the data firstly so the amount of credits are available and if the weapon the end user is trying
+#to buy is already bought based on the loaded data, simple select that weapon, otherwise if the user
+#has enought credits, minus the price of the weapon from the credits, add change it to true in the bought
+#array and change its text to "SELECT" to allow the end user to select it, otherwise show the not enought
+#credits screen all so the end user can buy new weapons, select them and be notified that they need
+#more credits to purchase the weapon
 func _buy_secondary(price, item_no):
 	main_menu.load_data()
 	
@@ -102,32 +129,46 @@ func _buy_secondary(price, item_no):
 	else:
 		_select_secondary(SWButtons[item_no], item_no)
 
-
+#when the user presses the exit button the market ui hides and the main menu ui shows so the user can
+#go back to the main menu whenver they want
 func _on_exit_button_pressed():
 	hide()
 	main_menu.show()
 
-
+#when the user presses this button, buy the weapon through the buy function so the user can simply 
+#use mouse click to buy a new weapon as they'd expect
 func _on_pw_button_1_pressed():
 	_buy_primary(pistol_price, 0)
 
+#when the user presses this button, buy the weapon through the buy function so the user can simply 
+#use mouse click to buy a new weapon as they'd expect
 func _on_pw_button_2_pressed():
 	_buy_primary(smg_price, 1)
 
+#when the user presses this button, buy the weapon through the buy function so the user can simply 
+#use mouse click to buy a new weapon as they'd expect
 func _on_pw_button_3_pressed():
 	_buy_primary(lmg_price, 2)
 
+#when the user presses this button, buy the weapon through the buy function so the user can simply 
+#use mouse click to buy a new weapon as they'd expect
 func _on_pw_button_4_pressed():
 	_buy_primary(ar_price, 3)
 
 
+#when the user presses this button, buy the weapon through the buy function so the user can simply 
+#use mouse click to buy a new weapon as they'd expect
 func _on_sw_button_1_pressed():
 	_buy_secondary(pistol_price, 0)
 
+#when the user presses this button, buy the weapon through the buy function so the user can simply 
+#use mouse click to buy a new weapon as they'd expect
 func _on_sw_button_2_pressed():
 	_buy_secondary(mp_price, 1)
 
-
+#hides the secondary weapons section and shows the primary weapons section if the primary weapons
+#section isn't already visible, also changes the image of the button to show the end user they're in
+#the primary weapons section
 func _on_primary_weapons_button_pressed():
 	if not $PrimaryWeapons.visible:
 		$SecondaryWeapons.hide()
@@ -138,6 +179,9 @@ func _on_primary_weapons_button_pressed():
 	else:
 		pass
 
+#hides the primary weapons section and shows the secondary weapons section if the secondary weapons
+#section isn't already visible, also changes the image of the button to show the end user they're in
+#the secondary weapons section
 func _on_secondary_weapons_button_pressed():
 	if not $SecondaryWeapons.visible:
 		$PrimaryWeapons.hide()

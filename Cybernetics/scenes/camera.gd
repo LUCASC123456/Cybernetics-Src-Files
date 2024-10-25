@@ -3,6 +3,10 @@ extends Camera2D
 @onready var main = get_node("/root/Main")
 
 func _process(_delta):
+	#if the game is paused, essentailly set no limits for the camera to go as well as disable smooth
+	#movement all so the camera doesn't get stuck on any of the levels which set their own limits for
+	#camera as well as to get the camera back to to the starting position quickly with smooth movement
+	#mostly for if the end user restarts the game
 	if get_tree().paused:
 		limit_left = 0
 		limit_top = 0
@@ -13,6 +17,8 @@ func _process(_delta):
 		drag_horizontal_enabled = false
 		drag_vertical_enabled = false
 	else:
+		#in any other case allow smooth movement for nicer gameplay as well as clamp the camera view
+		#to certain limits depending on the level so the player doesn't see anything out of bounds
 		position_smoothing_enabled = true
 		drag_horizontal_enabled = true
 		drag_vertical_enabled = true

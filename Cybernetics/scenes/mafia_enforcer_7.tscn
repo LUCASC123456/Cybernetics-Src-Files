@@ -118,5 +118,5 @@ wait_time = 3.0
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
 [connection signal="timeout" from="EntranceTimer" to="." method="_on_entrance_timer_timeout"]
 [connection signal="timeout" from="TrackTimer" to="." method="_on_track_timer_timeout"]
-[connection signal="timeout" from="SummonCoolDownTimer" to="." method="_on_summon_check_timer_timeout"]
+[connection signal="timeout" from="SummonCoolDownTimer" to="." method="_on_summon_cool_down_timer_timeout"]
 [connection signal="timeout" from="SummonTimer" to="." method="_on_summon_timer_timeout"]

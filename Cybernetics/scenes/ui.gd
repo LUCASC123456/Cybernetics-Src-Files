@@ -5,9 +5,14 @@ extends CanvasLayer
 
 var ui_mouse_entered : bool
 
+#when the ui enters the tree, set ui_mouse_button_entered to false so the player can fire their weapon
 func _ready():
 	ui_mouse_entered = false
 
+#used for constantly updating the gameplay ui text or images every frame by constantly assigning
+#changing variables throughout the game to the text of the ui or even changing images based on certain
+#events overall to keep the end user up to date with important and useful information that's always 
+#changing such as health or ammo etc
 func _process(_delta):
 	$HealthBar.value = player.health
 	$SheildBar.value = player.sheild
@@ -101,29 +106,43 @@ func _process(_delta):
 	else:
 		pass
 
+#used for preventing the end user from firing their weapon if their mouse enters a ui area on the screen
+#so for example if the want to exit, then decide not to they would'nt have fired any rounds
 func _on_pause_button_mouse_entered():
 	ui_mouse_entered = true
 
+#used for preventing the end user from firing their weapon if their mouse enters a ui area on the screen
+#so for example if the want to exit, then decide not to they would'nt have fired any rounds
 func _on_pause_button_mouse_exited():
 	ui_mouse_entered = false
 
+#used for preventing the end user from firing their weapon if their mouse enters a ui area on the screen
+#so for example if the want to exit, then decide not to they would'nt have fired any rounds
 func _on_primary_weapon_selection_mouse_entered():
 	ui_mouse_entered = true
 
+#used for preventing the end user from firing their weapon if their mouse enters a ui area on the screen
+#so for example if the want to exit, then decide not to they would'nt have fired any rounds
 func _on_primary_weapon_selection_mouse_exited():
 	ui_mouse_entered = false
 
+#used for preventing the end user from firing their weapon if their mouse enters a ui area on the screen
+#so for example if the want to exit, then decide not to they would'nt have fired any rounds
 func _on_secondary_weapon_selection_2_mouse_entered():
 	ui_mouse_entered = true
 
+#used for preventing the end user from firing their weapon if their mouse enters a ui area on the screen
+#so for example if the want to exit, then decide not to they would'nt have fired any rounds
 func _on_secondary_weapon_selection_2_mouse_exited():
 	ui_mouse_entered = false
 
-
+#pause the game when pressed so the user has control and can pause whenever they wish
 func _on_pause_button_pressed():
 	main.pause()
 
-
+#allow the user to switch to their primary weapon so they can use it whenever they wish while also
+#changing the ui image to show that they have the primary weapon equipped so they know which weapon
+#they have equipped
 func _on_primary_weapon_selection_pressed():
 	if not player.primary_equipped:
 		player.primary_equipped = true
@@ -140,6 +159,9 @@ func _on_primary_weapon_selection_pressed():
 	else:
 		pass
 
+#allow the user to switch to their secondary weapon so they can use it whenever they wish while also
+#changing the ui image to show that they have the secondary weapon equipped so they know which weapon
+#they have equipped
 func _on_secondary_weapon_selection_pressed():
 	if player.primary_equipped:
 		player.primary_equipped = false

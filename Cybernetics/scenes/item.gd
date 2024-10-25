@@ -21,11 +21,15 @@ var item_type : int
 var minimap_icon = "alert"
 var marker_added : bool
 
+#set the item texture to the designated type specified by the enemy when it died to let the player know
+#which power up it is
 func _ready():
 	$Sprite2D.texture = textures[item_type]
 
 func _on_body_entered(_body):
 	if item_type == 0:
+		#gain health if the players health isn't already 200 so they player earn more health and survive
+		#longer
 		if player.health < 200:
 			player.health += randi_range(10, 75)
 			if player.health >= 200:
@@ -37,6 +41,8 @@ func _on_body_entered(_body):
 		else:
 			pass
 	elif item_type == 1:
+		#gain sheid if the players shield isn't already 200 so they player can earn more sheild and
+		#survive longer
 		if player.sheild < 200:
 			player.sheild += randi_range(10, 75)
 			if player.sheild >= 200:
@@ -48,6 +54,10 @@ func _on_body_entered(_body):
 		else:
 			pass
 	elif item_type == 2:
+		#based whether the player has their priamry or secondary weapon equipped, and which primary
+		#and secondary weapon they're using, gain ammo for that particular weapon if the ammo isn't
+		#already full and the player is reloading or firing that weapon so the player can gain more
+		#ammo and fire more shots
 		if player.primary_equipped:
 			if player.get_node("ReloadTimerPrimary").is_stopped():
 				if player.primary_selected_gun == "PISTOL":
@@ -115,6 +125,9 @@ func _on_body_entered(_body):
 			else:
 				pass
 	elif item_type == 3:
+		#if the other two power ups aren't currently being used by the player (to prevent overlapping),
+		#give the player this particular powerup by adding time to its duration of usage so the player
+		#can use powerups and add more time to its duration if they're already using this particular one
 		if not player.force_field_activated and not player.double_damage_activated:
 			player.boost_activated = true
 			
@@ -127,6 +140,9 @@ func _on_body_entered(_body):
 		else:
 			pass
 	elif item_type == 4:
+		#if the other two power ups aren't currently being used by the player (to prevent overlapping),
+		#give the player this particular powerup by adding time to its duration of usage so the player
+		#can use powerups and add more time to its duration if they're already using this particular one
 		if not player.boost_activated and not player.double_damage_activated:
 			player.force_field_activated = true
 			
@@ -139,6 +155,9 @@ func _on_body_entered(_body):
 		else:
 			pass
 	elif item_type == 5:
+		#if the other two power ups aren't currently being used by the player (to prevent overlapping),
+		#give the player this particular powerup by adding time to its duration of usage so the player
+		#can use powerups and add more time to its duration if they're already using this particular one
 		if not player.boost_activated and not player.force_field_activated:
 			player.double_damage_activated = true
 			

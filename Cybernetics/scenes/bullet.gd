@@ -8,6 +8,8 @@ var primary_bullet_speed : int = 0
 var secondary_bullet_speed : int = 0
 var direction : Vector2
 
+#selecting bullet speeds for the different guns the player is using for the primary and secondary 
+#weapon so the end user gets benefit out of buying weapons
 func _ready():
 	if player.primary_selected_gun == "PISTOL":
 		primary_bullet_speed = 750
@@ -22,11 +24,13 @@ func _ready():
 	
 	if player.secondary_selected_gun == "PISTOL":
 		secondary_bullet_speed = 750
-	elif player.secondary_selected_gun == "MACHINE PISTOL":
+	elif player.secondary_selected_gun == "MP":
 		secondary_bullet_speed = 850
 	else:
 		pass
 
+#simulate bullet movement by adding distance every delta through velocity and rotating the bullet to 
+#face in the direction of travel for realism
 func _process(delta):
 	if player.primary_equipped:
 		position += primary_bullet_speed * direction * delta
@@ -35,9 +39,14 @@ func _process(delta):
 		position += secondary_bullet_speed * direction * delta
 		rotation = direction.angle()
 
+#deleting the bullet after a certain amount of time if it hasn't hit anything to prevent lag
 func _on_timer_timeout():
 	queue_free()
 
+#runs when the bullet collides with something, if that something is an enemy, depending on the level
+#and type of enemy, pick a random amount of damage out of a range and deal it, if the enemy health is
+#below 0, run the die function and always delete the bullet in the process in order to simulate
+#realistic bullets and to allow for the player to kill the enemies
 func _on_body_entered(body):
 	if body.is_in_group("enemies"):
 		var damage : int
@@ -136,7 +145,8 @@ func _on_body_entered(body):
 					damage = randi_range(0, 10)
 				else:
 					pass
-				
+			
+			#enemies can be damage resistant so this must not be true in order to deal damage for balance
 			if body.damage_resistant:
 				if body.entered:
 					pass

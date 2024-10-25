@@ -17,6 +17,7 @@ var boss : CharacterBody2D
 var enemy_level_count = [20, 30, 40, 50, 1]
 var levels = [true, false, false, false, false]
 
+#storing the entrance and exit door coordinate so the program can add and delete tiles to let the player go from level to level
 var player_door_coordinates = {
 	"Level1" : [Vector2i(15,5), Vector2i(15,6), Vector2i(15,7), Vector2i(15,8), Vector2i(15,9)],
 	"Level2" : [[Vector2i(24,5), Vector2i(24,6), Vector2i(24,7), Vector2i(24,8), Vector2i(24,9)], [Vector2i(55,5), Vector2i(55,6), Vector2i(55,7), Vector2i(55,8), Vector2i(55,9)]],
@@ -25,6 +26,7 @@ var player_door_coordinates = {
 	"Level5" : [Vector2i(167, 63), Vector2i(168, 63), Vector2i(169, 63), Vector2i(170, 63)]
 }
 
+#storing the enemy entrance door coordinates so the program can add and remove them when necessary/open and close them
 var enemy_door_coordinates = {
 	"Level1" : [[Vector2i(6,0), Vector2i(7,0), Vector2i(8,0), Vector2i(9,0)], [Vector2i(6,15), Vector2i(7,15), Vector2i(8,15), Vector2i(9,15)]],
 	"Level2" : [[Vector2i(32,0), Vector2i(33,0), Vector2i(34,0), Vector2i(35,0)], [Vector2i(44,0), Vector2i(45,0), Vector2i(46,0), Vector2i(47,0)], [Vector2i(32,15), Vector2i(33,15), Vector2i(34,15), Vector2i(35,15)], [Vector2i(44,15), Vector2i(45,15), Vector2i(46,15), Vector2i(47,15)]],
@@ -33,10 +35,13 @@ var enemy_door_coordinates = {
 	"Level5" : []
 }
 
+#load the user data when the game boots up so the user has all their progress
 func _on_tree_entered():
 	$MainMenu.load_data()
 
 func _ready():
+	#making sure all timers are stopped and the game is paused as well as resetting variables for a
+	#fresh restart without any interferance
 	get_tree().paused = true
 	$RestartTimer.paused = false
 	$RestartTimer.stop()
@@ -50,12 +55,15 @@ func _ready():
 	bullets_fired = 0
 	levels_completed = 0
 	
+	#clearing out any enemies, bullets, items etc to prevent lag
 	get_tree().call_group("enemies", "queue_free")
 	get_tree().call_group("minions", "queue_free")
 	get_tree().call_group("target_area_nodes", "queue_free")
 	get_tree().call_group("bullets", "queue_free")
 	get_tree().call_group("items", "queue_free")
 	
+	#making only the level 1 region accessible so so if the player somehow leaves the in bounds area
+	#they won't start another level
 	for i in $World.get_children():
 		if i.is_in_group("levels"):
 			if i.name == "Level1":
@@ -66,13 +74,15 @@ func _ready():
 					k.set_deferred("disabled", true)
 		else:
 			pass
-				
+	
+	#settings all levels to false execpt for level 1 to prevent overlapping level functionality
 	for i in range(0, len(levels)):
 		if i == 0:
 			levels[i] = true
 		else:
 			levels[i] = false
 	
+	#resetting all doors by adding tiles to prevent the user from going anywhere
 	for tile_coord in player_door_coordinates["Level1"]:
 		if tile_coord == Vector2i(15,5):
 			$World.set_cell(1, tile_coord, 7, Vector2i(0, 10), 0)
@@ -155,7 +165,8 @@ func _ready():
 			$World.set_cell(1, tile_coord, 7, Vector2i(0, 18), 0)
 		else:
 			$World.set_cell(1, tile_coord, 7, Vector2i(0,19), 0)
-		
+	
+	#setting all UI as hidden (not visible) except for the main menu to prevent overlapping ui
 	for i in get_children():
 		if i is CanvasLayer:
 			if i.name == "MainMenu":
@@ -165,6 +176,9 @@ func _ready():
 		else:
 			pass
 
+#for every new level entered, resets the player components e.g. health, sheild, ammo etc while also
+#restarting the restart timer for a new game while clearing out all the nodes in the previous level
+#to prevent lag and to overall prep the player for a new game
 func new_game():
 	if levels[0]:
 		$Player._ready()
@@ -210,6 +224,9 @@ func new_game():
 	
 	$RestartTimer.start()
 
+#runs when the restart timer finishes, opens all the enemy doors depending on the level in order to
+#give the player a bit of time to prepare after they enter a level while also restarting the credit
+#timer and the enemy spawn timer in order to fully start the level
 func _on_restart_timer_timeout():
 	if levels[0]:
 		get_tree().paused = false
@@ -297,6 +314,10 @@ func _on_restart_timer_timeout():
 	$CreditTimer.start()
 	$EnemySpawner.get_node("Timer").start()
 
+#used to constantly draw vision areas over certain enemies which use it for player detection by using
+#instantiated target area nodes and constantly drawing them around a given enemys position every frame
+#so functionality such enemy vision and walls blocking the target area nodes occur to prevent player
+#sighting behind walls
 func _physics_process(_delta):
 	target_area_nodes = get_tree().get_nodes_in_group("target_area_nodes")
 	mafia_enforcer_5s = get_tree().get_nodes_in_group("mafia_enforcer_5")
@@ -313,6 +334,8 @@ func _physics_process(_delta):
 	else:
 		pass
 
+#every time the credit timer stops, the player loses 2 credits which is about every second in order
+#to make credits harder to earn for balance
 func _on_credit_timer_timeout():
 	time_taken += 1
 	if credits_earned > 0:
@@ -324,6 +347,10 @@ func _on_credit_timer_timeout():
 	else:
 		pass
 
+#if the player kills and enemy, this function will run and will minus a talley off of the enemy count for 
+#the level and check if there aren't any enemies left to which it will open the exit doors if this 
+#is true whereas for the final level the game won screen will show instead so the player can go to the
+#next level
 func _on_enemy_killed():
 	enemies_left -= 1
 	enemies_killed += 1
@@ -396,15 +423,18 @@ func _on_enemy_killed():
 	else:
 		pass
 
+#pause the game
 func pause():
 	get_tree().paused = true
 	$RestartTimer.paused = true
 	$PauseScreen.show()
 
+#resume the game
 func resume():
 	get_tree().paused = false
 	$RestartTimer.paused = false
 	$PauseScreen.hide()
 
+#save the user data when the user exits the game so the user doesn't lose any progress
 func _on_tree_exited():
 	$MainMenu.save_data()

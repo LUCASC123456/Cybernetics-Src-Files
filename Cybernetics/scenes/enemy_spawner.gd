@@ -32,6 +32,8 @@ var enemies_level_5 : Array
 
 var probability : float
 
+#when the node enters the tree, add all the markers/enemy spawn points for each level to an array for
+#each level so the markers are better organised
 func _ready():
 	for i in $Level1.get_children():
 		if i is Marker2D:
@@ -57,6 +59,11 @@ func reset():
 	$Timer.stop()
 	$Timer2.stop()
 
+#when the timer finishes, using the different arrays representing the current number of instantiated
+#enemies in the tree for each level, if the array for the current level is smaller than specified number
+#of enemies for the current level, then choose a random enemy to spawn, otherwise stop the timer in
+#order to have better control over enemy spawning and to have each enemy spawn seperated by a given time
+#to give the player time to kill the enemies
 func _on_timer_timeout():
 	enemies_level_1 = get_tree().get_nodes_in_group("enemies_level_1")
 	enemies_level_2 = get_tree().get_nodes_in_group("enemies_level_2")
@@ -464,6 +471,10 @@ func _on_timer_timeout():
 		$Timer.stop()
 		$Timer2.start()
 
+#once the second timer is finished after being started once all the enemies for the current level are
+#spawned in, close the enemy entrance door for the current level or if the player has exited into the
+#passage way incase the player leaves the current level too soon overall to let the user know no more
+#enemies will be spawning
 func _on_timer_2_timeout():
 	if main.levels[0] or world.passage_way == "passage_way_1_entered" or world.passage_way == "passage_way_1_exited":
 		for tile_coord_array in main.enemy_door_coordinates["Level1"]:

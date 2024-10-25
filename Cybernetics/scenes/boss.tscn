@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://dkxilr5sharr1" path="res://assets/Enemies/Boss/BossDeath.png" id="1_ohfn0"]
 [ext_resource type="Script" path="res://scenes/boss.gd" id="1_x1y2i"]
 [ext_resource type="PackedScene" uid="uid://koyohndapjkm" path="res://scenes/enemy_bullet_3.tscn" id="2_1im3l"]
-[ext_resource type="Texture2D" uid="uid://dwnwqym6a8gwf" path="res://assets/Enemies/Boss/Boss.png" id="2_i2hlp"]
+[ext_resource type="Texture2D" uid="uid://cl330gc8luyqk" path="res://assets/Enemies/Boss/Boss.png" id="2_i2hlp"]
 [ext_resource type="PackedScene" uid="uid://bnikedhv02xi6" path="res://scenes/missile.tscn" id="3_pebpm"]
 [ext_resource type="Script" path="res://scenes/lof_boss.gd" id="5_w0btc"]
 [ext_resource type="Script" path="res://scenes/lof_boss_2.gd" id="6_lfy7j"]
