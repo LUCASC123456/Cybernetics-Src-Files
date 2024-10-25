@@ -388,7 +388,7 @@ func _process(_delta):
 				ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/50 \nMAGS: " + str(primary_mags) + "/3"
 		elif primary_selected_gun == "AR":
 			if primary_mags != 0:
-				if $ReloadTimerPrimaryr.is_stopped():
+				if $ReloadTimerPrimary.is_stopped():
 					ammo_counter.text = "AMMO: " + str(primary_mag_collection[primary_mags-1]) + "/30 \nMAGS: " + str(primary_mags) + "/3"
 				else:
 					ammo_counter.text = "RELOADING"
